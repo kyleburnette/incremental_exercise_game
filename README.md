@@ -51,3 +51,4 @@ Tips for file naming files and folders:
 
 Kyle Burnette
 Jacky Tsoi
+Alex Wong
