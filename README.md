@@ -49,6 +49,6 @@ Tips for file naming files and folders:
 
 ## Contributors
 
-Kyle Burnette
+Kyle Burnette - index.html
 Jacky Tsoi
 Alex Wong added profile
