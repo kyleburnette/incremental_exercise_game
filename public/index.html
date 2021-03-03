@@ -66,39 +66,36 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script>
-        var previousCrd;
+        var previousCrd = null;
         var options = {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0
         };
 
-        function calcDistance(previousPos, currentPos){
+        function calcDistance(previousCrd, currentCrd){
             const R = 6371e3; // metres
-            const φ1 = previousPos.latitude * Math.PI/180; // φ, λ in radians
-            const φ2 = currentPos.latitude * Math.PI/180;
-            const Δφ = (currentPos.latitude-previousPos.latitude) * Math.PI/180;
-            const Δλ = (currentPos.longitude-previousPos.longitude) * Math.PI/180;
+            const φ1 = previousCrd.latitude * Math.PI/180; // φ, λ in radians
+            const φ2 = currentCrd.latitude * Math.PI/180;
+            const Δφ = (currentCrd.latitude-previousCrd.latitude) * Math.PI/180;
+            const Δλ = (currentCrd.longitude-previousCrd.longitude) * Math.PI/180;
 
             const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
                     Math.cos(φ1) * Math.cos(φ2) *
                     Math.sin(Δλ/2) * Math.sin(Δλ/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-            const d = R * c; // in metres
+            return d = R * c; // in metres
         }
 
         function success(pos) {
             var crd = pos.coords;
-            previousCrd = crd;
-            distance = calcDistance(previousCrd, crd);
-
-            console.log('Your current position is:');
-            console.log(`Latitude : ${crd.latitude}`);
-            console.log(`Longitude: ${crd.longitude}`);
-            console.log(`More or less ${crd.accuracy} meters.`);
-            
-            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + ` Longitude: ${crd.longitude}` + ` Accuracy: ${crd.accuracy} meters.` + ` Distance from last measurement: ${distance}`;
+            if (previousCrd != null){
+                distance = calcDistance(previousCrd, crd);
+                console.log(distance);
+                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` + `<br/>Distance from last measurement: ${distance} meters`;
+            }
+            previousCrd = pos.coords;      
         }
 
         function error(err) {
