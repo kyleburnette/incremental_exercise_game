@@ -48,10 +48,6 @@
         <h1 class="display-4" id="test">Incremental Exercise Game</h1>
     </div>
 
-    <div class="container">
-        <img class="img-fluid" src="https://dummyimage.com/800x600/6/fff" alt="test image" />
-    </div>
-
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Footer Text</a>
@@ -82,7 +78,7 @@
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude: ${crd.longitude}`);
             console.log(`More or less ${crd.accuracy} meters.`);
-            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + ` Longitude: ${crd.longitude}` + ` More or less ${crd.accuracy} meters.`;
+            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.`;
         }
 
         function error(err) {
