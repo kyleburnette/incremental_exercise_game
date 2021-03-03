@@ -45,7 +45,8 @@
     </nav>
 
     <div class="container">
-        <h1 class="display-4" id="test">Incremental Exercise Game</h1>
+        <h1 class="display-4">Incremental Exercise Game</h1>
+        <h1 class="display-4" id="test">Coordinates go here</h1>
     </div>
 
     <nav class="navbar fixed-bottom navbar-light bg-light">
@@ -65,20 +66,39 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script>
+        var previousCrd;
         var options = {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0
         };
 
+        function calcDistance(previousPos, currentPos){
+            const R = 6371e3; // metres
+            const φ1 = previousPos.latitude * Math.PI/180; // φ, λ in radians
+            const φ2 = currentPos.latitude * Math.PI/180;
+            const Δφ = (currentPos.latitude-previousPos.latitude) * Math.PI/180;
+            const Δλ = (currentPos.longitude-previousPos.longitude) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            const d = R * c; // in metres
+        }
+
         function success(pos) {
             var crd = pos.coords;
+            distance = calcDistance(previousCrd, crd);
+            previousCrd = crd;
 
             console.log('Your current position is:');
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude: ${crd.longitude}`);
             console.log(`More or less ${crd.accuracy} meters.`);
-            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.`;
+            
+            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` + `<br/>Distance from last measurement: ${distance}`;
         }
 
         function error(err) {
