@@ -90,15 +90,15 @@
 
         function success(pos) {
             var crd = pos.coords;
-            distance = calcDistance(previousCrd, crd);
             previousCrd = crd;
+            distance = calcDistance(previousCrd, crd);
 
             console.log('Your current position is:');
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude: ${crd.longitude}`);
             console.log(`More or less ${crd.accuracy} meters.`);
             
-            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` + `<br/>Distance from last measurement: ${distance}`;
+            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + ` Longitude: ${crd.longitude}` + ` Accuracy: ${crd.accuracy} meters.` + ` Distance from last measurement: ${distance}`;
         }
 
         function error(err) {
