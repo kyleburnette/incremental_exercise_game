@@ -153,6 +153,8 @@
             console.warn(`ERROR(${err.code}): ${err.message}`);
         }
 
+        navigator.geolocation.getCurrentPosition(success, error, options);
+        
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
         }, 5000);
