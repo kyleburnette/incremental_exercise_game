@@ -37,7 +37,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <a class="nav-link" href="main.html">Login</a>
                     </li>
                 </ul>
             </div>
@@ -46,18 +46,7 @@
 
     <div class="container">
         <h1 class="display-4">Incremental Exercise Game</h1>
-        <ul class="list-group list-group-flush">
-            Walk to build your step counter to unimaginable heights!
-            <li class="list-group-item">Feature 1</li>
-            <li class="list-group-item">Feature 2</li>
-            <li class="list-group-item">Feature 3</li>
-            <li class="list-group-item">Feature 4</li>
-            <li class="list-group-item">Feature 5</li>
-        </ul>
-    </div>
-
-    <div class="container">
-        <img class="img-fluid" src="https://dummyimage.com/800x600/6/fff" alt="test image" />
+        <h1 class="display-4" id="test">Coordinates go here</h1>
     </div>
 
     <nav class="navbar fixed-bottom navbar-light bg-light">
@@ -76,7 +65,50 @@
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script>
+        var previousCrd = null;
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
 
+        function calcDistance(previousCrd, currentCrd){
+            const R = 6371e3; // metres
+            const φ1 = previousCrd.latitude * Math.PI/180; // φ, λ in radians
+            const φ2 = currentCrd.latitude * Math.PI/180;
+            const Δφ = (currentCrd.latitude-previousCrd.latitude) * Math.PI/180;
+            const Δλ = (currentCrd.longitude-previousCrd.longitude) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return d = R * c; // in metres
+        }
+
+        function success(pos) {
+            var crd = pos.coords;
+            if (previousCrd != null){
+                distance = calcDistance(previousCrd, crd);
+                console.log(distance);
+                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` + `<br/>Distance from last measurement: ${distance} meters`;
+            }
+            previousCrd = pos.coords;      
+        }
+
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+        
+        var intervalId = window.setInterval(function () {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        }, 5000);
+        
+    </script>
 </body>
 
 </html>

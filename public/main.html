@@ -50,7 +50,7 @@
         </div>
     </nav>
 
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success" id="test" role="alert">
         Successfully logged in!
     </div>
 
@@ -146,6 +146,7 @@
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude: ${crd.longitude}`);
             console.log(`More or less ${crd.accuracy} meters.`);
+            document.getElementById("test").innerHTML = `Latitude : ${crd.latitude}` + ` Longitude: ${crd.longitude}` + ` More or less ${crd.accuracy} meters.`;
         }
 
         function error(err) {
@@ -153,6 +154,11 @@
         }
 
         navigator.geolocation.getCurrentPosition(success, error, options);
+        
+        var intervalId = window.setInterval(function () {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        }, 5000);
+        
     </script>
 </body>
 
