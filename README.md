@@ -15,7 +15,8 @@ Technologies used for this project:
 - HTML, CSS
 - JavaScript
 - Bootstrap
-- ...
+- Firebase
+- Google Maps API
 
 ## Content
 
