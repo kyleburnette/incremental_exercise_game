@@ -1,0 +1,21 @@
+.footer-btn {
+    border-radius: 5px;
+    font-size: 2em;
+    padding: 2px 8px;
+}
+
+.home-btn {
+    padding: 2px 8px;
+}
+
+.start-btn {
+    padding: 2px 13px;
+}
+
+.stat-btn {
+    padding: 2px 10px;
+}
+
+.footer-btn-active {
+    color: gray;
+}

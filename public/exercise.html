@@ -14,7 +14,8 @@
 
 
     <!-- Optional styles and scripts of your own -->
-
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
 
 </head>
 
@@ -45,13 +46,22 @@
     </nav>
 
     <div class="container">
-        <h1 class="display-4">Incremental Exercise Game</h1>
-        <h1 class="display-4" id="test">Coordinates go here</h1>
+        <div class="container mt-3">
+            <div class="exercise-setup">
+                <h2 class="display-6">Exercise Setup</h2>
+            </div>
+        </div>
     </div>
 
+    <hr />
+
+    <!-- Footer Navigation Bar -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Footer Text</a>
+            <a href="main.html" class="footer-btn home-btn"><i class="fa fa-home"></i></a>
+            <a href="#" aria-current="page" class="footer-btn start-btn"><i
+                    class="fa fa-running footer-btn-active"></i></a>
+            <a href="stats.html" class="footer-btn stat-btn"><i class="fa fa-chart-bar"></i></a>
         </div>
     </nav>
 
