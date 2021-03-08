@@ -1,4 +1,4 @@
-## My Web Application (Title)
+## Globetrotter
 
 - [General info](#general-info)
 - [Technologies](#technologies)
@@ -6,7 +6,7 @@
 
 ## General Info
 
-This browser based web application to ...
+An incremental exercise game that tracks distance travelled to encourage activity outside.
 
 ## Technologies
 
@@ -16,6 +16,7 @@ Technologies used for this project:
 - JavaScript
 - Bootstrap
 - Firebase
+- Geolocation API
 - Google Maps API
 
 ## Content
@@ -50,6 +51,6 @@ Tips for file naming files and folders:
 
 ## Contributors
 
-Kyle Burnette - index.html
-Jacky Tsoi - main.html
-Alex Wong - profile.html
+- Kyle Burnette - index.html
+- Jacky Tsoi - main.html
+- Alex Wong - profile.html
