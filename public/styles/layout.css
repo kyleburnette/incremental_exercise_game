@@ -19,3 +19,7 @@
 .footer-btn-active {
     color: gray;
 }
+
+a {
+    text-decoration: none;
+}
