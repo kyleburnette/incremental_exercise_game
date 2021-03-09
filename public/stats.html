@@ -64,13 +64,32 @@
                 <h2 class="display-6">Current Goal</h2>
             </div>
             <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100">25%</div>
+                <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
+                    aria-valuemax="100">50%</div>
             </div>
         </div>
     </div>
 
     <hr />
+
+    <div class="container mt-3">
+        <h2 class="display-6">Recent Exercise Results</h2>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><a href="#" aria-current="page">March 7th, 2021</a></li>
+            <li class="list-group-item"><a href="#" aria-current="page">March 5th, 2021</a></li>
+            <li class="list-group-item"><a href="#" aria-current="page">February 23rd, 2021</a></li>
+            <li class="list-group-item"><a href="#" aria-current="page">February 20th, 2021</a></li>
+        </ul>
+    </div>
+
+    <hr />
+
+    <div class="container mt-3">
+        <h2 class="display-6">Charted Results</h2>
+        <div class="text-center">
+            <img src="images/dummy-chart.png" class="img-fluid rounded" alt="chart">
+        </div>
+    </div>
 
     <!-- Footer Navigation Bar -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
@@ -82,6 +101,8 @@
         </div>
     </nav>
 
+    <div class="filler"></div>
+
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
     <!----------------------------------------------->
@@ -92,51 +113,6 @@
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
-    <script>
-        var previousCrd = null;
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
-
-        function calcDistance(previousCrd, currentCrd) {
-            const R = 6371e3; // metres
-            const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
-            const φ2 = currentCrd.latitude * Math.PI / 180;
-            const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
-            const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
-
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            return d = R * c; // in metres
-        }
-
-        function success(pos) {
-            var crd = pos.coords;
-            if (previousCrd != null) {
-                distance = calcDistance(previousCrd, crd);
-                console.log(distance);
-                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-                    `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                    `<br/>Distance from last measurement: ${distance} meters`;
-            }
-            previousCrd = pos.coords;
-        }
-
-        function error(err) {
-            console.warn(`ERROR(${err.code}): ${err.message}`);
-        }
-
-        navigator.geolocation.getCurrentPosition(success, error, options);
-
-        var intervalId = window.setInterval(function () {
-            navigator.geolocation.getCurrentPosition(success, error, options);
-        }, 5000);
-    </script>
 </body>
 
 </html>
