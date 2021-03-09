@@ -73,13 +73,12 @@
                 </button>
             </div>
         </div>
-    </div>
-
-    <!-- Map View -->
-    <div class="container-fluid mt-3">
-        <img src="images/map.png" class="img-fluid map" alt="placeholder map">
-        <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()" data-bs-dismiss="modal"
-            data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
+        <!-- Map View -->
+        <div class="container-fluid mt-3">
+            <img src="images/map.png" class="img-fluid map" alt="placeholder map">
+            <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()"
+                data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
+        </div>
     </div>
 
     <!-- Session Completed Modal -->
@@ -93,16 +92,16 @@
                 </div>
                 <div class="modal-body">
                     <h5>Total Time</h5>
-                    <strong>2h 45m 30s</strong>
+                    <p>2h 45m 30s</p>
                     <hr />
                     <h5>Distance Travelled</h5>
-                    <strong>150.95km</strong>
+                    <p>150.95km</p>
                     <hr />
                     <h5>Estimated Steps Taken</h5>
-                    <strong>7530 steps</strong>
+                    <p>7530 steps</p>
                     <hr />
                     <h5>Estimated Calories Burned</h5>
-                    <strong>1295 calories</strong>
+                    <p>1295 calories</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip</button>
@@ -342,6 +341,7 @@
                 $(".map").css("display", "none");
                 $(".stop-button").css("display", "none");
                 $(".exercise-heading").html("Exercise Setup");
+                $(".setup-button").css("display", "block");
             }
 
             var previousCrd = null;
