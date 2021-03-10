@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -48,7 +48,7 @@
 
     <div class="container mt-3">
         <h1 class="display-4">Globetrotter Login</h1>
-        <div id="firebaseui-auth-container" class="mt-3"></div>
+        <div id="firebaseui-auth-container"></div>
         <div id="loader">Loading...</div>
     </div>
 
@@ -64,11 +64,13 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
-    <!-- <script src="firebase_api_login.js"></script> -->
+    
 
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script src="scripts/firebase_api.js"> </script>
+
     <script>
         // Initialize the FirebaseUI Widget using Firebase.
         var ui = new firebaseui.auth.AuthUI(firebase.auth());

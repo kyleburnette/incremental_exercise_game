@@ -62,6 +62,8 @@
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script src="scripts/distance_functions.js"></script>
+
     <script>
         var previousCrd = null;
         var options = {
@@ -92,7 +94,8 @@
                 console.log(distance);
                 document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
                     `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                    `<br/>Distance from last measurement: ${distance} meters`;
+                    `<br/>Distance from last measurement: ${distance} meters`
+                    `<br/>Speed: ${travelSpeed()}`;
             }
             previousCrd = pos.coords;
         }
