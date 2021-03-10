@@ -57,7 +57,7 @@
     <!----------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+        </script>
 
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
@@ -65,35 +65,44 @@
 
     <script>
         var previousCrd = null;
+        var distanceThisCycle = 0;
         var options = {
             enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0
         };
 
-        function calcDistance(previousCrd, currentCrd){
-            const R = 6371e3; // metres
-            const φ1 = previousCrd.latitude * Math.PI/180; // φ, λ in radians
-            const φ2 = currentCrd.latitude * Math.PI/180;
-            const Δφ = (currentCrd.latitude-previousCrd.latitude) * Math.PI/180;
-            const Δλ = (currentCrd.longitude-previousCrd.longitude) * Math.PI/180;
+        function calcDistance(previousCrd, currentCrd) {
+            const R = 6371e3; // meters
+            const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
+            const φ2 = currentCrd.latitude * Math.PI / 180;
+            const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
+            const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
 
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                    Math.cos(φ1) * Math.cos(φ2) *
-                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            distanceThisCycle = R * c;
+            return d = R * c; // in meters
+        }
 
-            return d = R * c; // in metres
+        function travelSpeed() {
+            return distanceThisCycle / 5; //meters per second
         }
 
         function success(pos) {
             var crd = pos.coords;
-            if (previousCrd != null){
+            if (previousCrd != null) {
                 distance = calcDistance(previousCrd, crd);
                 console.log(distance);
-                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` + `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` + `<br/>Distance from last measurement: ${distance} meters`;
+                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` 
+                + `<br/>Longitude: ${crd.longitude}` 
+                + `<br/>Accuracy: ${crd.accuracy} meters.` 
+                + `<br/>Distance from last measurement: ${distance} meters`
+                + `<br/>Speed ${travelSpeed()}`;
             }
-            previousCrd = pos.coords;      
+            previousCrd = pos.coords;
         }
 
         function error(err) {
@@ -101,11 +110,11 @@
         }
 
         navigator.geolocation.getCurrentPosition(success, error, options);
-        
+
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
         }, 5000);
-        
+
     </script>
 </body>
 
