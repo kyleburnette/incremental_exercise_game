@@ -65,28 +65,6 @@
     <script src="scripts/distance_functions.js"></script>
 
     <script>
-        var previousCrd = null;
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
-
-        function calcDistance(previousCrd, currentCrd) {
-            const R = 6371e3; // metres
-            const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
-            const φ2 = currentCrd.latitude * Math.PI / 180;
-            const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
-            const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
-
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            return d = R * c; // in metres
-        }
-
         function success(pos) {
             var crd = pos.coords;
             if (previousCrd != null) {
@@ -108,7 +86,7 @@
 
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
-        }, 5000);
+        }, pollRate);
     </script>
 </body>
 

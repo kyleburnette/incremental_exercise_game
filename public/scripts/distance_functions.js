@@ -33,25 +33,3 @@ function isWalking(){
     //to-do
     return false;
 }
-
-function success(pos) {
-    var crd = pos.coords;
-    if (previousCrd != null) {
-        distance = calcDistance(previousCrd, crd);
-        console.log(distance);
-        document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-            `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-            `<br/>Distance from last measurement: ${distance} meters`;
-    }
-    previousCrd = pos.coords;
-}
-
-function error(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-}
-
-navigator.geolocation.getCurrentPosition(success, error, options);
-
-var intervalId = window.setInterval(function () {
-    navigator.geolocation.getCurrentPosition(success, error, options);
-}, pollRate);
