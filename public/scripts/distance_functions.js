@@ -21,12 +21,12 @@ function calcDistance(previousCrd, currentCrd) {
         Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    distanceTraveledThisCycle = d = R * c;
-    return distanceTraveledThisCycle; // in metres
+    return d = R * c; // in metres
 }
 
 function travelSpeed(){
-    return distanceTraveledThisCycle / pollRate;
+    //to-do
+    return 0;
 }
 
 function isWalking(){
