@@ -94,7 +94,7 @@
                 console.log(distance);
                 document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
                     `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                    `<br/>Distance from last measurement: ${distance} meters`
+                    `<br/>Distance from last measurement: ${distance} meters` +
                     `<br/>Speed: ${travelSpeed()}`;
             }
             previousCrd = pos.coords;
