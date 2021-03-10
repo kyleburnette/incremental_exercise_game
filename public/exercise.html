@@ -75,7 +75,7 @@
         </div>
         <!-- Map View -->
         <div class="container-fluid mt-3">
-            <img src="images/map.png" class="img-fluid map" alt="placeholder map">
+            <div id="map2"></div>
             <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()"
                 data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
         </div>
@@ -116,7 +116,8 @@
                     <p>1295 calories</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onClick="window.location.reload();">Skip</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#adjustmentModal">Adjust & Feedback</button>
                 </div>
@@ -136,32 +137,32 @@
                 <div class="modal-body">
                     <h5>Map Routing Adjustments</h5>
                     <div class="container mt-3">
-                        <h6>Difficulty (Elevation)</h6>
+                        <h6>Difficulty (Time Limit)</h6>
                         <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
-                        <label class="btn btn-secondary" for="option1">Lower</label>
+                        <label class="btn btn-secondary" for="option1">Easier</label>
 
                         <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
                         <label class="btn btn-secondary" for="option2">Equal</label>
 
                         <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
-                        <label class="btn btn-secondary" for="option3">Higher</label>
+                        <label class="btn btn-secondary" for="option3">Harder</label>
                     </div>
                     <div class="container mt-3">
                         <h6>Duration (Time to Destination)</h6>
                         <input type="radio" class="btn-check" name="options2" id="option2-1" autocomplete="off">
-                        <label class="btn btn-secondary" for="option2-1">Lower</label>
+                        <label class="btn btn-secondary" for="option2-1">Easier</label>
 
                         <input type="radio" class="btn-check" name="options2" id="option2-2" autocomplete="off">
                         <label class="btn btn-secondary" for="option2-2">Equal</label>
 
                         <input type="radio" class="btn-check" name="options2" id="option2-3" autocomplete="off">
-                        <label class="btn btn-secondary" for="option2-3">Higher</label>
+                        <label class="btn btn-secondary" for="option2-3">Harder</label>
                     </div>
                     <div class="container mt-3">
                         <label for="customRange3" class="form-label">Rate the Session</label>
                         <input type="range" class="form-range" min="1" max="5" step="1" id="customRange3">
                     </div>
-                    <div class="range-margin d-flex justify-content-between mt-3">
+                    <div class="d-flex justify-content-between mt-3">
                         <p>1</p>
                         <p>2</p>
                         <p>3</p>
@@ -170,7 +171,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onClick="window.location.reload();">Skip</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#confirmModal">Apply</button>
                 </div>
@@ -193,7 +195,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#adjustmentModal">Back</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onClick="window.location.reload();">Submit</button>
                 </div>
             </div>
         </div>
@@ -246,10 +249,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="images/map.png" class="img-fluid" alt="placeholder map" content="user-scalable=yes">
+                    <div id="map"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">Reset</button>
+                    <button type="button" class="btn btn-secondary" onclick="initMap()">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#questListModal">Start</button>
                 </div>
@@ -330,15 +333,100 @@
         <!-- JS files: Your own JavaScript functions included here    -->
         <!--------------------------------------------------------------------->
         <script>
+            var destinationLat = 0;
+            var destinationLng = 0;
+
+            function initMap() {
+                var pos = {};
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        updateMap([pos.lat, pos.lng]);
+                    });
+                } else {
+                    console.log("Unsupported browser.");
+                }
+            }
+
+            function updateMap(val) {
+                const destination_marker = "images/destination_marker.png";
+                const location_marker = "images/position_marker.png";
+                let destinationSet = false;
+                var crd = {
+                    'lat': val[0],
+                    'lng': val[1]
+                };
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    center: {
+                        lat: parseFloat(crd.lat),
+                        lng: parseFloat(crd.lng)
+                    },
+                    zoomControl: true,
+                    mapTypeControl: false,
+                    scaleControl: true,
+                    streetViewControl: false,
+                    rotateControl: false,
+                    fullscreenControl: true,
+                    clickableIcons: false,
+                    zoom: 12,
+                });
+
+                // Create the initial InfoWindow.
+                let infoWindow = new google.maps.InfoWindow({
+                    content: "Click on the map to place your destination pin",
+                    position: {
+                        lat: parseFloat(crd.lat),
+                        lng: parseFloat(crd.lng)
+                    },
+                });
+                infoWindow.open(map);
+
+                // Configure the click listener.
+                map.addListener("click", (mapsMouseEvent) => {
+                    // Close the current InfoWindow.
+                    infoWindow.close();
+                    // Move destination marker
+                    if (destinationSet) {
+                        destinationMarker.setPosition(mapsMouseEvent.latLng);
+                        destinationLat = mapsMouseEvent.latLng.lat();
+                        destinationLng = mapsMouseEvent.latLng.lng();
+                        console.log(destinationLat, destinationLng);
+                    } else {
+                        destinationMarker = new google.maps.Marker({
+                            position: mapsMouseEvent.latLng,
+                            map,
+                            icon: destination_marker,
+                        });
+                        destinationLat = mapsMouseEvent.latLng.lat();
+                        destinationLng = mapsMouseEvent.latLng.lng();
+                        console.log(destinationLat, destinationLng);
+                        destinationSet = true;
+                    }
+                });
+
+                // user's current position pin
+                new google.maps.Marker({
+                    position: {
+                        lat: parseFloat(crd.lat),
+                        lng: parseFloat(crd.lng)
+                    },
+                    map,
+                    icon: location_marker,
+                });
+            }
+
             function toggleMap() {
-                $(".map").css("display", "block");
+                $("#map2").css("display", "block");
                 $(".stop-button").css("display", "block");
                 $(".exercise-heading").html("Map View - DD/MM/YY");
                 $(".setup-button").css("display", "none");
             }
 
             function endExercise() {
-                $(".map").css("display", "none");
+                $("#map2").css("display", "none");
                 $(".stop-button").css("display", "none");
                 $(".exercise-heading").html("Exercise Setup");
                 $(".setup-button").css("display", "block");
@@ -371,9 +459,11 @@
                 if (previousCrd != null) {
                     distance = calcDistance(previousCrd, crd);
                     console.log(distance);
+                    /*
                     document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
                         `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
                         `<br/>Distance from last measurement: ${distance} meters`;
+                    */
                 }
                 previousCrd = pos.coords;
             }
@@ -387,6 +477,14 @@
             var intervalId = window.setInterval(function () {
                 navigator.geolocation.getCurrentPosition(success, error, options);
             }, 5000);
+
+            $("#destinationModal").on('shown.bs.modal', function () {
+                initMap();
+                google.maps.event.trigger(map, "resize");
+            });
+        </script>
+        <script async type="text/javascript" defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2xvJALxbNJvyjbgPz9knJMZ9DLxrrZ0U&callback=initMap">
         </script>
 </body>
 

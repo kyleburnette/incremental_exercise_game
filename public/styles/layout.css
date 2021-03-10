@@ -44,17 +44,13 @@
     margin-bottom: 100px;
 }
 
-.map {
-    display: none;
-}
-
-.range-margin {
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
 .stop-button {
     display: none;
+}
+
+#map {
+    width: auto;
+    height: 50vh;
 }
 
 a {
