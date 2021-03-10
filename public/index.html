@@ -91,6 +91,10 @@
             return distanceThisCycle / 5; //meters per second
         }
 
+        function isWalking() {
+            return travelSpeed() > 0.5 //meters per second
+        }
+
         function success(pos) {
             var crd = pos.coords;
             if (previousCrd != null) {
@@ -100,7 +104,8 @@
                 + `<br/>Longitude: ${crd.longitude}` 
                 + `<br/>Accuracy: ${crd.accuracy} meters.` 
                 + `<br/>Distance from last measurement: ${distance} meters`
-                + `<br/>Speed ${travelSpeed()}`;
+                + `<br/>Speed ${travelSpeed()}`
+                + `<br/>Walking? ${isWalking()}`;
             }
             previousCrd = pos.coords;
         }
