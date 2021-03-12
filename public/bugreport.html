@@ -55,9 +55,10 @@
     <h2 class="text-center" style="padding-top: 50px;">Bug Report</h2>
 
     <div class="form-group" style="padding-left: 15vw; padding-right: 15vw">
-        <label for="exampleFormControlTextarea1">What happened? Describe the problem as best you can.</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
-        <a href="submissionreceived.html" type="submit" class="btn btn-primary mt-3">Submit Report</a>
+        <label for="exampleFormControlTextarea1">Describe the problem as best you can.</label>
+        <textarea class="form-control" id="feedback-input" rows="10"></textarea>
+        <button type="submit" id="button-submit" name="btn-search" class="btn btn-primary btn-lg btn-tusaj">Submit
+            Bug Report</button>
     </div>
 
     <div class="filler"></div>
@@ -74,13 +75,44 @@
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
     <!----------------------------------------------->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+        </script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
 
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script src="scripts/firebase_api.js"></script>
+
+    <script>
+        function writeFeedback(text) {
+            var writeSuggestion = db.collection("bugreports");
+
+            writeSuggestion.add({
+                user: "test",
+                feedback: text,
+                timestamp: Date.now().toString()
+            }).then(function () {
+                window.location.href = "submissionreceived.html";
+            });
+        }
+
+        function getFeedback() {
+            document.getElementById("button-submit").addEventListener('click', function () {
+                var feedback = document.getElementById("feedback-input").value;
+                console.log(feedback);
+                writeFeedback(feedback);
+            });
+        }
+
+        getFeedback();
+
+    </script>
 </body>
 
 </html>
