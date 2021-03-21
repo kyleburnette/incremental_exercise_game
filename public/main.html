@@ -166,9 +166,17 @@
         }
 
         function writeUserScore(text) {
-            var writeSuggestion = db.collection("scores");
-
-            db.collection('scores').doc(loggedInUser.uid).set({ score: userScore }, { merge: true })
+            var updateScore = db.collection("scores");
+            console.log("Current score:", userScore);
+            if (loggedInUser == null) {
+                console.warn("User is not logged in!");
+            } else {
+                updateScore.doc(loggedInUser.uid).set({
+                    score: userScore
+                }, {
+                    merge: true
+                })
+            }
         }
 
         var previousCrd = null;
@@ -198,42 +206,40 @@
             return distanceThisCycle / 5; //meters per second
         }
 
-
-
         function isWalking() {
             return travelSpeed() > 0.5 //meters per second
         }
 
         function success(pos) {
             var crd = pos.coords;
-            var position = {
-                'lat': crd.latitude,
-                'lng': crd.longitude
-            }
-
             if (previousCrd != null) {
-                if (crd.accuracy > 50) {
+                distance = calcDistance(previousCrd, crd);
+                console.log(distance);
+                if (crd.accuracy > 25) {
+                    console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
                 } else {
                     distance = calcDistance(previousCrd, crd);
-                    console.log("Updated position");
-                    updateMarker(position);
-                    totalDistance += distance;
-                    console.log("Total Distance:", totalDistance);
-                    
-            if (isWalking()) {
-                userScore++;
-            } else {
-                userScore--;
+                    if (distance > 10) {
+                        console.log("Updated position");
+                        updateMarker(position);
+                        userScore += distance;
+                        console.log("Total Distance:", totalDistance);
+                        updateCrd = true;
+                    } else {
+                        console.log("Distance travelled insignificant, ignoring update.");
+                        updateCrd = false;
+                    }
+
             }
-            writeUserScore();
-                    
-                    document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-                        `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                        `<br/>Distance from last measurement: ${distance} meters`;
-                    
+            document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}`
+                        + `<br/>Longitude: ${crd.longitude}`
+                        + `<br/>Accuracy: ${crd.accuracy} meters.`
+                        + `<br/>Distance from last measurement: ${distance} meters`
+                        + `<br/>Speed ${travelSpeed()}`
+                        + `<br/>Walking? ${isWalking()}`
+                        + `<br/>User Score: ${userScore}`;
                 }
-            }
             previousCrd = pos.coords;
         }
 
@@ -250,14 +256,13 @@
                 loggedInUser = user;
                 retrieveUserScore();
             } else {
-                console.log("no user");
+                console.warn("No user detected!");
             }
         });
 
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
         }, 5000);
-
     </script>
 </body>
 
