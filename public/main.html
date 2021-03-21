@@ -56,6 +56,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
+    <div class="container" id="score-text">
+        Your score: -undef-
+    </div>
+
     <div class="display-4">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
@@ -129,15 +133,118 @@
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
     <!----------------------------------------------->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+        </script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
 
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script src="scripts/firebase_api.js"></script>
 
     <script>
+        function retrieveUserScore() {
+            var user = firebase.auth().currentUser;
+            var score = db.collection("scores").doc(user.uid);
+
+            console.log(user.uid);
+            score.get().then((doc) => {
+                if (doc.exists) {
+                    userScore = parseInt(doc.data()["score"]);
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+        }
+
+        function writeUserScore(text) {
+            var writeSuggestion = db.collection("scores");
+
+            db.collection('scores').doc(loggedInUser.uid).set({score: userScore}, {merge: true})
+        }
+
+        var previousCrd = null;
+        var distanceThisCycle = 0;
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function calcDistance(previousCrd, currentCrd) {
+            const R = 6371e3; // meters
+            const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
+            const φ2 = currentCrd.latitude * Math.PI / 180;
+            const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
+            const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
+
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            distanceThisCycle = R * c;
+            return d = R * c; // in meters
+        }
+
+        function travelSpeed() {
+            return distanceThisCycle / 5; //meters per second
+        }
+
+        function isWalking() {
+            return travelSpeed() > 0.5 //meters per second
+        }
+
+        function success(pos) {
+            var crd = pos.coords;
+            if (previousCrd != null) {
+                distance = calcDistance(previousCrd, crd);
+                console.log(distance);
+                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}`
+                    + `<br/>Longitude: ${crd.longitude}`
+                    + `<br/>Accuracy: ${crd.accuracy} meters.`
+                    + `<br/>Distance from last measurement: ${distance} meters`
+                    + `<br/>Speed ${travelSpeed()}`
+                    + `<br/>Walking? ${isWalking()}`
+                    + `<br/>User Score: ${userScore}`;
+            }
+            previousCrd = pos.coords;
+        }
+
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+
+        loggedInUser = null;
+        var userScore = 0;
+
+        //main stuff
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                loggedInUser = user;
+                retrieveUserScore();
+            } else {
+                console.log("no user");
+            }
+        });
+        
+        var intervalId = window.setInterval(function () {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+
+            if (isWalking()) {
+                userScore++;
+            } else {
+                userScore--;
+            }
+            writeUserScore();
+        }, 5000);
 
     </script>
 </body>
