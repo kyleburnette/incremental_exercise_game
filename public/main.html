@@ -258,6 +258,7 @@
 
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
+            writeUserScore();
         }, 5000);
     </script>
 </body>
