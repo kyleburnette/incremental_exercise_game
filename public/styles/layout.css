@@ -48,9 +48,18 @@
     display: none;
 }
 
+.map-line {
+    display: none;
+}
+
 #map {
     width: auto;
     height: 50vh;
+}
+
+#mapView {
+    width: auto;
+    height: 55vh;
 }
 
 a {

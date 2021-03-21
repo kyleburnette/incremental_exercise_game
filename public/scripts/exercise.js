@@ -7,6 +7,9 @@ var destinationLat = 0;
 var destinationLng = 0;
 var dateObj;
 
+var routeOption = "off";
+var trackingState = false;
+
 function startView() {
     var heading = "Map View - ";
     var date = getDate();
@@ -19,7 +22,8 @@ function getDate() {
 }
 
 function initMap() {
-    var pos = {};
+    destinationLat = 0;
+    destinationLng = 0;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             var pos = {
@@ -31,6 +35,10 @@ function initMap() {
     } else {
         console.log("Unsupported browser.");
     }
+}
+
+function initMapView() {
+    updateMapView();
 }
 
 function updateMap(val) {
@@ -75,7 +83,6 @@ function updateMap(val) {
             destinationLat = mapsMouseEvent.latLng.lat();
             destinationLng = mapsMouseEvent.latLng.lng();
             console.log("Destination:", destinationLat, destinationLng);
-            console.log(crd);
         } else {
             destinationMarker = new google.maps.Marker({
                 position: mapsMouseEvent.latLng,
@@ -85,7 +92,6 @@ function updateMap(val) {
             destinationLat = mapsMouseEvent.latLng.lat();
             destinationLng = mapsMouseEvent.latLng.lng();
             console.log("Destination:", destinationLat, destinationLng);
-            console.log(crd);
             destinationSet = true;
         }
     });
@@ -101,20 +107,79 @@ function updateMap(val) {
     });
 }
 
+function updateMapView() {
+    const destination_marker = "images/destination_marker.png";
+    const location_marker = "images/position_marker.png";
+    const map = new google.maps.Map(document.getElementById("mapView"), {
+        center: {
+            lat: crd.lat,
+            lng: crd.lng
+        },
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: true,
+        zoom: 15,
+    });
+
+    destinationMarker = new google.maps.Marker({
+        position: {
+            lat: destinationLat,
+            lng: destinationLng
+        },
+        map,
+        icon: destination_marker,
+    });
+
+    // user's current position pin
+    new google.maps.Marker({
+        position: {
+            lat: crd.lat,
+            lng: crd.lng
+        },
+        map,
+        icon: location_marker,
+    });
+
+    // create the optimal route to destination
+    if (routeOption == "off") {
+        console.log("Route not specified, ignoring request.");
+    } else {
+        findRoute(destinationLat, destinationLng);
+    };
+}
+
+function setRoute() {
+    routeOption = $("input[name=routingOption]:checked").val();
+    console.log("Selected Route Option:", routeOption);
+}
+
+function findRoute(lat, lng) {
+    console.log("Location:", crd)
+    console.log("Destination:", lat, lng);
+}
+
 function toggleMap() {
-    $("#map2").css("display", "block");
+    $("#mapView").css("display", "block");
+    initMapView();
+    trackingState = true;
     $(".stop-button").css("display", "block");
-    startView();
+    $(".map-line").css("display", "block");
     $(".setup-button").css("display", "none");
+    startView();
 }
 
 function endExercise() {
-    $("#map2").css("display", "none");
+    $("#mapView").css("display", "none");
     $(".stop-button").css("display", "none");
+    $(".map-line").css("display", "none");
     $(".exercise-heading").html("Exercise Setup");
     $(".setup-button").css("display", "block");
 }
 
+var totalDistance = 0;
 var previousCrd = null;
 var options = {
     enableHighAccuracy: true,
