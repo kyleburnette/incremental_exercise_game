@@ -168,7 +168,7 @@
         function writeUserScore(text) {
             var writeSuggestion = db.collection("scores");
 
-            db.collection('scores').doc(loggedInUser.uid).set({score: userScore}, {merge: true})
+            db.collection('scores').doc(loggedInUser.uid).set({ score: userScore }, { merge: true })
         }
 
         var previousCrd = null;
@@ -198,22 +198,41 @@
             return distanceThisCycle / 5; //meters per second
         }
 
+
+
         function isWalking() {
             return travelSpeed() > 0.5 //meters per second
         }
 
         function success(pos) {
             var crd = pos.coords;
+            var position = {
+                'lat': crd.latitude,
+                'lng': crd.longitude
+            }
+
             if (previousCrd != null) {
-                distance = calcDistance(previousCrd, crd);
-                console.log(distance);
-                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}`
-                    + `<br/>Longitude: ${crd.longitude}`
-                    + `<br/>Accuracy: ${crd.accuracy} meters.`
-                    + `<br/>Distance from last measurement: ${distance} meters`
-                    + `<br/>Speed ${travelSpeed()}`
-                    + `<br/>Walking? ${isWalking()}`
-                    + `<br/>User Score: ${userScore}`;
+                if (crd.accuracy > 50) {
+                    console.log("Inaccurate, did not take position.");
+                } else {
+                    distance = calcDistance(previousCrd, crd);
+                    console.log("Updated position");
+                    updateMarker(position);
+                    totalDistance += distance;
+                    console.log("Total Distance:", totalDistance);
+                    
+            if (isWalking()) {
+                userScore++;
+            } else {
+                userScore--;
+            }
+            writeUserScore();
+                    
+                    document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
+                        `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
+                        `<br/>Distance from last measurement: ${distance} meters`;
+                    
+                }
             }
             previousCrd = pos.coords;
         }
@@ -234,16 +253,9 @@
                 console.log("no user");
             }
         });
-        
+
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
-
-            if (isWalking()) {
-                userScore++;
-            } else {
-                userScore--;
-            }
-            writeUserScore();
         }, 5000);
 
     </script>
