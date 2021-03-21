@@ -171,7 +171,7 @@
             if (loggedInUser == null) {
                 console.warn("User is not logged in!");
             } else {
-                db.collection('scores').doc(loggedInUser.uid).set({
+                updateScore.doc(loggedInUser.uid).set({
                     score: userScore
                 }, {
                     merge: true

@@ -26,6 +26,8 @@ var trackingState = false;
 
 var positionMarker;
 
+var currentScore = 0;
+
 function startView() {
     var heading = "Map View - ";
     var date = new Date();
@@ -180,12 +182,14 @@ function drawPath() {
 
 function toggleMap() {
     trackingState = true;
+
     $("#mapView").css("display", "block");
     $("#disclaimer").css("display", "none");
-    initMapView();
     $(".stop-button").css("display", "block");
     $(".map-line").css("display", "block");
     $(".setup-button").css("display", "none");
+
+    initMapView();
     startView();
 }
 
@@ -202,15 +206,26 @@ function formatDate(endTime) {
     return `${hoursF}h ${minutesF}m ${secondsF}s`;
 }
 
+function scoreMultiplier(distance) {
+    // timeMultiplier = Total estimated time to finish divided by total time taken
+    const baseMultiplier = 0.5;
+    var timeMultiplier = 1.1;
+    var bonusScore = totalDistance * baseMultiplier;
+    bonusScore *= timeMultiplier;
+    return totalDistance + bonusScore;
+}
+
 function endExercise() {
     trackingState = false;
+    endTime = new Date();
+
     $("#mapView").css("display", "none");
     $(".stop-button").css("display", "none");
     $(".map-line").css("display", "none");
     $(".setup-button").css("display", "block");
     $(".exercise-heading").html("Exercise Setup");
     $("#disclaimer").css("display", "block");
-    endTime = new Date();
+
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
     totalSteps = Math.round(totalDistance * 1.3123);
@@ -222,6 +237,9 @@ function endExercise() {
         totalMaxCalories = (totalSteps / 100) * 4;
         $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
     }
+
+    userScore = scoreMultiplier(totalDistance);
+    writeUserScore();
     // Create a database entry of exercise and then move on to feedback and adjustments
 }
 
@@ -304,12 +322,54 @@ function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+loggedInUser = null;
+
+function retrieveUserScore() {
+    var user = firebase.auth().currentUser;
+    var score = db.collection("scores").doc(user.uid);
+    score.get().then((doc) => {
+        if (doc.exists) {
+            userScore = parseInt(doc.data()["score"]);
+            console.log("Starting Score:", userScore);
+        } else {
+            // doc.data() will be undefined in this case
+            console.warn("No such document!");
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+}
+
+function writeUserScore(text) {
+    var updateScore = db.collection("scores");
+    console.log("Current score:", userScore);
+    if (loggedInUser == null) {
+        console.warn("User is not logged in!");
+    } else {
+        updateScore.doc(loggedInUser.uid).set({
+            score: userScore
+        }, {
+            merge: true
+        })
+    }
+}
+
 $("#destinationModal").on('shown.bs.modal', function () {
     initMap();
     google.maps.event.trigger(map, "resize");
 });
 
 $(document).ready(function() {
+    //main stuff
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            loggedInUser = user;
+            retrieveUserScore();
+        } else {
+            console.warn("No user detected!");
+        }
+    });
+
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         deviceType = "Mobile";
         $(".setup-button").css("display", "block");
