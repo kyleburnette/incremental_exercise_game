@@ -9,6 +9,7 @@
  * 
  ******************************************************************************/
 
+var deviceType = "Mobile";
 
 var crd = {
     'lat': 0,
@@ -194,8 +195,8 @@ function formatDate(endTime) {
     var minutes = seconds / 60;
     var hours = minutes / 60;
 
-    var secondsF = Math.abs(Math.round(seconds));
-    var minutesF = Math.abs(Math.round(minutes));
+    var secondsF = Math.abs(Math.round(seconds)) % 60;
+    var minutesF = Math.abs(Math.round(minutes)) % 60;
     var hoursF = Math.abs(Math.round(hours));
 
     return `${hoursF}h ${minutesF}m ${secondsF}s`;
@@ -211,12 +212,16 @@ function endExercise() {
     $("#disclaimer").css("display", "block");
     endTime = new Date();
     $("#totalTime").html(formatDate(endTime));
-    $("#distanceTravelled").html(`${totalDistance / 1000}km`);
+    $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
     totalSteps = Math.round(totalDistance * 1.3123);
     $("#estimatedSteps").html(`${totalSteps} steps`);
     totalMinCalories = (totalSteps / 100) * 3;
-    totalMaxCalories = (totalSteps / 100) * 4;
-    $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
+    if (totalMinCalories == 0) {
+        $("#estimatedCalories").html(`${totalMinCalories} calories`);
+    } else {
+        totalMaxCalories = (totalSteps / 100) * 4;
+        $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
+    }
     // Create a database entry of exercise and then move on to feedback and adjustments
 }
 
@@ -248,6 +253,7 @@ function calcDistance(previousCrd, currentCrd) {
 }
 
 function success(pos) {
+    var updateCrd = true;
     var crd = pos.coords;
     var position = {
         'lat': crd.latitude,
@@ -255,15 +261,22 @@ function success(pos) {
     }
 
     if (previousCrd != null) {
-        if (crd.accuracy > 50) {
+        if (crd.accuracy > 25) {
+            console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not take position.");
         } else {
             distance = calcDistance(previousCrd, crd);
             if (trackingState == true) {
-                console.log("Updated position");
-                updateMarker(position);
-                totalDistance += distance;
-                console.log("Total Distance:", totalDistance);
+                if (distance > 10) {
+                    console.log("Updated position");
+                    updateMarker(position);
+                    totalDistance += distance;
+                    console.log("Total Distance:", totalDistance);
+                    updateCrd = true;
+                } else {
+                    console.log("Distance travelled insignificant, ignoring update.");
+                    updateCrd = false;
+                }
             }
             /*
             document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
@@ -272,7 +285,15 @@ function success(pos) {
             */
         }
     }
-    previousCrd = pos.coords;
+    if (crd.accuracy > 25) {
+        console.log("Accuracy:", crd.accuracy);
+        console.log("Inaccurate, did not change previous coordinate.");
+    } else {
+        if (updateCrd == true) {
+            previousCrd = pos.coords;
+            console.log("New coordinate:", previousCrd);
+        }
+    }
 }
 
 function updateMarker(val) {
@@ -283,13 +304,32 @@ function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-navigator.geolocation.getCurrentPosition(success, error, options);
-
-var intervalId = window.setInterval(function () {
-    navigator.geolocation.getCurrentPosition(success, error, options);
-}, 7500);
-
 $("#destinationModal").on('shown.bs.modal', function () {
     initMap();
     google.maps.event.trigger(map, "resize");
+});
+
+$(document).ready(function() {
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        deviceType = "Mobile";
+        $(".setup-button").css("display", "block");
+    } else {
+        deviceType = "Desktop";
+        $("#desktop-warning").html("Sorry! This application does not work on desktop, please switch to a mobile device.");
+        $("#desktop-warning").css("margin-bottom", "20px");
+        $(".setup-button").css("display", "none");
+    }
+    console.log("Device Type:", deviceType);
+    if (deviceType == "Mobile") {
+        navigator.geolocation.getCurrentPosition(success, error, options);
+        var intervalId = window.setInterval(function () {
+            if (deviceType == "Mobile") {
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            } else {
+                console.warn("User is not on a mobile device, not running application.");
+            }
+        }, 7500);
+    } else {
+        console.warn("User is not on a mobile device, not running application.");
+    }
 });
