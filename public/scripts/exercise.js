@@ -134,7 +134,7 @@ function updateMapView() {
     });
 
     // user's current position pin
-    new google.maps.Marker({
+    positionMarker = new google.maps.Marker({
         position: {
             lat: crd.lat,
             lng: crd.lng
@@ -162,9 +162,9 @@ function findRoute(lat, lng) {
 }
 
 function toggleMap() {
+    trackingState = true;
     $("#mapView").css("display", "block");
     initMapView();
-    trackingState = true;
     $(".stop-button").css("display", "block");
     $(".map-line").css("display", "block");
     $(".setup-button").css("display", "none");
@@ -172,6 +172,7 @@ function toggleMap() {
 }
 
 function endExercise() {
+    trackingState = false;
     $("#mapView").css("display", "none");
     $(".stop-button").css("display", "none");
     $(".map-line").css("display", "none");
@@ -204,9 +205,17 @@ function calcDistance(previousCrd, currentCrd) {
 
 function success(pos) {
     var crd = pos.coords;
+    var position = {
+        'lat': crd.latitude,
+        'lng': crd.longitude
+    };
     if (previousCrd != null) {
         distance = calcDistance(previousCrd, crd);
-        console.log(distance);
+        if (trackingState == true) {
+            positionMarker.setPosition(position);
+            totalDistance += distance;
+            console.log(totalDistance);
+        }
         /*
         document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
             `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
