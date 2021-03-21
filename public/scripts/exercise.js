@@ -5,20 +5,19 @@ var crd = {
 
 var destinationLat = 0;
 var destinationLng = 0;
-var dateObj;
+var dateObj = new Date();
+var endTime = new Date();
 
 var routeOption = "off";
 var trackingState = false;
 
+var positionMarker;
+
 function startView() {
     var heading = "Map View - ";
-    var date = getDate();
+    var date = new Date();
+    dateObj = date;
     $(".exercise-heading").html(heading.concat(date));
-}
-
-function getDate() {
-    dateObj = new Date().toLocaleString('en-CA', {timeZone: "America/Vancouver"});
-    return dateObj;
 }
 
 function initMap() {
@@ -121,7 +120,7 @@ function updateMapView() {
         streetViewControl: false,
         rotateControl: false,
         fullscreenControl: true,
-        zoom: 15,
+        zoom: 12,
     });
 
     destinationMarker = new google.maps.Marker({
@@ -171,20 +170,46 @@ function toggleMap() {
     startView();
 }
 
+function formatDate(endTime) {
+    var diff = (dateObj.getTime() - endTime.getTime());
+    var seconds = diff / 1000;
+    var minutes = seconds / 60;
+    var hours = minutes / 60;
+
+    var secondsF = Math.abs(Math.round(seconds));
+    var minutesF = Math.abs(Math.round(minutes));
+    var hoursF = Math.abs(Math.round(hours));
+
+    return `${hoursF}h ${minutesF}m ${secondsF}s`;
+}
+
 function endExercise() {
     trackingState = false;
     $("#mapView").css("display", "none");
     $(".stop-button").css("display", "none");
     $(".map-line").css("display", "none");
-    $(".exercise-heading").html("Exercise Setup");
     $(".setup-button").css("display", "block");
+    $(".exercise-heading").html("Exercise Setup");
+    endTime = new Date();
+    $("#totalTime").html(formatDate(endTime));
+    $("#distanceTravelled").html(`${totalDistance / 1000}km`);
+    totalSteps = Math.round(totalDistance * 1.3123);
+    $("#estimatedSteps").html(`${totalSteps} steps`);
+    totalMinCalories = (totalSteps / 100) * 3;
+    totalMaxCalories = (totalSteps / 100) * 4;
+    $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
+    // Create a database entry of exercise and then move on to feedback and adjustments
 }
 
+var totalTime = 0;
 var totalDistance = 0;
+var totalSteps = 0;
+var totalMinCalories = 0;
+var totalMaxCalories = 0;
 var previousCrd = null;
 var options = {
     enableHighAccuracy: true,
-    timeout: 5000,
+    timeout: 7500,
     maximumAge: 0
 };
 
@@ -208,21 +233,31 @@ function success(pos) {
     var position = {
         'lat': crd.latitude,
         'lng': crd.longitude
-    };
+    }
+
     if (previousCrd != null) {
-        distance = calcDistance(previousCrd, crd);
-        if (trackingState == true) {
-            positionMarker.setPosition(position);
-            totalDistance += distance;
-            console.log(totalDistance);
+        if (crd.accuracy > 50) {
+            console.log("Inaccurate, did not take position.");
+        } else {
+            distance = calcDistance(previousCrd, crd);
+            if (trackingState == true) {
+                console.log("Updated position");
+                updateMarker(position);
+                totalDistance += distance;
+                console.log("Total Distance:", totalDistance);
+            }
+            /*
+            document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
+                `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
+                `<br/>Distance from last measurement: ${distance} meters`;
+            */
         }
-        /*
-        document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-            `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-            `<br/>Distance from last measurement: ${distance} meters`;
-        */
     }
     previousCrd = pos.coords;
+}
+
+function updateMarker(val) {
+    positionMarker.setPosition(val);
 }
 
 function error(err) {
@@ -233,7 +268,7 @@ navigator.geolocation.getCurrentPosition(success, error, options);
 
 var intervalId = window.setInterval(function () {
     navigator.geolocation.getCurrentPosition(success, error, options);
-}, 5000);
+}, 7500);
 
 $("#destinationModal").on('shown.bs.modal', function () {
     initMap();
