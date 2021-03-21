@@ -75,7 +75,9 @@
         </div>
         <!-- Map View -->
         <div class="container-fluid mt-3">
-            <div id="map2"></div>
+            <div id="map2">
+                <!-- Map View will go here -->
+            </div>
             <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()"
                 data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
         </div>
@@ -254,238 +256,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="initMap()">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
-                        data-bs-target="#questListModal">Start</button>
+                        onclick="toggleMap()">Start</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quest List Modal -->
-    <div class="modal fade" id="questListModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="questListLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="questListLabel">Quest List</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="d-grid gap-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Lorem ipsum
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Lorem ipsum
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Downtown
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Lorem ipsum
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Lorem ipsum
-                                </label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Display local only</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Add pins</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary">Reset</button>
-                        <!-- Change Skip innerHTML to Confirm when options are selected. -->
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            onclick="toggleMap()">Skip</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!----------------------------------------------->
+    <!-- JS: Boostrap, Firebase, API related    -->
+    <!----------------------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
+    </script>
 
-        <!----------------------------------------------->
-        <!-- JS: Boostrap, Firebase, API related    -->
-        <!----------------------------------------------->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-        </script>
-
-        <!--------------------------------------------------------------------->
-        <!-- JS files: Your own JavaScript functions included here    -->
-        <!--------------------------------------------------------------------->
-        <script>
-            var destinationLat = 0;
-            var destinationLng = 0;
-
-            function initMap() {
-                var pos = {};
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        var pos = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        updateMap([pos.lat, pos.lng]);
-                    });
-                } else {
-                    console.log("Unsupported browser.");
-                }
-            }
-
-            function updateMap(val) {
-                const destination_marker = "images/destination_marker.png";
-                const location_marker = "images/position_marker.png";
-                let destinationSet = false;
-                var crd = {
-                    'lat': val[0],
-                    'lng': val[1]
-                };
-                const map = new google.maps.Map(document.getElementById("map"), {
-                    center: {
-                        lat: parseFloat(crd.lat),
-                        lng: parseFloat(crd.lng)
-                    },
-                    zoomControl: true,
-                    mapTypeControl: false,
-                    scaleControl: true,
-                    streetViewControl: false,
-                    rotateControl: false,
-                    fullscreenControl: true,
-                    clickableIcons: false,
-                    zoom: 12,
-                });
-
-                // Create the initial InfoWindow.
-                let infoWindow = new google.maps.InfoWindow({
-                    content: "Click on the map to place your destination pin",
-                    position: {
-                        lat: parseFloat(crd.lat),
-                        lng: parseFloat(crd.lng)
-                    },
-                });
-                infoWindow.open(map);
-
-                // Configure the click listener.
-                map.addListener("click", (mapsMouseEvent) => {
-                    // Close the current InfoWindow.
-                    infoWindow.close();
-                    // Move destination marker
-                    if (destinationSet) {
-                        destinationMarker.setPosition(mapsMouseEvent.latLng);
-                        destinationLat = mapsMouseEvent.latLng.lat();
-                        destinationLng = mapsMouseEvent.latLng.lng();
-                        console.log(destinationLat, destinationLng);
-                    } else {
-                        destinationMarker = new google.maps.Marker({
-                            position: mapsMouseEvent.latLng,
-                            map,
-                            icon: destination_marker,
-                        });
-                        destinationLat = mapsMouseEvent.latLng.lat();
-                        destinationLng = mapsMouseEvent.latLng.lng();
-                        console.log(destinationLat, destinationLng);
-                        destinationSet = true;
-                    }
-                });
-
-                // user's current position pin
-                new google.maps.Marker({
-                    position: {
-                        lat: parseFloat(crd.lat),
-                        lng: parseFloat(crd.lng)
-                    },
-                    map,
-                    icon: location_marker,
-                });
-            }
-
-            function toggleMap() {
-                $("#map2").css("display", "block");
-                $(".stop-button").css("display", "block");
-                $(".exercise-heading").html("Map View - DD/MM/YY");
-                $(".setup-button").css("display", "none");
-            }
-
-            function endExercise() {
-                $("#map2").css("display", "none");
-                $(".stop-button").css("display", "none");
-                $(".exercise-heading").html("Exercise Setup");
-                $(".setup-button").css("display", "block");
-            }
-
-            var previousCrd = null;
-            var options = {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
-            };
-
-            function calcDistance(previousCrd, currentCrd) {
-                const R = 6371e3; // metres
-                const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
-                const φ2 = currentCrd.latitude * Math.PI / 180;
-                const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
-                const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
-
-                const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                    Math.cos(φ1) * Math.cos(φ2) *
-                    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                return d = R * c; // in metres
-            }
-
-            function success(pos) {
-                var crd = pos.coords;
-                if (previousCrd != null) {
-                    distance = calcDistance(previousCrd, crd);
-                    console.log(distance);
-                    /*
-                    document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-                        `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                        `<br/>Distance from last measurement: ${distance} meters`;
-                    */
-                }
-                previousCrd = pos.coords;
-            }
-
-            function error(err) {
-                console.warn(`ERROR(${err.code}): ${err.message}`);
-            }
-
-            navigator.geolocation.getCurrentPosition(success, error, options);
-
-            var intervalId = window.setInterval(function () {
-                navigator.geolocation.getCurrentPosition(success, error, options);
-            }, 5000);
-
-            $("#destinationModal").on('shown.bs.modal', function () {
-                initMap();
-                google.maps.event.trigger(map, "resize");
-            });
-        </script>
-        <script async type="text/javascript" defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2xvJALxbNJvyjbgPz9knJMZ9DLxrrZ0U&callback=initMap">
-        </script>
+    <!--------------------------------------------------------------------->
+    <!-- JS files: Your own JavaScript functions included here    -->
+    <!--------------------------------------------------------------------->
+    <script src="scripts/exercise.js">
+    </script>
+    <script async type="text/javascript" defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2xvJALxbNJvyjbgPz9knJMZ9DLxrrZ0U&callback=initMap">
+    </script>
 </body>
 
 </html>
