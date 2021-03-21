@@ -32,6 +32,10 @@
     color: gray;
 }
 
+.setup-button {
+    display: none;
+}
+
 .navbar {
     box-shadow: 0 8px 6px -6px #999;
 }
