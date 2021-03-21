@@ -1,3 +1,15 @@
+/******************************************************************************
+ * 
+ * To implement:
+ * - Find optimal route to destination with API
+ * - Create an algorithm to calculate point multipliers for time remaining,
+ *      - < 1.0x multipliers if time remaining is negative
+ * - Create a timer for the time remaining (for points)
+ * - Save exercise statistics and pathing to database
+ * 
+ ******************************************************************************/
+
+
 var crd = {
     'lat': 0,
     'lng': 0
@@ -158,11 +170,17 @@ function setRoute() {
 function findRoute(lat, lng) {
     console.log("Location:", crd)
     console.log("Destination:", lat, lng);
+    // Use Google API to find the shortest route
+}
+
+function drawPath() {
+    // Create poly lines to create route and append lat and lng to an array for each point to save.
 }
 
 function toggleMap() {
     trackingState = true;
     $("#mapView").css("display", "block");
+    $("#disclaimer").css("display", "none");
     initMapView();
     $(".stop-button").css("display", "block");
     $(".map-line").css("display", "block");
@@ -190,6 +208,7 @@ function endExercise() {
     $(".map-line").css("display", "none");
     $(".setup-button").css("display", "block");
     $(".exercise-heading").html("Exercise Setup");
+    $("#disclaimer").css("display", "block");
     endTime = new Date();
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${totalDistance / 1000}km`);
