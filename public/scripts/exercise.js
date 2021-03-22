@@ -35,6 +35,8 @@ var routeError = false;
 
 var positionMarker;
 var destinationMarker;
+const destination_marker = "images/destination_marker.png";
+const location_marker = "images/position_marker.png";
 var destinationSet = false;
 
 var timer = 0;
@@ -68,8 +70,6 @@ function initMapView() {
 }
 
 function updateMap(val) {
-    const destination_marker = "images/destination_marker.png";
-    const location_marker = "images/position_marker.png";
     crd = {
         'lat': val[0],
         'lng': val[1]
@@ -105,13 +105,15 @@ function updateMap(val) {
         // Move destination marker
         if (destinationSet) {
             destinationMarker.setPosition(mapsMouseEvent.latLng);
+            destinationMarker.setMap(map);
+            destinationMarker.setIcon(destination_marker);
             destinationLat = mapsMouseEvent.latLng.lat();
             destinationLng = mapsMouseEvent.latLng.lng();
             console.log("Destination:", destinationLat, destinationLng);
         } else {
             destinationMarker = new google.maps.Marker({
                 position: mapsMouseEvent.latLng,
-                map,
+                map: map,
                 icon: destination_marker,
             });
             destinationLat = mapsMouseEvent.latLng.lat();
@@ -127,16 +129,13 @@ function updateMap(val) {
             lat: parseFloat(crd.lat),
             lng: parseFloat(crd.lng)
         },
-        map,
+        map: map,
         icon: location_marker,
     });
 }
 
 function updateMapView() {
-    const destination_marker = "images/destination_marker.png";
-    const location_marker = "images/position_marker.png";
-
-    const map = new google.maps.Map(document.getElementById("mapView"), {
+    const mapView = new google.maps.Map(document.getElementById("mapView"), {
         center: {
             lat: crd.lat,
             lng: crd.lng
@@ -155,9 +154,9 @@ function updateMapView() {
             lat: destinationLat,
             lng: destinationLng
         },
-        map,
         icon: destination_marker,
     });
+    destinationMarker.setMap(mapView);
 
     // user's current position pin
     positionMarker = new google.maps.Marker({
@@ -165,9 +164,9 @@ function updateMapView() {
             lat: crd.lat,
             lng: crd.lng
         },
-        map,
         icon: location_marker,
     });
+    positionMarker.setMap(mapView);
 
     // create the optimal route to destination
     if (routeOption == "off") {
@@ -240,7 +239,6 @@ function toggleMap() {
         var origin = new google.maps.LatLng(crd.lat, crd.lng);
         var destination = new google.maps.LatLng(destinationLat, destinationLng);
         var service = new google.maps.DistanceMatrixService();
-        var date = new Date();
         service.getDistanceMatrix(
             {
                 origins: [origin],
