@@ -15,6 +15,14 @@ var crd = {
     'lat': 0,
     'lng': 0
 };
+var startPosition = {
+    'latitude': 0,
+    'longitude': 0
+}
+var destinationPosition = {
+    'latitude': 0,
+    'longitude': 0
+}
 
 var destinationLat = 0;
 var destinationLng = 0;
@@ -228,6 +236,12 @@ function formatDate(endTime) {
     return `${hoursF}h ${minutesF}m ${secondsF}s`;
 }
 
+function checkTime(endTime) {
+    var diff = (dateObj.getTime() - endTime.getTime());
+    var minutes = diff / 1000 / 60;
+    return minutes;
+}
+
 function scoreMultiplier(distance) {
     // timeMultiplier = Total estimated time to finish divided by total time taken
     // timeMultiplier will be < 1 if total time taken is negative
@@ -250,8 +264,10 @@ function endExercise() {
     $("#disclaimer").css("display", "block");
 
     if (routeError == true) {
-        $("#route-error").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
-    }
+        $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
+    } else if (totalDistance == 0) {
+        $("#error-message").html("");
+    } else if (totalTime)
 
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
@@ -305,10 +321,14 @@ function calcDistance(previousCrd, currentCrd) {
 function success(pos) {
     var updateCrd = true;
     var crd = pos.coords;
-    var position = {
-        'lat': crd.latitude,
-        'lng': crd.longitude
-    }
+    startPosition = {
+        'latitude': crd.latitude,
+        'longitude': crd.longitude
+    };
+    destinationPosition = {
+        'latitude': destinationLat,
+        'longitude': destinationLng
+    };
 
     if (previousCrd != null) {
         if (crd.accuracy > 20) {
@@ -328,11 +348,6 @@ function success(pos) {
                     updateCrd = false;
                 }
             }
-            /*
-            document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
-                `<br/>Longitude: ${crd.longitude}` + `<br/>Accuracy: ${crd.accuracy} meters.` +
-                `<br/>Distance from last measurement: ${distance} meters`;
-            */
         }
     }
     if (trackingState == true) {
@@ -343,6 +358,12 @@ function success(pos) {
             if (updateCrd == true) {
                 previousCrd = pos.coords;
             }
+        }
+        console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
+        if (calcDistance(startPosition, destinationPosition) < 30) {
+            console.log("Arrived at destination");
+            $("#completedModal").modal("toggle");
+            endExercise();
         }
     }
 }
