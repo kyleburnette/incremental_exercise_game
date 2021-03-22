@@ -16,6 +16,9 @@
     <!-- Optional styles and scripts of your own -->
     <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
 
 </head>
@@ -110,6 +113,19 @@
 
         // The start method will wait until the DOM is loaded.
         ui.start('#firebaseui-auth-container', uiConfig);
+
+        $(document).ready(function () {
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (user) {
+                    loggedInUser = user;
+                    console.log("Logged in as", loggedInUser.displayName,
+                        "and will redirecting to home.");
+                    window.location.href = "main.html";
+                } else {
+                    console.log("No user is logged in.");
+                }
+            });
+        })
     </script>
 </body>
 

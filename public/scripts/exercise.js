@@ -174,13 +174,9 @@ function updateMapView() {
     } else {
         var directionsService = new google.maps.DirectionsService();
         var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
-        directionsDisplay.setMap(map);
+        directionsDisplay.setMap(mapView);
         findRoute(directionsService, directionsDisplay);
     };
-}
-
-function countTimer() {
-
 }
 
 function setRoute() {
@@ -444,6 +440,7 @@ loggedInUser = null;
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
     var score = db.collection("scores").doc(user.uid);
+    console.log("Logged ID:", user.uid);
     score.get().then((doc) => {
         if (doc.exists) {
             userScore = parseInt(doc.data()["score"]);
@@ -459,6 +456,7 @@ function retrieveUserScore() {
 
 function writeUserScore(text) {
     var updateScore = db.collection("scores");
+    userScore = Math.round(userScore);
     console.log("Current score:", userScore);
     if (loggedInUser == null) {
         console.warn("User is not logged in!");
@@ -471,10 +469,6 @@ function writeUserScore(text) {
     }
 }
 
-function countTimer(time) {
-    timer = time;
-}
-
 $("#destinationModal").on('shown.bs.modal', function () {
     initMap();
     google.maps.event.trigger(map, "resize");
@@ -485,6 +479,7 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
+            console.log("Logged in as", loggedInUser.displayName);
             retrieveUserScore();
         } else {
             console.warn("No user detected!");

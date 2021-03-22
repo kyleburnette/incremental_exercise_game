@@ -132,7 +132,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
@@ -147,8 +147,7 @@
         function retrieveUserScore() {
             var user = firebase.auth().currentUser;
             var score = db.collection("scores").doc(user.uid);
-
-            console.log(user.uid);
+            console.log("Logged ID:", user.uid);
             score.get().then((doc) => {
                 if (doc.exists) {
                     userScore = parseInt(doc.data()["score"]);
@@ -163,6 +162,7 @@
 
         function writeUserScore(text) {
             var updateScore = db.collection("scores");
+            userScore = Math.round(userScore);
             console.log("Current score:", userScore);
             if (loggedInUser == null) {
                 console.warn("User is not logged in!");
@@ -210,15 +210,13 @@
             var crd = pos.coords;
             if (previousCrd != null) {
                 distance = calcDistance(previousCrd, crd);
-                console.log(distance);
+                console.log("Distance:", distance);
                 if (crd.accuracy > 25) {
                     console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
                 } else {
                     distance = calcDistance(previousCrd, crd);
                     if (distance > 10) {
-                        console.log("Updated position");
-                        updateMarker(position);
                         userScore += distance;
                         console.log("Total Distance:", totalDistance);
                         updateCrd = true;
@@ -227,15 +225,15 @@
                         updateCrd = false;
                     }
 
-            }
-            document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}`
-                        + `<br/>Longitude: ${crd.longitude}`
-                        + `<br/>Accuracy: ${crd.accuracy} meters.`
-                        + `<br/>Distance from last measurement: ${distance} meters`
-                        + `<br/>Speed ${travelSpeed()}`
-                        + `<br/>Walking? ${isWalking()}`
-                        + `<br/>User Score: ${userScore}`;
                 }
+                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
+                    `<br/>Longitude: ${crd.longitude}` +
+                    `<br/>Accuracy: ${crd.accuracy} meters.` +
+                    `<br/>Distance from last measurement: ${distance} meters` +
+                    `<br/>Speed ${travelSpeed()}` +
+                    `<br/>Walking? ${isWalking()}` +
+                    `<br/>User Score: ${userScore}`;
+            }
             previousCrd = pos.coords;
         }
 
@@ -250,6 +248,7 @@
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 loggedInUser = user;
+                console.log("Logged in as", loggedInUser.displayName);
                 retrieveUserScore();
             } else {
                 console.warn("No user detected!");
