@@ -1,10 +1,10 @@
 /******************************************************************************
  * 
  * To implement:
- * - Find optimal route to destination with API
- * - Create an algorithm to calculate point multipliers for time remaining,
- *      - < 1.0x multipliers if time remaining is negative
- * - Create a timer for the time remaining (for points)
+ * DONE - Find optimal route to destination with API
+ * DONE - Create an algorithm to calculate point multipliers for time remaining,
+ *          - < 1.0x multipliers if time remaining is negative
+ * DONE Create a timer for the time remaining (for points)
  * - Save exercise statistics and pathing to database
  * 
  ******************************************************************************/
@@ -34,6 +34,7 @@ var trackingState = false;
 var routeError = false;
 
 var positionMarker;
+var destinationSet = false;
 
 var currentScore = 0;
 
@@ -67,7 +68,6 @@ function initMapView() {
 function updateMap(val) {
     const destination_marker = "images/destination_marker.png";
     const location_marker = "images/position_marker.png";
-    let destinationSet = false;
     crd = {
         'lat': val[0],
         'lng': val[1]
@@ -239,7 +239,7 @@ function formatDate(endTime) {
 function checkTime(endTime) {
     var diff = (dateObj.getTime() - endTime.getTime());
     var minutes = diff / 1000 / 60;
-    return minutes;
+    return Math.abs(Math.round(minutes));
 }
 
 function scoreMultiplier(distance) {
@@ -265,9 +265,11 @@ function endExercise() {
 
     if (routeError == true) {
         $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
-    } else if (totalDistance == 0) {
-        $("#error-message").html("");
-    } else if (totalTime)
+    } else if (totalDistance <= 0) {
+        $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
+    } else if (checkTime(endTime) < 5) {
+        $("#error-message").html("<h4>Session time is less than 5 minutes, this session will not be recorded.</h4><hr />");
+    }
 
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
@@ -275,13 +277,13 @@ function endExercise() {
     $("#estimatedSteps").html(`${totalSteps} steps`);
     totalMinCalories = (totalSteps / 100) * 3;
     if (totalMinCalories == 0) {
-        $("#estimatedCalories").html(`${totalMinCalories} calories`);
+        $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)} calories`);
     } else {
         totalMaxCalories = (totalSteps / 100) * 4;
-        $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
+        $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
 
-    if (routeError == false) {
+    if (routeError == false && totalDistance > 0 && checkTime(endTime) >= 5) {
         userScore = scoreMultiplier(totalDistance);
         writeUserScore();
 
@@ -359,11 +361,13 @@ function success(pos) {
                 previousCrd = pos.coords;
             }
         }
-        console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
-        if (calcDistance(startPosition, destinationPosition) < 30) {
-            console.log("Arrived at destination");
-            $("#completedModal").modal("toggle");
-            endExercise();
+        if (destinationSet) {
+            console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
+            if (calcDistance(startPosition, destinationPosition) < 30) {
+                console.log("Arrived at destination");
+                $("#completedModal").modal("toggle");
+                endExercise();
+            } 
         }
     }
 }
