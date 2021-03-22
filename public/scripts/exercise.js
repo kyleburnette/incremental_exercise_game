@@ -233,8 +233,8 @@ function toggleMap() {
 
     // calculate time to destination
     if (destinationSet == true) {
-        $("#timer").css("display", "block");
-        $("#timeTotal").css("display", "block");
+        $(".timer").css("display", "block");
+        $(".timeTotal").css("display", "block");
 
         var origin = new google.maps.LatLng(crd.lat, crd.lng);
         var destination = new google.maps.LatLng(destinationLat, destinationLng);
@@ -315,8 +315,8 @@ function endExercise() {
 
     $("#mapView").css("display", "none");
     $("#disclaimer").css("display", "block");
-    $("#timer").css("display", "none");
-    $("#timeTotal").css("display", "none");
+    $(".timer").css("display", "none");
+    $(".timeTotal").css("display", "none");
     $(".stop-button").css("display", "none");
     $(".map-line").css("display", "none");
     $(".setup-button").css("display", "block");

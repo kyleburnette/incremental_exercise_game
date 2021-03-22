@@ -60,11 +60,11 @@
     display: none;
 }
 
-#timeTotal {
+.timeTotal {
     display: none;
 }
 
-#timer {
+.timer {
     display: none;
 }
 
