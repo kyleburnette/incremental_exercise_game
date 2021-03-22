@@ -392,7 +392,7 @@ $("#destinationModal").on('shown.bs.modal', function () {
     google.maps.event.trigger(map, "resize");
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     //main stuff
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -403,7 +403,7 @@ $(document).ready(function() {
         }
     });
 
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         deviceType = "Mobile";
         $(".setup-button").css("display", "block");
     } else {
