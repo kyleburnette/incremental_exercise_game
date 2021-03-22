@@ -23,6 +23,7 @@ var endTime = new Date();
 
 var routeOption = "off";
 var trackingState = false;
+var routeError = false;
 
 var positionMarker;
 
@@ -124,6 +125,7 @@ function updateMap(val) {
 function updateMapView() {
     const destination_marker = "images/destination_marker.png";
     const location_marker = "images/position_marker.png";
+
     const map = new google.maps.Map(document.getElementById("mapView"), {
         center: {
             lat: crd.lat,
@@ -161,7 +163,10 @@ function updateMapView() {
     if (routeOption == "off") {
         console.log("Route not specified, ignoring request.");
     } else {
-        findRoute(destinationLat, destinationLng);
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+        directionsDisplay.setMap(map);
+        findRoute(directionsService, directionsDisplay);
     };
 }
 
@@ -170,10 +175,27 @@ function setRoute() {
     console.log("Selected Route Option:", routeOption);
 }
 
-function findRoute(lat, lng) {
-    console.log("Location:", crd)
-    console.log("Destination:", lat, lng);
-    // Use Google API to find the shortest route
+function findRoute(directionsService, directionsDisplay) {
+    var destinationCrd = {
+        'lat': destinationLat,
+        'lng': destinationLng
+    };
+    console.log("Location:", crd);
+    console.log("Destination:", destinationCrd.lat, destinationCrd.lng);
+    directionsService.route({
+        origin: crd,
+        destination: destinationCrd,
+        travelMode: 'WALKING'
+    }, function(response, status) {
+        if (status == 'OK') {
+            directionsDisplay.setDirections(response);
+        } else {
+            console.warn('Directions request failed due to ' + status);
+            routeError = true;
+            $("#completedModal").modal("toggle");
+            endExercise();
+        }
+    });
 }
 
 function drawPath() {
@@ -208,6 +230,7 @@ function formatDate(endTime) {
 
 function scoreMultiplier(distance) {
     // timeMultiplier = Total estimated time to finish divided by total time taken
+    // timeMultiplier will be < 1 if total time taken is negative
     const baseMultiplier = 0.5;
     var timeMultiplier = 1.1;
     var bonusScore = totalDistance * baseMultiplier;
@@ -226,6 +249,10 @@ function endExercise() {
     $(".exercise-heading").html("Exercise Setup");
     $("#disclaimer").css("display", "block");
 
+    if (routeError == true) {
+        $("#route-error").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
+    }
+
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
     totalSteps = Math.round(totalDistance * 1.3123);
@@ -238,9 +265,14 @@ function endExercise() {
         $("#estimatedCalories").html(`${totalMinCalories}-${totalMaxCalories} calories`);
     }
 
-    userScore = scoreMultiplier(totalDistance);
-    writeUserScore();
-    // Create a database entry of exercise and then move on to feedback and adjustments
+    if (routeError == false) {
+        userScore = scoreMultiplier(totalDistance);
+        writeUserScore();
+
+        // Create a database entry of exercise and then move on to feedback and adjustments
+    } else {
+        console.warn("Routing error was detected, score will not be updated.");
+    }
 }
 
 var totalTime = 0;
@@ -279,13 +311,13 @@ function success(pos) {
     }
 
     if (previousCrd != null) {
-        if (crd.accuracy > 25) {
+        if (crd.accuracy > 20) {
             console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not take position.");
         } else {
             distance = calcDistance(previousCrd, crd);
             if (trackingState == true) {
-                if (distance > 10) {
+                if (distance > 20) {
                     console.log("Updated position");
                     updateMarker(position);
                     totalDistance += distance;
@@ -303,13 +335,14 @@ function success(pos) {
             */
         }
     }
-    if (crd.accuracy > 25) {
-        console.log("Accuracy:", crd.accuracy);
-        console.log("Inaccurate, did not change previous coordinate.");
-    } else {
-        if (updateCrd == true) {
-            previousCrd = pos.coords;
-            console.log("New coordinate:", previousCrd);
+    if (trackingState == true) {
+        if (crd.accuracy > 20) {
+            console.log("Accuracy:", crd.accuracy);
+            console.log("Inaccurate, did not change previous coordinate.");
+        } else {
+            if (updateCrd == true) {
+                previousCrd = pos.coords;
+            }
         }
     }
 }
