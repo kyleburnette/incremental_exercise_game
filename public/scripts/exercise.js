@@ -2,9 +2,9 @@
  * 
  * To implement:
  * DONE - Find optimal route to destination with API
- * DONE - Create an algorithm to calculate point multipliers for time remaining,
- *          - < 1.0x multipliers if time remaining is negative
- * DONE Create a timer for the time remaining (for points)
+ * Create an algorithm to calculate point multipliers
+ *          - create time multipler (< 1.0x multipliers if time remaining is negative)
+ * DONE - Create a timer for the time remaining (for points)
  * - Save exercise statistics and pathing to database
  * 
  ******************************************************************************/
@@ -34,8 +34,10 @@ var trackingState = false;
 var routeError = false;
 
 var positionMarker;
+var destinationMarker;
 var destinationSet = false;
 
+var timer = 0;
 var currentScore = 0;
 
 function startView() {
@@ -178,6 +180,10 @@ function updateMapView() {
     };
 }
 
+function countTimer() {
+
+}
+
 function setRoute() {
     routeOption = $("input[name=routingOption]:checked").val();
     console.log("Selected Route Option:", routeOption);
@@ -219,8 +225,61 @@ function toggleMap() {
     $(".map-line").css("display", "block");
     $(".setup-button").css("display", "none");
 
+    var intervalTimer = window.setInterval(function () {
+        if (destinationSet == true) {
+            timer = timer + 1;
+            updateTime(timer);
+        }
+    }, 1000);
+
+    // calculate time to destination
+    if (destinationSet == true) {
+        $("#timer").css("display", "block");
+        $("#timeTotal").css("display", "block");
+
+        var origin = new google.maps.LatLng(crd.lat, crd.lng);
+        var destination = new google.maps.LatLng(destinationLat, destinationLng);
+        var service = new google.maps.DistanceMatrixService();
+        var date = new Date();
+        service.getDistanceMatrix(
+            {
+                origins: [origin],
+                destinations: [destination],
+                travelMode: 'WALKING',
+                unitSystem: google.maps.UnitSystem.METRIC
+            }, response_data);
+        function response_data(responseDis, status) {
+            if (status !== google.maps.DistanceMatrixStatus.OK || status != "OK") {
+                console.warn("Error:", status);
+            } else {
+                $("#timeGiven").html(responseDis.rows[0].elements[0].duration.text);
+            }
+        }
+    }
     initMapView();
     startView();
+}
+
+function updateTime(time) {
+    var hours = 0;
+    var minutes = 0;
+    var seconds = 0;
+    if (time >= 3600) {
+        hours = Math.floor(time / 3600);
+        time = time % 3600;
+    }
+    if (time >= 60) {
+        minutes = Math.floor(time / 60);
+        time = time % 60;
+    }
+    seconds = time % 3600;
+    if (hours > 0) {
+        $("#timeTaken").html(`${hours}h ${minutes}m ${seconds}s`);
+    } else if (minutes > 0) {
+        $("#timeTaken").html(`${minutes}m ${seconds}s`);
+    } else {
+        $("#timeTaken").html(`${seconds}s`);
+    }
 }
 
 function formatDate(endTime) {
@@ -257,11 +316,13 @@ function endExercise() {
     endTime = new Date();
 
     $("#mapView").css("display", "none");
+    $("#disclaimer").css("display", "block");
+    $("#timer").css("display", "none");
+    $("#timeTotal").css("display", "none");
     $(".stop-button").css("display", "none");
     $(".map-line").css("display", "none");
     $(".setup-button").css("display", "block");
     $(".exercise-heading").html("Exercise Setup");
-    $("#disclaimer").css("display", "block");
 
     if (routeError == true) {
         $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
@@ -289,7 +350,7 @@ function endExercise() {
 
         // Create a database entry of exercise and then move on to feedback and adjustments
     } else {
-        console.warn("Routing error was detected, score will not be updated.");
+        console.warn("Error was detected, database will not be updated.");
     }
 }
 
@@ -410,6 +471,10 @@ function writeUserScore(text) {
             merge: true
         })
     }
+}
+
+function countTimer(time) {
+    timer = time;
 }
 
 $("#destinationModal").on('shown.bs.modal', function () {

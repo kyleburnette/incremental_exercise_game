@@ -48,11 +48,23 @@
     margin-bottom: 100px;
 }
 
+.filler-2 {
+    margin-bottom: 100px;
+}
+
 .stop-button {
     display: none;
 }
 
 .map-line {
+    display: none;
+}
+
+#timeTotal {
+    display: none;
+}
+
+#timer {
     display: none;
 }
 

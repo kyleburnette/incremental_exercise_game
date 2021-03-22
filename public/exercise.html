@@ -100,18 +100,29 @@
                 </button>
             </div>
         </div>
+
         <!-- Map View -->
         <div class="container-fluid mt-3">
+            <div class="d-grid timer">
+                <div class="btn btn-primary mt-2" id="timeTotal">
+                    Time to Destination: <span id="timeGiven"></span>
+                </div>
+            </div>
             <div id="mapView">
                 <!-- Map View will go here -->
             </div>
             <hr class="map-line" />
-            <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()"
-                data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-danger stop-button mt-3" onclick="endExercise()"
+                    data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#completedModal">Stop</button>
+                <div class="btn btn-primary mt-3" id="timer">
+                    Current Time: <span id="timeTaken"></span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="filler"></div>
+    <div class="filler-2"></div>
 
     <!-- Footer Navigation Bar -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
