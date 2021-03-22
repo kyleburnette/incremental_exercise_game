@@ -26,8 +26,8 @@ function uploadUserProfilePic() {
         // listen for file selection
         fileInput.addEventListener('change', function (e) {
             var file = e.target.files[0];
-            var blob = URL.createObjectURL(file);
-            image.src = blob;            // display this image
+            var fileImg = URL.createObjectURL(file);
+            image.src = fileImg;            // display this image
 
             //store using this name
             var storageRef = storage.ref("images/" + user.uid + ".jpg"); 
