@@ -67,6 +67,10 @@
         <div class="card mt-2 profile-card" style="width: 18rem;">
             <img src="https://dummyimage.com/500x500/000/fff&text=Profile+Image" class="card-img-top"
                 alt="Profile Image of User">
+                <form action="/action_page.php">
+                    <input type="file" id="myFile" name="filename">
+                    <input type="submit">
+                  </form>
             <div class="card-body">
                 <h5 class="card-title">Alex Wong</h5>
                 <p class="card-text"></p>
@@ -76,10 +80,6 @@
                 <li class="list-group-item">Settings</li>
                 <li class="list-group-item">Submit a Report</li>
             </ul>
-            <div class="card-body">
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
         </div>
     </div>
 
@@ -101,10 +101,12 @@
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
     </script>
 
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
-
+    <script src="scripts/upload_profilePic.js"></script>
 </body>
-
+    
 </html>
