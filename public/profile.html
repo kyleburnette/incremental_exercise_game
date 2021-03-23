@@ -69,10 +69,10 @@
         <div class="card mt-2 profile-card" style="width: 18rem;">
             <img src="https://dummyimage.com/500x500/000/fff&text=Profile+Image" class="card-img-top"
                 alt="Profile Image of User">
-                <form action="submit">
-                    <input type="file" id="mypic-input" name="filename">
-                    <input type="submit">
-                  </form>
+            <form action="submit">
+                <input type="file" id="mypic-input" name="filename">
+                <input type="submit">
+            </form>
             <div class="card-body">
                 <h5 class="card-title">Alex Wong</h5>
                 <p class="card-text"></p>
@@ -102,6 +102,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
     </script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
     <script src="scripts/firebase_api.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
 
@@ -110,19 +114,19 @@
     <!--------------------------------------------------------------------->
     <script src="scripts/upload_profilePic.js"></script>
     <script>
-    function readQuote() {
-        db.collection("messages").doc("monday")
-            .onSnapshot(function (snap) {
-                console.log(snap.data()); //.data() returns data object
-                document.getElementById("quote-goes-here").innerHTML = snap.data().message;
-                //using vanilla javascript
-                //$('#quote-goes-here').text(c.data().quote);                             //using jquery object dot notation
-                //$("#quote-goes-here").text(c.data()["quote"]);                          //using json object indexing
-                // delete after getDate() is implemented;
-            })
-    }
-    readQuote();
+        function readQuote() {
+            db.collection("messages").doc("monday")
+                .onSnapshot(function (snap) {
+                    console.log(snap.data()); //.data() returns data object
+                    document.getElementById("quote-goes-here").innerHTML = snap.data().message;
+                    //using vanilla javascript
+                    //$('#quote-goes-here').text(c.data().quote);                             //using jquery object dot notation
+                    //$("#quote-goes-here").text(c.data()["quote"]);                          //using json object indexing
+                    // delete after getDate() is implemented;
+                })
+        }
+        readQuote();
     </script>
 </body>
-    
+
 </html>
