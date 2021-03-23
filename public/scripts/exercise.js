@@ -2,9 +2,10 @@
  * 
  * To implement:
  * DONE - Find optimal route to destination with API
- * Create an algorithm to calculate point multipliers
+ * DONE - Create an algorithm to calculate point multipliers
  *          - create time multipler (< 1.0x multipliers if time remaining is negative)
  * DONE - Create a timer for the time remaining (for points)
+ * - Draw user path
  * - Save exercise statistics and pathing to database
  * 
  ******************************************************************************/
@@ -39,6 +40,7 @@ const destination_marker = "images/destination_marker.png";
 const location_marker = "images/position_marker.png";
 var destinationSet = false;
 
+var duration;
 var timer = 0;
 var currentScore = 0;
 
@@ -246,7 +248,8 @@ function toggleMap() {
             if (status !== google.maps.DistanceMatrixStatus.OK || status != "OK") {
                 console.warn("Error:", status);
             } else {
-                $("#timeGiven").html(responseDis.rows[0].elements[0].duration.text);
+                duration = responseDis.rows[0].elements[0].duration.text
+                $("#timeGiven").html(duration);
             }
         }
     }
@@ -298,9 +301,22 @@ function checkTime(endTime) {
 function scoreMultiplier(distance) {
     // timeMultiplier = Total estimated time to finish divided by total time taken
     // timeMultiplier will be < 1 if total time taken is negative
-    const baseMultiplier = 0.5;
-    var timeMultiplier = 1.1;
+    const baseMultiplier = 0.25;
+    var timeMultiplier = 1;
+    if (destinationSet == true) {
+        var timeCap = timespanMillis(duration);
+        timeMultiplier = timeCap / timer;
+        if (timeMultiplier < 1) {
+            timeMultiplier = Math.max(timeMultiplier, 0.5);
+        } else if (timeMultiplier > 1) {
+            timeMultiplier = Math.min(timeMultiplier, 2);
+        } else {
+            timeMultiplier = 1;
+        }
+    }
+
     var bonusScore = totalDistance * baseMultiplier;
+    console.log("Time Multipler:", timeMultiplier);
     bonusScore *= timeMultiplier;
     return totalDistance + bonusScore;
 }
@@ -338,15 +354,35 @@ function endExercise() {
         $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
 
-    if (routeError == false && totalDistance > 0 && checkTime(endTime) >= 5) {
-        userScore = scoreMultiplier(totalDistance);
+    if (routeError == false && totalDistance > 0) {
+        userScore += scoreMultiplier(totalDistance);
         writeUserScore();
-
-        // Create a database entry of exercise and then move on to feedback and adjustments
+        if (checkTime(endTime) >= 5) {
+            // Create a database entry of exercise and then move on to feedback and adjustments
+        } else {
+            console.warn("Session not longer than 5 minutes, not saving.");
+        }
     } else {
         console.warn("Error was detected, database will not be updated.");
     }
 }
+
+var timespanMillis = (function() {
+    var tMillis = {
+        second: 1000,
+        min: 60 * 1000,
+        minute: 60 * 1000,
+        hour: 60 * 60 * 1000 // etc.
+    };
+    return function(s) {
+        var regex = /(\d+)\s*(second|min|minute|hour)/g, ms=0, m, x;
+        while (m = regex.exec(s)) {
+            x = Number(m[1]) * (tMillis[m[2]]||0);
+            ms += x;
+        }
+        return x ? ms : NaN;
+    };
+})();
 
 var totalTime = 0;
 var totalDistance = 0;
@@ -457,7 +493,6 @@ function retrieveUserScore() {
 function writeUserScore(text) {
     var updateScore = db.collection("scores");
     userScore = Math.round(userScore);
-    console.log("Current score:", userScore);
     if (loggedInUser == null) {
         console.warn("User is not logged in!");
     } else {

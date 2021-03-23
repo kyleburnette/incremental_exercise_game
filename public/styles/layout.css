@@ -74,6 +74,7 @@
 }
 
 #mapView {
+    display: none;
     width: auto;
     height: 55vh;
 }
