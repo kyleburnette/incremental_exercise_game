@@ -1,3 +1,4 @@
+
 firebase.auth().onAuthStateChanged(function(user) {
     var user = firebase.auth().currentUser;
     if (user != null) {
@@ -26,8 +27,8 @@ function uploadUserProfilePic() {
         // listen for file selection
         fileInput.addEventListener('change', function (e) {
             var file = e.target.files[0];
-            var fileImg = URL.createObjectURL(file);
-            image.src = fileImg;            // display this image
+            var blob = URL.createObjectURL(file);
+            image.src = blob;            // display this image
 
             //store using this name
             var storageRef = storage.ref("images/" + user.uid + ".jpg"); 

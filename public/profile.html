@@ -58,17 +58,18 @@
                 Featured
             </div>
             <div class="card-body">
-                <h5 class="card-title">Quote of the day~</h5>
-                <p class="card-text">"veni, vidi, vici" - Julius Caesar ; "I came, I saw, I conquered"</p>
+                <h5 class="card-title">Quote of the day</h5>
+                <p class="card-text">~<span id="quote-goes-here"></span></p>
                 <a href="goal.html" class="btn btn-primary">Set a Goal</a>
             </div>
 
         </div>
+        <!-- // using pointer 1 from upload_profilePic.js // -->
+
         <div class="card mt-2 profile-card" style="width: 18rem;">
             <img src="https://dummyimage.com/500x500/000/fff&text=Profile+Image" class="card-img-top"
                 alt="Profile Image of User">
-                // using pointer 1 //
-                <form action="fileInput">
+                <form action="submit">
                     <input type="file" id="mypic-input" name="filename">
                     <input type="submit">
                   </form>
@@ -108,6 +109,7 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script src="scripts/upload_profilePic.js"></script>
+    <script src="scripts/quoteToday.js"></script>
 </body>
     
 </html>
