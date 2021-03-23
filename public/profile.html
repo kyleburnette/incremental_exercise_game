@@ -67,9 +67,9 @@
         <!-- // using pointer 1 from upload_profilePic.js // -->
 
         <div class="card mt-2 profile-card" style="width: 18rem;">
-            <img src="https://dummyimage.com/500x500/000/fff&text=Profile+Image" class="card-img-top"
-                alt="Profile Image of User">
-            <form action="submit">
+            <img src="https://dummyimage.com/500x500/000/fff&text=Profile+Image" id="mypic-goes-here"
+                class="card-img-top" alt="Profile Image of User">
+            <form>
                 <input type="file" id="mypic-input" name="filename">
                 <input type="submit">
             </form>
@@ -86,6 +86,28 @@
     </div>
 
     <div class="filler"></div>
+
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="confirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmLabel">Profile Picture Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="preview-picture">
+                        <!-- Preview of picture goes here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onClick="uploadUserProfilePic()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer Navigation Bar -->
     <nav class="navbar fixed-bottom navbar-light bg-light">

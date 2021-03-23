@@ -38,6 +38,8 @@ var positionMarker;
 var destinationMarker;
 const destination_marker = "images/destination_marker.png";
 const location_marker = "images/position_marker.png";
+var userPath;
+var pathCoordinates = [];
 var destinationSet = false;
 
 var duration;
@@ -179,6 +181,20 @@ function updateMapView() {
         directionsDisplay.setMap(mapView);
         findRoute(directionsService, directionsDisplay);
     };
+
+    pathCoordinates = [
+        { lat: crd.lat , lng: crd.lng }
+    ];
+
+    // draw path taken by user
+    userPath = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#93E62E",
+        strokeOpacity: 0.7,
+        strokeWeight: 6,
+      });
+    userPath.setMap(mapView);
 }
 
 function setRoute() {
@@ -209,8 +225,22 @@ function findRoute(directionsService, directionsDisplay) {
     });
 }
 
-function drawPath() {
+
+function drawPath(pos) {
     // Create poly lines to create route and append lat and lng to an array for each point to save.
+    var holdPush = {};
+    var tempPush = {};
+    console.log("Saved pos:", pos);
+    holdPush = pos;
+    tempPush.lat = holdPush.latitude;
+    tempPush.lng = holdPush.longitude;
+    pathCoordinates.push(tempPush);
+    console.log("Path Coordinates: ", pathCoordinates);
+}
+
+function updatePath() {
+    console.log("Updating path");
+    userPath.setPath(pathCoordinates);
 }
 
 function toggleMap() {
@@ -336,6 +366,8 @@ function endExercise() {
 
     if (routeError == true) {
         $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
+    } else if (flagCounter > 5) {
+        $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving. Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
     } else if (totalDistance <= 0) {
         $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
     } else if (checkTime(endTime) < 5) {
@@ -354,7 +386,7 @@ function endExercise() {
         $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
 
-    if (routeError == false && totalDistance > 0) {
+    if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
         writeUserScore();
         if (checkTime(endTime) >= 5) {
@@ -411,6 +443,8 @@ function calcDistance(previousCrd, currentCrd) {
     return d = R * c; // in metres
 }
 
+var flagCounter = 0;
+
 function success(pos) {
     var updateCrd = true;
     var crd = pos.coords;
@@ -424,31 +458,43 @@ function success(pos) {
     };
 
     if (previousCrd != null) {
-        if (crd.accuracy > 20) {
+        if (crd.accuracy > 30) {
             console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not take position.");
         } else {
             distance = calcDistance(previousCrd, crd);
-            if (trackingState == true) {
-                if (distance > 20) {
+            if (trackingState) {
+                if (distance > 200) {
+                    flagCounter++;
+                    if (flagCounter <= 10) {
+                        console.warn("Abnormal distance tracked:", distance, "ignoring update.");
+                    } else {
+                        endExercise();
+                    }
+                    updateCrd = false;
+                } else if (distance > 10) {
+                    flagCounter = 0;
                     console.log("Updated position");
-                    updateMarker(position);
+                    updateMarker(crd);
+                    drawPath(crd);
+                    updatePath();
                     totalDistance += distance;
                     console.log("Total Distance:", totalDistance);
                     updateCrd = true;
                 } else {
+                    flagCounter = 0;
                     console.log("Distance travelled insignificant, ignoring update.");
                     updateCrd = false;
                 }
             }
         }
     }
-    if (trackingState == true) {
-        if (crd.accuracy > 20) {
+    if (trackingState) {
+        if (crd.accuracy > 30) {
             console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not change previous coordinate.");
         } else {
-            if (updateCrd == true) {
+            if (updateCrd) {
                 previousCrd = pos.coords;
             }
         }
@@ -464,7 +510,7 @@ function success(pos) {
 }
 
 function updateMarker(val) {
-    positionMarker.setPosition(val);
+    positionMarker.setPosition({ lat: val.latitude, lng: val.longitude });
 }
 
 function error(err) {
