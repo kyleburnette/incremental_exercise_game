@@ -58,8 +58,7 @@
 
     <div class="container">
         <div id="debug"></div>
-        Your score is: <span id="user-score">-</span><br/>
-        You <span id="walking-indicator">aren't</span> walking!
+        <div id="walking-indicator">You aren't walking!</div>
     </div>
 
     <div class="container mt-3">
@@ -171,7 +170,7 @@
         }
 
         function travelSpeed() {
-            return distanceThisCycle / (pollRate / 1000); //meters per second
+            return distanceThisCycle / (updateRate / 1000); //meters per second
         }
 
         function isWalking() {
@@ -189,22 +188,20 @@
                     console.log("Inaccurate, did not take position.");
                 } 
                 if (isWalking()) {
-                    document.getElementById("walking-indicator").innerHTML = "are";
+                    document.getElementById("walking-indicator").innerHTML = "You are walking and earning points!"
                     userScore++;
                     distance = calcDistance(previousCrd, crd);
                 } else {
-                    document.getElementById("walking-indicator").innerHTML = "aren't";
+                    document.getElementById("walking-indicator").innerHTML = "You aren't walking!";
                 }
-                document.getElementById("debug").innerHTML = `Latitude: ${crd.latitude}` +
+            }
+            document.getElementById("debug").innerHTML = `Latitude: ${crd.latitude}` +
                     `<br/>Longitude: ${crd.longitude}` +
                     `<br/>Accuracy: ${crd.accuracy} meters.` +
-                    `<br/>Distance from last measurement: ${distance} meters` +
                     `<br/>Speed ${travelSpeed()}` +
                     `<br/>Walking? ${isWalking()}` +
                     `<br/>User Score: ${userScore}` +
                     `<br/>cycle count (debug): ${cycleCount}`;
-                document.getElementById("user-score").innerHTML = userScore;
-            }
             previousCrd = pos.coords;
         }
 

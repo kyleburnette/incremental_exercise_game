@@ -18,4 +18,4 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Reference Firebase storage service
-var storage = firebase.storage();
+//var storage = firebase.storage();
