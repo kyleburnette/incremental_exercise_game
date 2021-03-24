@@ -170,7 +170,7 @@
         }
 
         function travelSpeed() {
-            return distanceThisCycle // / (updateRate / 1000); //meters per second
+            return distanceThisCycle / (pollingRate / 1000); //meters per second
         }
 
         function isWalking() {
@@ -212,6 +212,7 @@
         loggedInUser = null;
         var userScore = 0;
         var updateRate = 5000; //ms
+        var pollingRate = 1000; //ms
         var cycleCount = 0;
 
         //main stuff
@@ -225,7 +226,11 @@
             }
         });
 
-        var id = navigator.geolocation.watchPosition(success, error, options);
+        var intervalId = window.setInterval(function () {
+            navigator.geolocation.getCurrentPosition(success, error, options);
+            writeUserScore();
+        }, pollingRate);
+
         var updateScoreTimer = window.setInterval(function () {
             writeUserScore();
         }, updateRate);
