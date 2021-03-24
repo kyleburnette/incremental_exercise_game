@@ -278,7 +278,7 @@ function toggleMap() {
             if (status !== google.maps.DistanceMatrixStatus.OK || status != "OK") {
                 console.warn("Error:", status);
             } else {
-                duration = responseDis.rows[0].elements[0].duration.text
+                duration = responseDis.rows[0].elements[0].duration.text;
                 $("#timeGiven").html(duration);
             }
         }
@@ -331,15 +331,34 @@ function checkTime(endTime) {
 function scoreMultiplier(distance) {
     // timeMultiplier = Total estimated time to finish divided by total time taken
     // timeMultiplier will be < 1 if total time taken is negative
+    var allowedTimeMultiplier = 1;
+    var durationMultiplier = 1;
+    var user = firebase.auth().currentUser;
+    var userDb = db.collection("user").doc(user.uid);
+    userDb.get().then((doc) => {
+        if (doc.exists) {
+            allowedTimeMultiplier = Math.max(0.5, parseFloat(doc.data()["timeMultiplier"]));
+            allowedTimeMultiplier = Math.min(3, allowedTimeMultiplier);
+            console.log("Allowed Time Multiplier:", allowedTimeMultiplier);
+            durationMultiplier = Math.max(0.5, parseFloat(doc.data()["durationMultiplier"]));
+            durationMultiplier = Math.min(3, durationMultiplier);
+            console.log("Allowed Duration Multiplier:", durationMultiplier);
+        } else {
+            // doc.data() will be undefined in this case
+            console.warn("No such document!");
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
     const baseMultiplier = 0.25;
     var timeMultiplier = 1;
     if (destinationSet == true) {
-        var timeCap = timespanMillis(duration);
+        var timeCap = timespanMillis(duration) * durationMultiplier * allowedTimeMultiplier;
         timeMultiplier = timeCap / timer;
         if (timeMultiplier < 1) {
             timeMultiplier = Math.max(timeMultiplier, 0.5);
         } else if (timeMultiplier > 1) {
-            timeMultiplier = Math.min(timeMultiplier, 2);
+            timeMultiplier = Math.min(timeMultiplier, 3);
         } else {
             timeMultiplier = 1;
         }
@@ -519,6 +538,47 @@ function error(err) {
 
 loggedInUser = null;
 
+function retrieveMultiplier() {
+    var checkMultiplier = db.collection("user");
+    var loggedInUser = firebase.auth().currentUser;
+    if (loggedInUser == null) {
+        console.warn("User is not logged in!");
+        window.location.href = "login.html";
+    } else {
+        var userDb = db.collection("user").doc(loggedInUser.uid);
+        userDb.get().then((doc) => {
+            if (doc.exists) {
+                if (doc.data()["timeMultiplier"] == null) {
+                    console.log("Set new time multiplier");
+                    checkMultiplier.doc(loggedInUser.uid).set({
+                        timeMultiplier: 1
+                    }, {
+                        merge: true
+                    })
+                }
+                if (doc.data()["durationMultiplier"] == null) {
+                    console.log("Set new duration multiplier");
+                    checkMultiplier.doc(loggedInUser.uid).set({
+                        durationMultiplier: 1
+                    }, {
+                        merge: true
+                    })
+                }
+            } else {
+                console.log("Create user document with base multipliers");
+                checkMultiplier.doc(loggedInUser.uid).set({
+                    timeMultiplier: 1,
+                    durationMultiplier: 1
+                }, {
+                    merge: true
+                })
+            }
+        }).catch((error) => {
+            console.warn("Error getting document:", error);
+        });
+    }
+}
+
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
     var score = db.collection("scores").doc(user.uid);
@@ -562,6 +622,7 @@ $(document).ready(function () {
         if (user) {
             loggedInUser = user;
             console.log("Logged in as", loggedInUser.displayName);
+            retrieveMultiplier();
             retrieveUserScore();
         } else {
             console.warn("No user detected!");
@@ -582,12 +643,13 @@ $(document).ready(function () {
     if (deviceType == "Mobile") {
         navigator.geolocation.getCurrentPosition(success, error, options);
         var intervalId = window.setInterval(function () {
+            // continue checking if the device is mobile, inspect element on mobile view will mess up if you don't
             if (deviceType == "Mobile") {
                 navigator.geolocation.getCurrentPosition(success, error, options);
             } else {
                 console.warn("User is not on a mobile device, not running application.");
             }
-        }, 7500);
+        }, 1000);
     } else {
         console.warn("User is not on a mobile device, not running application.");
     }
