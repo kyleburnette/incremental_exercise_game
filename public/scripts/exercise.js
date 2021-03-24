@@ -378,8 +378,8 @@ function endExercise() {
         $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving. Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
     } else if (totalDistance <= 0) {
         $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
-    } else if (checkTime(endTime) < 5) {
-        $("#error-message").html("<h4>Session time is less than 5 minutes, this session will not be recorded.</h4><hr />");
+    } else if (checkTime(endTime) < 3) {
+        $("#error-message").html("<h4>Session time is less than 3 minutes, this session will not be recorded.</h4><hr />");
     }
 
     $("#totalTime").html(formatDate(endTime));
@@ -397,7 +397,7 @@ function endExercise() {
     if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
         writeUserScore();
-        if (checkTime(endTime) <= 5) {
+        if (checkTime(endTime) >= 3) {
             // Create a database entry of exercise and then move on to feedback and adjustments
             var user = firebase.auth().currentUser;
 
