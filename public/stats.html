@@ -74,11 +74,11 @@
 
     <div class="container mt-3">
         <h2 class="display-6">Recent Exercise Results</h2>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><a href="#" aria-current="page">March 7th, 2021</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">March 5th, 2021</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">February 23rd, 2021</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">February 20th, 2021</a></li>
+        <ul class="list-group list-group-flush" id="list-entries">
+            <li class="list-group-item entry-color">March 7th, 2021</li>
+            <li class="list-group-item entry-color">March 5th, 2021</li>
+            <li class="list-group-item entry-color">February 23rd, 2021</li>
+            <li class="list-group-item entry-color">February 20th, 2021</li>
         </ul>
     </div>
 
@@ -93,6 +93,56 @@
     </nav>
 
     <div class="filler"></div>
+
+    <!-- Session Review Modal -->
+    <div class="modal fade" id="reviewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="completedLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dateLabel">Unknown Date</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="window.location.reload()"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Total Time</h5>
+                    <p id="totalTime">Undetermined</p>
+                    <hr />
+                    <h5>Distance Travelled</h5>
+                    <p id="distanceTravelled">Undetermined</p>
+                    <hr />
+                    <h5>Estimated Steps Taken</h5>
+                    <p id="estimatedSteps">Undetermined</p>
+                    <hr />
+                    <h5>Estimated Calories Burned</h5>
+                    <p id="estimatedCalories">Undetermined</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#mapModal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Review Modal -->
+    <div class="modal fade" id="mapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="destinationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="destinationLabel">Map Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="map"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
