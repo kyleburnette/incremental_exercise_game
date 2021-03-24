@@ -1,15 +1,3 @@
-/******************************************************************************
- * 
- * To implement:
- * DONE - Find optimal route to destination with API
- * DONE - Create an algorithm to calculate point multipliers
- *          - create time multipler (< 1.0x multipliers if time remaining is negative)
- * DONE - Create a timer for the time remaining (for points)
- * - Draw user path
- * - Save exercise statistics and pathing to database
- * 
- ******************************************************************************/
-
 var deviceType = "Mobile";
 
 var crd = {
@@ -328,19 +316,20 @@ function checkTime(endTime) {
     return Math.abs(Math.round(minutes));
 }
 
+var allowedTimeMultiplier = 1;
+var durationMultiplier = 1;
+
 function scoreMultiplier(distance) {
     // timeMultiplier = Total estimated time to finish divided by total time taken
     // timeMultiplier will be < 1 if total time taken is negative
-    var allowedTimeMultiplier = 1;
-    var durationMultiplier = 1;
     var user = firebase.auth().currentUser;
     var userDb = db.collection("user").doc(user.uid);
     userDb.get().then((doc) => {
         if (doc.exists) {
-            allowedTimeMultiplier = Math.max(0.5, parseFloat(doc.data()["timeMultiplier"]));
+            allowedTimeMultiplier = Math.max(0.25, parseFloat(doc.data()["timeMultiplier"]));
             allowedTimeMultiplier = Math.min(3, allowedTimeMultiplier);
             console.log("Allowed Time Multiplier:", allowedTimeMultiplier);
-            durationMultiplier = Math.max(0.5, parseFloat(doc.data()["durationMultiplier"]));
+            durationMultiplier = Math.max(0.25, parseFloat(doc.data()["durationMultiplier"]));
             durationMultiplier = Math.min(3, durationMultiplier);
             console.log("Allowed Duration Multiplier:", durationMultiplier);
         } else {
@@ -356,7 +345,7 @@ function scoreMultiplier(distance) {
         var timeCap = timespanMillis(duration) * durationMultiplier * allowedTimeMultiplier;
         timeMultiplier = timeCap / timer;
         if (timeMultiplier < 1) {
-            timeMultiplier = Math.max(timeMultiplier, 0.5);
+            timeMultiplier = Math.max(timeMultiplier, 0.25);
         } else if (timeMultiplier > 1) {
             timeMultiplier = Math.min(timeMultiplier, 3);
         } else {
@@ -408,8 +397,26 @@ function endExercise() {
     if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
         writeUserScore();
-        if (checkTime(endTime) >= 5) {
+        if (checkTime(endTime) <= 5) {
             // Create a database entry of exercise and then move on to feedback and adjustments
+            var user = firebase.auth().currentUser;
+            var sessionDb = db.collection("user").doc(user.uid).collection("sessions");
+            sessionDb.add({
+                date: dateObj,
+                routeOption: routeOption,
+                startPosition: startPosition,
+                destinationPosition: destinationPosition,
+                totalTime: formatDate(endTime),
+                distanceTravelled: (totalDistance / 1000).toFixed(2),
+                stepsTaken: totalSteps,
+                minCaloriesBurned: totalMinCalories.toFixed(2),
+                maxCaloriesBurned: totalMaxCalories.toFixed(2),
+                path: pathCoordinates
+            }).then((docRef) => {
+                console.log("Entry written to:", docRef.id);
+            }).catch((error) => {
+                console.error("Error added document:", error);
+            })
         } else {
             console.warn("Session not longer than 5 minutes, not saving.");
         }
@@ -537,6 +544,67 @@ function error(err) {
 }
 
 loggedInUser = null;
+var difficultyRating;
+var durationRating;
+
+function applyFeedback() {
+    difficultyRating = $("input[name=difficultyRating]:checked").val();
+    durationRating = $("input[name=durationRating]:checked").val();
+    var recentFeedback = $("input[name=exerciseRating]").val();
+    var loggedInUser = firebase.auth().currentUser;
+    var userDb = db.collection("user").doc(loggedInUser.uid);
+
+    userDb.get().then((doc) => {
+        if (doc.exists) {
+            allowedTimeMultiplier = Math.max(0.25, parseFloat(doc.data()["timeMultiplier"]));
+            allowedTimeMultiplier = Math.min(3, allowedTimeMultiplier);
+            durationMultiplier = Math.max(0.25, parseFloat(doc.data()["durationMultiplier"]));
+            durationMultiplier = Math.min(3, durationMultiplier);
+            var newDifficulty = difficultyRating * allowedTimeMultiplier;
+            newDifficulty = Math.max(0.25, (newDifficulty));
+            console.log(newDifficulty);
+            newDifficulty = Math.min(3, (newDifficulty));
+            console.log(newDifficulty);
+            var newDuration = durationRating * durationMultiplier;
+            newDuration = Math.max(0.25, (newDuration));
+            console.log(newDuration);
+            newDuration = Math.min(3, (newDuration));
+            console.log(newDuration);
+
+            var loggedInUser = firebase.auth().currentUser;
+            if (loggedInUser == null) {
+                console.warn("User is not logged in!");
+                window.location.href = "login.html";
+            } else {
+                var checkFeedback = db.collection("user");
+                userDb.get().then((doc) => {
+                    if (doc.exists) {
+                        checkFeedback.doc(loggedInUser.uid).set({
+                            timeMultiplier: newDifficulty,
+                            durationMultiplier: newDuration,
+                            recentFeedback: recentFeedback
+                        }, {
+                            merge: true
+                        })
+                    } else {
+                        console.warn("Document does not exist!")
+                    }
+                }).catch((error) => {
+                    console.warn("Error getting document:", error);
+                });
+            }
+            console.log("New Difficulty Rating:", newDifficulty);
+            console.log("New Duration Rating:", newDuration);
+            console.log("Exercise Rating:", recentFeedback);
+        } else {
+            // doc.data() will be undefined in this case
+            console.warn("No such document!");
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+    setTimeout(() => window.location.reload(), 1000);
+}
 
 function retrieveMultiplier() {
     var checkMultiplier = db.collection("user");
