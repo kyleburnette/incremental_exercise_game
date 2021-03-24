@@ -56,38 +56,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div class="display-4">
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="images/carousel1.jpg" class="d-block w-100" alt="Vancouver Image 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="images/carousel2.jpg" class="d-block w-100" alt="Vancouver Image 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="images/carousel3.jpg" class="d-block w-100" alt="Vancouver Image 1">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+    <div class="container">
+        <div id="debug"></div>
+        Your score is: <span id="user-score">-</span><br/>
+        You <span id="walking-indicator">aren't</span> walking!
     </div>
 
     <div class="container mt-3">
@@ -203,7 +175,7 @@
         }
 
         function isWalking() {
-            return travelSpeed() > 0.8 //meters per second
+            return travelSpeed() > 1.5 //meters per second
         }
 
         function success(pos) {
@@ -215,11 +187,15 @@
                 if (crd.accuracy > 25) {
                     console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
-                } else if (isWalking()) {
+                } 
+                if (isWalking()) {
+                    document.getElementById("walking-indicator").innerHTML = "are";
                     userScore++;
                     distance = calcDistance(previousCrd, crd);
+                } else {
+                    document.getElementById("walking-indicator").innerHTML = "aren't";
                 }
-                document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
+                document.getElementById("debug").innerHTML = `Latitude: ${crd.latitude}` +
                     `<br/>Longitude: ${crd.longitude}` +
                     `<br/>Accuracy: ${crd.accuracy} meters.` +
                     `<br/>Distance from last measurement: ${distance} meters` +
@@ -227,6 +203,7 @@
                     `<br/>Walking? ${isWalking()}` +
                     `<br/>User Score: ${userScore}` +
                     `<br/>cycle count (debug): ${cycleCount}`;
+                document.getElementById("user-score").innerHTML = userScore;
             }
             previousCrd = pos.coords;
         }
@@ -237,7 +214,7 @@
 
         loggedInUser = null;
         var userScore = 0;
-        var pollRate = 1000;
+        var updateRate = 5000; //ms
         var cycleCount = 0;
 
         //main stuff
@@ -252,6 +229,10 @@
         });
 
         var id = navigator.geolocation.watchPosition(success, error, options);
+        var updateScoreTimer = window.setInterval(function () {
+            writeUserScore();
+        }, updateRate);
+
     </script>
 </body>
 
