@@ -31,8 +31,8 @@ function uploadUserProfilePic() {
           var file = e.target.files[0];
           var blob = URL.createObjectURL(file);
           preview.src = blob;            // display this image
+          $("#showImage").modal("toggle");
       })
-      $("#showImage").modal("toggle");
   })
 }
 uploadUserProfilePic();
@@ -78,3 +78,15 @@ function displayUserProfilePic() {
     })
 }
 displayUserProfilePic();
+
+$(document).ready(function () {
+  firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+          loggedInUser = user;
+          console.log("Logged in as", loggedInUser.displayName);
+      } else {
+          console.warn("No user detected!");
+          window.location.href = "login.html";
+      }
+    });
+});
