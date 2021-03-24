@@ -207,6 +207,7 @@
         }
 
         function success(pos) {
+            cycleCount++;
             var crd = pos.coords;
             if (previousCrd != null) {
                 distance = calcDistance(previousCrd, crd);
@@ -224,7 +225,8 @@
                     `<br/>Distance from last measurement: ${distance} meters` +
                     `<br/>Speed ${travelSpeed()}` +
                     `<br/>Walking? ${isWalking()}` +
-                    `<br/>User Score: ${userScore}`;
+                    `<br/>User Score: ${userScore}` +
+                    `<br/>cycle count (debug): ${cycleCount}`;
             }
             previousCrd = pos.coords;
         }
@@ -236,6 +238,7 @@
         loggedInUser = null;
         var userScore = 0;
         var pollRate = 1000;
+        var cycleCount = 0;
 
         //main stuff
         firebase.auth().onAuthStateChanged(function (user) {
