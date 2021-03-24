@@ -541,6 +541,7 @@ function writeUserScore(text) {
     userScore = Math.round(userScore);
     if (loggedInUser == null) {
         console.warn("User is not logged in!");
+        window.location.href = "login.html";
     } else {
         updateScore.doc(loggedInUser.uid).set({
             score: userScore
@@ -564,6 +565,7 @@ $(document).ready(function () {
             retrieveUserScore();
         } else {
             console.warn("No user detected!");
+            window.location.href = "login.html";
         }
     });
 
