@@ -179,7 +179,7 @@
         var distanceThisCycle = 0;
         var options = {
             enableHighAccuracy: true,
-            timeout: 5000,
+            timeout: 2000,
             maximumAge: 0
         };
 
@@ -215,7 +215,7 @@
                 if (crd.accuracy > 25) {
                     console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
-                } else {
+                } else if (isWalking()) {
                     userScore++;
                     distance = calcDistance(previousCrd, crd);
                 }
