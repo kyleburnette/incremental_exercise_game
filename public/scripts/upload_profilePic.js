@@ -1,3 +1,4 @@
+console.log(firebase.storage);
 
 firebase.auth().onAuthStateChanged(function(user) {
     var user = firebase.auth().currentUser;
@@ -31,13 +32,14 @@ function uploadUserProfilePic() {
           var blob = URL.createObjectURL(file);
           preview.src = blob;            // display this image
       })
+      $("#showImage").modal("toggle");
   })
 }
 uploadUserProfilePic();
 
 function confirmProfilePic() {
   //store using this name
-  var storageRef = firebase.storage().ref("images/" + user.uid + ".jpg"); 
+  var storageRef = storage().ref("images/" + user.uid + ".jpg"); 
             
   //upload the picked file
   storageRef.put(file) 
