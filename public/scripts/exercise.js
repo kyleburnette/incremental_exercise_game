@@ -400,6 +400,30 @@ function endExercise() {
         if (checkTime(endTime) <= 5) {
             // Create a database entry of exercise and then move on to feedback and adjustments
             var user = firebase.auth().currentUser;
+
+            var step = db.collection("user").doc(user.uid);
+            step.get().then((doc) => {
+                if (doc.exists) {
+                    var oldStep;
+                    if (oldStep == NaN || oldStep == null) {
+                        oldStep = 0;
+                    } else {
+                        oldStep = parseInt(doc.data()["step"]);
+                    }
+                    console.log(oldStep);
+                    step.set({
+                        steps: oldStep + totalSteps
+                    }, {
+                        merge: true
+                    })
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.warn("No such document!");
+                }
+            }).catch((error) => {
+                console.warn("Error getting document:", error);
+            });
+
             var sessionDb = db.collection("user").doc(user.uid).collection("sessions");
             sessionDb.add({
                 date: dateObj,
