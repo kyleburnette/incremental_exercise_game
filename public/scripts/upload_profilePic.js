@@ -39,7 +39,7 @@ uploadUserProfilePic();
 
 function confirmProfilePic() {
   //store using this name
-  var storageRef = storage().ref("images/" + user.uid + ".jpg"); 
+  var storageRef = firebase.storage().ref("images/" + user.uid + ".jpg"); 
             
   //upload the picked file
   storageRef.put(file) 
