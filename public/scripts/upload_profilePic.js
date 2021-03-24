@@ -51,8 +51,10 @@ function confirmProfilePic() {
   storageRef.getDownloadURL()
       .then(function (url) {   // Get URL of the uploaded file
           console.log(url);    // Save the URL into users collection
-          db.collection("users").doc(user.uid).update({
+          db.collection("users").doc(user.uid).set({
               "profilePic": url
+          },{
+            merge: true
           })
           .then(function(){
               console.log('Added Profile Pic URL to Firestore.');
@@ -68,12 +70,14 @@ function displayUserProfilePic() {
             .get()                                            //READ the doc
             .then(function (doc) {
                 var picUrl = doc.data().profilePic;           //extract pic url
-
+                //if (profilePic === null){
+                  //console.log("profile pic is not null")
+                //}
 								// use this line if "mypicdiv" is a "div"
                 //$("#mypicdiv").append("<img src='" + picUrl + "'>")
                 
 								// use this line if "mypic-goes-here" is an "img" 
-								$("#mypic-goes-here").attr("src", picUrl);
+								$("#mypic-goes-here").attr("src", profileUrl);
             })
     })
 }
