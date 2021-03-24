@@ -199,11 +199,11 @@
         }
 
         function travelSpeed() {
-            return distanceThisCycle / 5; //meters per second
+            return distanceThisCycle / (pollRate / 1000); //meters per second
         }
 
         function isWalking() {
-            return travelSpeed() > 0.5 //meters per second
+            return travelSpeed() > 0.8 //meters per second
         }
 
         function success(pos) {
@@ -215,16 +215,8 @@
                     console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
                 } else {
+                    userScore++;
                     distance = calcDistance(previousCrd, crd);
-                    if (distance > 10) {
-                        userScore += distance;
-                        console.log("Total Distance:", totalDistance);
-                        updateCrd = true;
-                    } else {
-                        console.log("Distance travelled insignificant, ignoring update.");
-                        updateCrd = false;
-                    }
-
                 }
                 document.getElementById("test").innerHTML = `Latitude: ${crd.latitude}` +
                     `<br/>Longitude: ${crd.longitude}` +
@@ -243,6 +235,7 @@
 
         loggedInUser = null;
         var userScore = 0;
+        var pollRate = 1000;
 
         //main stuff
         firebase.auth().onAuthStateChanged(function (user) {
@@ -255,10 +248,7 @@
             }
         });
 
-        var intervalId = window.setInterval(function () {
-            navigator.geolocation.getCurrentPosition(success, error, options);
-            writeUserScore();
-        }, 5000);
+        var id = navigator.geolocation.watchPosition(success, error, options);
     </script>
 </body>
 

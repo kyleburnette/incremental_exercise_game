@@ -95,7 +95,6 @@
             var writeSuggestion = db.collection("suggestions");
 
             var user = firebase.auth().currentUser;
-            db.collection('scores').doc(user.uid).set({foo:'bar'}, {merge: true})
             writeSuggestion.add({
                 userDisplayName: user.displayName,
                 userEmail: user.email,
