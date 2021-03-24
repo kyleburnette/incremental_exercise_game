@@ -472,7 +472,7 @@ function success(pos) {
                         endExercise();
                     }
                     updateCrd = false;
-                } else if (distance > 10) {
+                } else if (distance > 5) {
                     flagCounter = 0;
                     console.log("Updated position");
                     updateMarker(crd);
@@ -500,7 +500,7 @@ function success(pos) {
         }
         if (destinationSet) {
             console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
-            if (calcDistance(startPosition, destinationPosition) < 30) {
+            if (calcDistance(startPosition, destinationPosition) < 25) {
                 console.log("Arrived at destination");
                 $("#completedModal").modal("toggle");
                 endExercise();
