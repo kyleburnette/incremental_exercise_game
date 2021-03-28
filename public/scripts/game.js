@@ -199,19 +199,6 @@ function calcGrowth(base, x) {
     return base * Math.pow((1 + growthRate), x)
 }
 
-
-
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-        loggedInUser = user;
-        console.log("Logged in as", loggedInUser.displayName);
-        retrieveUserScore();
-        retrieveUserInventory();
-    } else {
-        console.warn("No user detected!");
-    }
-});
-
 function getPropertyName(id) {
     switch (id) {
         case "skateboard-button":
@@ -284,38 +271,10 @@ function createParticleDiv(e) {
             .append($('<img src="images/skateboard.png" alt="myimage" />'))
             .appendTo("#particles")
             .fadeIn("fast")
-            .animate({path : new $.path.bezier(bezier_params)})
+            .animate({ path: new $.path.bezier(bezier_params) })
             .delay(500)
             .fadeOut("fast");
     });
-    /*
-        var div = $('<div class="image-wrapper">')
-            .css({
-                "position": "absolute",
-                "left": (e.pageX - 20) + 'px',
-                "top": (e.pageY - 20) + 'px',
-                "z-index": "1000000",
-                "animation": "fadeIn ease 2s",
-                "pointer-events": "none",
-    
-            })
-            .append($('<img src="images/position_marker.png" alt="myimage" />'))
-            .appendTo($("#particles"));
-    
-        $(div).fadeIn("slow", function(){
-            setTimeout(function () {
-            
-                div.addClass('fade-out');
-                setTimeout(function () { div.remove(); }, 0);
-            }, 1000);   
-        });*/
-
-}
-
-
-
-function spawnText(e) {
-    createParticleDiv(e);
 }
 
 $(".game-button").click(function (e) {
@@ -326,6 +285,20 @@ $(".game-button").click(function (e) {
     if (userScore >= price) {
         userScore -= price;
         increaseInventoryCount(inventoryType);
-        spawnText(e);
+        createParticleDiv(e);
     }
+});
+
+$(document).ready(function () {
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            loggedInUser = user;
+            console.log("Logged in as", loggedInUser.displayName);
+            retrieveUserScore();
+            retrieveUserInventory();
+        } else {
+            console.warn("No user detected!");
+            window.location.href = "login.html";
+        }
+    });
 });
