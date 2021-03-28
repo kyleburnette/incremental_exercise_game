@@ -46,6 +46,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="feedback.html">Feedback</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedback.html" onclick="logOut()">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -54,6 +57,36 @@
     <div class="alert alert-success alert-dismissible fade show" id="test" role="alert">
         Successfully logged in!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="container">
+        <div id="inventory">Your inventory</div>
+        <div id="skateboard">
+           <p id="skateboard-count">Skateboards: 0</p>
+           <p id="skateboard-info">+0 steps/second</p>
+           <button type="button" class="btn btn-primary btn-lg" id="skateboard-button">Buy 1 Skateboard (Cost: 10 points)</button>
+        </div>
+        <div id="bicycle">
+            <p id="bicycle-count">Bicycles: 0</p></div>
+            <p id="bicycle-info">+0 steps/second</p>
+        <button type="button" class="btn btn-primary btn-lg" id="bicycle-button">Buy 1 Bicycle (Cost: 200 points)</button>
+        <div id="car">
+            <p id="car-count">Cars: 0</p></div>
+            <p id="car-info">+0 steps/second</p>
+        <button type="button" class="btn btn-primary btn-lg" id="car-button">Buy 1 Car (Cost: 500 points)</button>
+        <div id="train">
+            <p id="train-count">Trains: 0</p></div>
+            <p id="train-info">+0 steps/second</p>
+        <button type="button" class="btn btn-primary btn-lg" id="train-button">Buy 1 Train (Cost: 1000 points)</button>
+        <div id="plane">
+            <p id="plane-count">Planes: 0</p></div>
+            <p id="plane-info">+0 steps/second</p>
+        <button type="button" class="btn btn-primary btn-lg" id="plane-button">Buy 1 Plane (Cost: 5000 points)</button>
+        <div id="spaceship">
+            <p id="spaceship-count">Spaceships: 0</p></div>
+            <p id="spaceship-info">+0 steps/second</p>
+        <button type="button" class="btn btn-primary btn-lg" id="spaceship-button">Buy 1 Spaceship (Cost: 10000 points)</button>
+
     </div>
 
     <div class="container">
@@ -103,7 +136,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
@@ -115,6 +148,38 @@
     <script src="scripts/firebase_api.js"></script>
 
     <script>
+        var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
+
+        function increaseSkateboardCount(){
+            inventory.skateboard++;
+            updateCounts();
+        }
+
+        function increaseBicycleCount(){
+            inventory.bicycle++;
+            updateCounts();
+        }
+
+        function increaseCarCount(){
+            inventory.car++;
+            updateCounts();
+        }
+
+        function increaseTrainCount(){
+            inventory.train++;
+            updateCounts();
+        }
+
+        function increasePlaneCount(){
+            inventory.plane++;
+            updateCounts();
+        }
+
+        function increaseSpaceshipCount(){
+            inventory.spaceship++;
+            updateCounts();
+        }
+        
         function retrieveUserScore() {
             var user = firebase.auth().currentUser;
             var score = db.collection("scores").doc(user.uid);
@@ -122,6 +187,46 @@
             score.get().then((doc) => {
                 if (doc.exists) {
                     userScore = parseInt(doc.data()["score"]);
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+        }
+
+        function updateCounts(){
+            $("#skateboard-count").html("Skateboards: " + inventory.skateboard);
+            $("#bicycle-count").html("Bicycles: " + inventory.bicycle);
+            $("#car-count").html("Cars: " + inventory.car);
+            $("#train-count").html("Trains: " + inventory.train);
+            $("#plane-count").html("Planes: " + inventory.plane);
+            $("#spaceship-count").html("Spaceships: " + inventory.spaceship);
+            $("#debug").html(`User Score: ` + userScore);
+
+            $("#skateboard-info").html("+" + inventory.skateboard * 1 + " steps/second");
+            $("#bicycle-info").html("+" + inventory.bicycle * 2 + " steps/second");
+            $("#car-info").html("+" + inventory.car * 5 + " steps/second");
+            $("#train-info").html("+" + inventory.train * 8 + " steps/second");
+            $("#spaceship-info").html("+" + inventory.spaceship * 10 + " steps/second")
+        }
+
+        function retrieveUserInventory() {
+            var user = firebase.auth().currentUser;
+            var inventoryDB = db.collection("inventory").doc(user.uid);
+            console.log("Logged ID:", user.uid);
+            inventoryDB.get().then((doc) => {
+                if (doc.exists) {
+                    inventory.bicycle = parseInt(doc.data()["bicycle"]);
+                    
+                    inventory.car = parseInt(doc.data()["car"]);
+                    inventory.plane = parseInt(doc.data()["plane"]);
+                    inventory.skateboard = parseInt(doc.data()["skateboard"]);
+                    inventory.spaceship = parseInt(doc.data()["spaceship"]);
+                    inventory.train = parseInt(doc.data()["train"]);
+
+                    updateCounts();
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
@@ -142,7 +247,25 @@
                     score: userScore
                 }, {
                     merge: true
-                })
+                });
+            }
+        }
+
+        function writeUserInventory(text) {
+            var updateInv = db.collection("inventory");
+            if (loggedInUser == null) {
+                console.warn("User is not logged in!");
+            } else {
+                updateInv.doc(loggedInUser.uid).set({
+                    skateboard: inventory.skateboard,
+                    bicycle: inventory.bicycle,
+                    car: inventory.car,
+                    train: inventory.train,
+                    plane: inventory.plane,
+                    spaceship: inventory.spaceship,
+                }, {
+                    merge: true
+                });
             }
         }
 
@@ -173,8 +296,22 @@
             return distanceThisCycle / (pollingRate / 1000); //meters per second
         }
 
+        function logOut() {
+            firebase.auth().signOut()
+                .then(function () {
+                    window.location.href = "index.html";
+                })
+                .catch(function (error) {
+                    // An error happened
+                });
+        }
+
         function isWalking() {
             return travelSpeed() > 1.5 //meters per second
+        }
+
+        function handleUserScore() {
+            userScore += 1 + (inventory.bicycle * 1) + (inventory.skateboard * 2) + (inventory.car * 5) + (inventory.spaceship * 10) + (inventory.train * 8);
         }
 
         function success(pos) {
@@ -186,22 +323,18 @@
                 if (crd.accuracy > 25) {
                     console.log("Accuracy:", crd.accuracy);
                     console.log("Inaccurate, did not take position.");
-                } 
+                }
                 if (isWalking()) {
                     document.getElementById("walking-indicator").innerHTML = "You are walking and earning points!"
-                    userScore++;
+                    handleUserScore();
                     distance = calcDistance(previousCrd, crd);
                 } else {
+                    handleUserScore();
                     document.getElementById("walking-indicator").innerHTML = "You aren't walking!";
                 }
             }
-            document.getElementById("debug").innerHTML = `Latitude: ${crd.latitude}` +
-                    `<br/>Longitude: ${crd.longitude}` +
-                    `<br/>Accuracy: ${crd.accuracy} meters.` +
-                    `<br/>Speed ${travelSpeed()}` +
-                    `<br/>Walking? ${isWalking()}` +
-                    `<br/>User Score: ${userScore}` +
-                    `<br/>cycle count (debug): ${cycleCount}`;
+            document.getElementById("debug").innerHTML =
+                `User Score: ${userScore}`;
             previousCrd = pos.coords;
         }
 
@@ -221,6 +354,7 @@
                 loggedInUser = user;
                 console.log("Logged in as", loggedInUser.displayName);
                 retrieveUserScore();
+                retrieveUserInventory();
             } else {
                 console.warn("No user detected!");
             }
@@ -229,11 +363,55 @@
         var intervalId = window.setInterval(function () {
             navigator.geolocation.getCurrentPosition(success, error, options);
             writeUserScore();
+            writeUserInventory();
         }, pollingRate);
 
         var updateScoreTimer = window.setInterval(function () {
             writeUserScore();
         }, updateRate);
+
+        $("#skateboard-button").click(function(){
+            if (userScore >= 10){
+                increaseSkateboardCount();
+                userScore -= 10;
+            }
+        });
+
+        $("#bicycle-button").click(function(){
+            if (userScore >= 200){
+                increaseBicycleCount();
+                userScore -= 200;
+            }
+        });
+
+        $("#car-button").click(function(){
+            if (userScore >= 500){
+                increaseCarCount();
+                userScore -= 500;
+            }
+
+        });
+
+        $("#train-button").click(function(){
+            if (userScore >= 1000){
+                increaseTrainCount();
+                userScore -= 1000;
+            }
+        });
+
+        $("#plane-button").click(function(){
+            if (userScore >= 5000){
+                increasePlaneCount();
+                userScore -= 5000;
+            }
+        });
+
+        $("#spaceship-button").click(function(){
+            if (userScore >= 10000){
+                increaseSpaceshipCount();
+                userScore -= 10000;
+            }
+        });
 
     </script>
 </body>
