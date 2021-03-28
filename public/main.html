@@ -60,38 +60,46 @@
     </div>
 
     <div class="container">
-        <div id="inventory">Your inventory</div>
-        <div id="skateboard">
-           <p id="skateboard-count">Skateboards: 0</p>
-           <p id="skateboard-info">+0 steps/second</p>
-           <button type="button" class="btn btn-primary btn-lg" id="skateboard-button">Buy 1 Skateboard (Cost: <span id="skateboard-cost">10</span> points)</button>
-        </div>
-        <div id="bicycle">
-            <p id="bicycle-count">Bicycles: 0</p></div>
-            <p id="bicycle-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="bicycle-button">Buy 1 Bicycle (Cost: <span id="bicycle-cost">200</span> points)</button>
-        <div id="car">
-            <p id="car-count">Cars: 0</p></div>
-            <p id="car-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="car-button">Buy 1 Car (Cost: <span id="car-cost">500</span> points)</button>
-        <div id="train">
-            <p id="train-count">Trains: 0</p></div>
-            <p id="train-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="train-button">Buy 1 Train (Cost: <span id="train-cost">1000</span> points)</button>
-        <div id="plane">
-            <p id="plane-count">Planes: 0</p></div>
-            <p id="plane-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="plane-button">Buy 1 Plane (Cost: <span id="plane-cost">5000</span> points)</button>
-        <div id="spaceship">
-            <p id="spaceship-count">Spaceships: 0</p></div>
-            <p id="spaceship-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="spaceship-button">Buy 1 Spaceship (Cost: <span id="spaceship-cost">10000</span> points)</button>
-
-    </div>
-
-    <div class="container">
+        <div id="total-steps-per-second"></div>
         <div id="debug"></div>
         <div id="walking-indicator">You aren't walking!</div>
+        <div class="h2" id="inventory">Your inventory</div>
+        <div id="skateboard">
+            <p id="skateboard-count">Skateboards: 0</p>
+            <p id="skateboard-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="skateboard-button">Buy 1 Skateboard
+                (Cost: <span id="skateboard-cost">10</span> steps)</button>
+        </div>
+        <div id="bicycle">
+            <p id="bicycle-count">Bicycles: 0</p>
+            <p id="bicycle-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="bicycle-button">Buy 1 Bicycle (Cost:
+                <span id="bicycle-cost">200</span> steps)</button>
+        </div>
+        <div id="car">
+            <p id="car-count">Cars: 0</p>
+            <p id="car-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="car-button">Buy 1 Car (Cost: <span
+                    id="car-cost">500</span> steps)</button>
+        </div>
+        <div id="train">
+            <p id="train-count">Trains: 0</p>
+            <p id="train-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="train-button">Buy 1 Train (Cost: <span
+                    id="train-cost">1000</span> steps)</button>
+        </div>
+        <div id="plane">
+            <p id="plane-count">Planes: 0</p>
+            <p id="plane-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="plane-button">Buy 1 Plane (Cost: <span
+                    id="plane-cost">5000</span> steps)</button>
+        </div>
+        <div id="spaceship">
+            <p id="spaceship-count">Spaceships: 0</p>
+            <p id="spaceship-info"></p>
+            <button type="button" class="btn btn-primary btn-lg game-button" id="spaceship-button">Buy 1 Spaceship
+                (Cost: <span id="spaceship-cost">10000</span> steps)</button>
+        </div>
     </div>
 
     <div class="container mt-3">
@@ -146,298 +154,9 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script src="scripts/firebase_api.js"></script>
+    <script src="scripts/game_settings.js"></script>
+    <script src="scripts/game.js"></script>
 
-    <script>
-        var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
-
-        function increaseSkateboardCount(){
-            inventory.skateboard++;
-            updateCounts();
-        }
-
-        function increaseBicycleCount(){
-            inventory.bicycle++;
-            updateCounts();
-        }
-
-        function increaseCarCount(){
-            inventory.car++;
-            updateCounts();
-        }
-
-        function increaseTrainCount(){
-            inventory.train++;
-            updateCounts();
-        }
-
-        function increasePlaneCount(){
-            inventory.plane++;
-            updateCounts();
-        }
-
-        function increaseSpaceshipCount(){
-            inventory.spaceship++;
-            updateCounts();
-        }
-        
-        function retrieveUserScore() {
-            var user = firebase.auth().currentUser;
-            var score = db.collection("scores").doc(user.uid);
-            console.log("Logged ID:", user.uid);
-            score.get().then((doc) => {
-                if (doc.exists) {
-                    userScore = parseInt(doc.data()["score"]);
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                }
-            }).catch((error) => {
-                console.log("Error getting document:", error);
-            });
-        }
-
-        function updateCounts(){
-            $("#skateboard-count").html("Skateboards: " + inventory.skateboard);
-            $("#bicycle-count").html("Bicycles: " + inventory.bicycle);
-            $("#car-count").html("Cars: " + inventory.car);
-            $("#train-count").html("Trains: " + inventory.train);
-            $("#plane-count").html("Planes: " + inventory.plane);
-            $("#spaceship-count").html("Spaceships: " + inventory.spaceship);
-            $("#debug").html(`User Score: ` + userScore);
-
-            $("#skateboard-info").html("+" + inventory.skateboard * 1 + " steps/second");
-            $("#bicycle-info").html("+" + inventory.bicycle * 2 + " steps/second");
-            $("#car-info").html("+" + inventory.car * 5 + " steps/second");
-            $("#train-info").html("+" + inventory.train * 8 + " steps/second");
-            $("#plane-info").html("+" + inventory.plane * 9 + " steps/second");
-            $("#spaceship-info").html("+" + inventory.spaceship * 10 + " steps/second")
-
-            $("#skateboard-cost").html(Math.round(calcGrowth(10, inventory.skateboard)));
-            $("#bicycle-cost").html(Math.round(calcGrowth(200, inventory.bicycle)));
-            $("#car-cost").html(Math.round(calcGrowth(500, inventory.car)));
-            $("#train-cost").html(Math.round(calcGrowth(1000, inventory.train)));
-            $("#plane-cost").html(Math.round(calcGrowth(5000, inventory.plane)));
-            $("#spaceship-cost").html(Math.round(calcGrowth(10000, inventory.spaceship)));
-        }
-
-        function retrieveUserInventory() {
-            var user = firebase.auth().currentUser;
-            var inventoryDB = db.collection("inventory").doc(user.uid);
-            console.log("Logged ID:", user.uid);
-            inventoryDB.get().then((doc) => {
-                if (doc.exists) {
-                    inventory.bicycle = parseInt(doc.data()["bicycle"]);
-                    
-                    inventory.car = parseInt(doc.data()["car"]);
-                    inventory.plane = parseInt(doc.data()["plane"]);
-                    inventory.skateboard = parseInt(doc.data()["skateboard"]);
-                    inventory.spaceship = parseInt(doc.data()["spaceship"]);
-                    inventory.train = parseInt(doc.data()["train"]);
-
-                    updateCounts();
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                }
-            }).catch((error) => {
-                console.log("Error getting document:", error);
-            });
-        }
-
-        function writeUserScore(text) {
-            var updateScore = db.collection("scores");
-            userScore = Math.round(userScore);
-            console.log("Current score:", userScore);
-            if (loggedInUser == null) {
-                console.warn("User is not logged in!");
-            } else {
-                updateScore.doc(loggedInUser.uid).set({
-                    score: userScore
-                }, {
-                    merge: true
-                });
-            }
-        }
-
-        function writeUserInventory(text) {
-            var updateInv = db.collection("inventory");
-            if (loggedInUser == null) {
-                console.warn("User is not logged in!");
-            } else {
-                updateInv.doc(loggedInUser.uid).set({
-                    skateboard: inventory.skateboard,
-                    bicycle: inventory.bicycle,
-                    car: inventory.car,
-                    train: inventory.train,
-                    plane: inventory.plane,
-                    spaceship: inventory.spaceship,
-                }, {
-                    merge: true
-                });
-            }
-        }
-
-        var previousCrd = null;
-        var distanceThisCycle = 0;
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 2000,
-            maximumAge: 0
-        };
-
-        function calcDistance(previousCrd, currentCrd) {
-            const R = 6371e3; // meters
-            const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
-            const φ2 = currentCrd.latitude * Math.PI / 180;
-            const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
-            const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
-
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            distanceThisCycle = R * c;
-            return d = R * c; // in meters
-        }
-
-        function travelSpeed() {
-            return distanceThisCycle / (pollingRate / 1000); //meters per second
-        }
-
-        function logOut() {
-            firebase.auth().signOut()
-                .then(function () {
-                    window.location.href = "index.html";
-                })
-                .catch(function (error) {
-                    // An error happened
-                });
-        }
-
-        function isWalking() {
-            return travelSpeed() > 1.5 //meters per second
-        }
-
-        function handleUserScore() {
-            userScore += 1 + (inventory.bicycle * 1) + (inventory.skateboard * 2) + (inventory.car * 5) + (inventory.spaceship * 10) + (inventory.train * 8) + (inventory.plane * 9);
-        }
-
-        function success(pos) {
-            cycleCount++;
-            var crd = pos.coords;
-            if (previousCrd != null) {
-                distance = calcDistance(previousCrd, crd);
-                console.log("Distance:", distance);
-                if (crd.accuracy > 25) {
-                    console.log("Accuracy:", crd.accuracy);
-                    console.log("Inaccurate, did not take position.");
-                }
-                if (isWalking()) {
-                    document.getElementById("walking-indicator").innerHTML = "You are walking and earning points!"
-                    handleUserScore();
-                    distance = calcDistance(previousCrd, crd);
-                } else {
-                    handleUserScore();
-                    document.getElementById("walking-indicator").innerHTML = "You aren't walking!";
-                }
-            }
-            document.getElementById("debug").innerHTML =
-                `User Score: ${userScore}`;
-            previousCrd = pos.coords;
-        }
-
-        function error(err) {
-            console.warn(`ERROR(${err.code}): ${err.message}`);
-        }
-
-        function calcGrowth(base, x){
-            console.log(base * Math.pow((1 + 0.15), x))
-            return base * Math.pow((1 + 0.15), x)
-        }
-
-        loggedInUser = null;
-        var userScore = 0;
-        var updateRate = 5000; //ms
-        var pollingRate = 1000; //ms
-        var cycleCount = 0;
-
-        //main stuff
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                loggedInUser = user;
-                console.log("Logged in as", loggedInUser.displayName);
-                retrieveUserScore();
-                retrieveUserInventory();
-            } else {
-                console.warn("No user detected!");
-            }
-        });
-
-        var intervalId = window.setInterval(function () {
-            navigator.geolocation.getCurrentPosition(success, error, options);
-            writeUserScore();
-            writeUserInventory();
-        }, pollingRate);
-
-        var updateScoreTimer = window.setInterval(function () {
-            writeUserScore();
-        }, updateRate);
-
-        $("#skateboard-button").click(function(){
-            price = calcGrowth(10, inventory.skateboard);
-            if (userScore >= price){
-                increaseSkateboardCount();
-                userScore -= price;
-            }
-        });
-
-        $("#bicycle-button").click(function(){
-            price = calcGrowth(200, inventory.bicycle);
-
-            if (userScore >= price){
-                increaseBicycleCount();
-                userScore -= price;
-            }
-        });
-
-        $("#car-button").click(function(){
-            price = calcGrowth(500, inventory.car);
-
-            if (userScore >= price){
-                increaseCarCount();
-                userScore -= price;
-            }
-
-        });
-
-        $("#train-button").click(function(){
-            price = calcGrowth(1000, inventory.train);
-
-            if (userScore >= price){
-                increaseTrainCount();
-                userScore -= price;
-            }
-        });
-
-        $("#plane-button").click(function(){
-            price = calcGrowth(5000, inventory.plane);
-
-            if (userScore >= price){
-                increasePlaneCount();
-                userScore -= price;
-            }
-        });
-
-        $("#spaceship-button").click(function(){
-            price = calcGrowth(10000, inventory.spaceship);
-
-            if (userScore >= price){
-                increaseSpaceshipCount();
-                userScore -= price;
-            }
-        });
-
-    </script>
 </body>
 
 </html>
