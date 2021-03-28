@@ -1,4 +1,24 @@
 var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
+var previousCrd = null;
+var distanceThisCycle = 0;
+var options = {
+    enableHighAccuracy: true,
+    timeout: 2000,
+    maximumAge: 0
+};
+var userScore = 0;
+loggedInUser = null;
+
+//polls current location every X seconds determined by polling rate
+var intervalId = window.setInterval(function () {
+    navigator.geolocation.getCurrentPosition(success, error, options); 
+}, pollingRate);
+
+//updates database every X seconds determined by update rate
+var updateScoreTimer = window.setInterval(function () {
+    writeUserScore();
+    writeUserInventory();
+}, updateRate);
 
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
@@ -107,14 +127,6 @@ function writeUserInventory(text) {
     }
 }
 
-var previousCrd = null;
-var distanceThisCycle = 0;
-var options = {
-    enableHighAccuracy: true,
-    timeout: 2000,
-    maximumAge: 0
-};
-
 function calcDistance(previousCrd, currentCrd) {
     const R = 6371e3; // meters
     const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
@@ -189,8 +201,7 @@ function calcGrowth(base, x) {
     return base * Math.pow((1 + growthRate), x)
 }
 
-loggedInUser = null;
-var userScore = 0;
+
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -202,15 +213,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.warn("No user detected!");
     }
 });
-
-var intervalId = window.setInterval(function () {
-    navigator.geolocation.getCurrentPosition(success, error, options); 
-}, pollingRate);
-
-var updateScoreTimer = window.setInterval(function () {
-    writeUserScore();
-    writeUserInventory();
-}, updateRate);
 
 function getPropertyName(id){
     switch(id){
