@@ -64,28 +64,28 @@
         <div id="skateboard">
            <p id="skateboard-count">Skateboards: 0</p>
            <p id="skateboard-info">+0 steps/second</p>
-           <button type="button" class="btn btn-primary btn-lg" id="skateboard-button">Buy 1 Skateboard (Cost: 10 points)</button>
+           <button type="button" class="btn btn-primary btn-lg" id="skateboard-button">Buy 1 Skateboard (Cost: <span id="skateboard-cost">10</span> points)</button>
         </div>
         <div id="bicycle">
             <p id="bicycle-count">Bicycles: 0</p></div>
             <p id="bicycle-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="bicycle-button">Buy 1 Bicycle (Cost: 200 points)</button>
+        <button type="button" class="btn btn-primary btn-lg" id="bicycle-button">Buy 1 Bicycle (Cost: <span id="bicycle-cost">200</span> points)</button>
         <div id="car">
             <p id="car-count">Cars: 0</p></div>
             <p id="car-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="car-button">Buy 1 Car (Cost: 500 points)</button>
+        <button type="button" class="btn btn-primary btn-lg" id="car-button">Buy 1 Car (Cost: <span id="car-cost">500</span> points)</button>
         <div id="train">
             <p id="train-count">Trains: 0</p></div>
             <p id="train-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="train-button">Buy 1 Train (Cost: 1000 points)</button>
+        <button type="button" class="btn btn-primary btn-lg" id="train-button">Buy 1 Train (Cost: <span id="train-cost">1000</span> points)</button>
         <div id="plane">
             <p id="plane-count">Planes: 0</p></div>
             <p id="plane-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="plane-button">Buy 1 Plane (Cost: 5000 points)</button>
+        <button type="button" class="btn btn-primary btn-lg" id="plane-button">Buy 1 Plane (Cost: <span id="plane-cost">5000</span> points)</button>
         <div id="spaceship">
             <p id="spaceship-count">Spaceships: 0</p></div>
             <p id="spaceship-info">+0 steps/second</p>
-        <button type="button" class="btn btn-primary btn-lg" id="spaceship-button">Buy 1 Spaceship (Cost: 10000 points)</button>
+        <button type="button" class="btn btn-primary btn-lg" id="spaceship-button">Buy 1 Spaceship (Cost: <span id="spaceship-cost">10000</span> points)</button>
 
     </div>
 
@@ -209,7 +209,15 @@
             $("#bicycle-info").html("+" + inventory.bicycle * 2 + " steps/second");
             $("#car-info").html("+" + inventory.car * 5 + " steps/second");
             $("#train-info").html("+" + inventory.train * 8 + " steps/second");
+            $("#plane-info").html("+" + inventory.plane * 9 + " steps/second");
             $("#spaceship-info").html("+" + inventory.spaceship * 10 + " steps/second")
+
+            $("#skateboard-cost").html(Math.round(calcGrowth(10, inventory.skateboard)));
+            $("#bicycle-cost").html(Math.round(calcGrowth(200, inventory.bicycle)));
+            $("#car-cost").html(Math.round(calcGrowth(500, inventory.car)));
+            $("#train-cost").html(Math.round(calcGrowth(1000, inventory.train)));
+            $("#plane-cost").html(Math.round(calcGrowth(5000, inventory.plane)));
+            $("#spaceship-cost").html(Math.round(calcGrowth(10000, inventory.spaceship)));
         }
 
         function retrieveUserInventory() {
@@ -311,7 +319,7 @@
         }
 
         function handleUserScore() {
-            userScore += 1 + (inventory.bicycle * 1) + (inventory.skateboard * 2) + (inventory.car * 5) + (inventory.spaceship * 10) + (inventory.train * 8);
+            userScore += 1 + (inventory.bicycle * 1) + (inventory.skateboard * 2) + (inventory.car * 5) + (inventory.spaceship * 10) + (inventory.train * 8) + (inventory.plane * 9);
         }
 
         function success(pos) {
@@ -340,6 +348,11 @@
 
         function error(err) {
             console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+
+        function calcGrowth(base, x){
+            console.log(base * Math.pow((1 + 0.15), x))
+            return base * Math.pow((1 + 0.15), x)
         }
 
         loggedInUser = null;
@@ -371,45 +384,56 @@
         }, updateRate);
 
         $("#skateboard-button").click(function(){
-            if (userScore >= 10){
+            price = calcGrowth(10, inventory.skateboard);
+            if (userScore >= price){
                 increaseSkateboardCount();
-                userScore -= 10;
+                userScore -= price;
             }
         });
 
         $("#bicycle-button").click(function(){
-            if (userScore >= 200){
+            price = calcGrowth(200, inventory.bicycle);
+
+            if (userScore >= price){
                 increaseBicycleCount();
-                userScore -= 200;
+                userScore -= price;
             }
         });
 
         $("#car-button").click(function(){
-            if (userScore >= 500){
+            price = calcGrowth(500, inventory.car);
+
+            if (userScore >= price){
                 increaseCarCount();
-                userScore -= 500;
+                userScore -= price;
             }
 
         });
 
         $("#train-button").click(function(){
-            if (userScore >= 1000){
+            price = calcGrowth(1000, inventory.train);
+
+            if (userScore >= price){
                 increaseTrainCount();
-                userScore -= 1000;
+                userScore -= price;
             }
         });
 
         $("#plane-button").click(function(){
-            if (userScore >= 5000){
+            price = calcGrowth(5000, inventory.plane);
+
+            if (userScore >= price){
                 increasePlaneCount();
-                userScore -= 5000;
+                userScore -= price;
             }
         });
 
         $("#spaceship-button").click(function(){
-            if (userScore >= 10000){
+            price = calcGrowth(10000, inventory.spaceship);
+
+            if (userScore >= price){
                 increaseSpaceshipCount();
-                userScore -= 10000;
+                userScore -= price;
             }
         });
 
