@@ -11,7 +11,7 @@ loggedInUser = null;
 
 //polls current location every X seconds determined by polling rate
 var intervalId = window.setInterval(function () {
-    navigator.geolocation.getCurrentPosition(success, error, options); 
+    navigator.geolocation.getCurrentPosition(success, error, options);
 }, pollingRate);
 
 //updates database every X seconds determined by update rate
@@ -36,14 +36,14 @@ function retrieveUserScore() {
     });
 }
 
-function calcTotalStepsPerSecond(){
+function calcTotalStepsPerSecond() {
     return 1
-    + inventory.skateboard * stepsPerSecond.skateboard 
-    + inventory.bicycle * stepsPerSecond.bicycle 
-    + inventory.car * stepsPerSecond.car
-    + inventory.train * stepsPerSecond.train
-    + inventory.plane * stepsPerSecond.plane
-    + inventory.spaceship * stepsPerSecond.spaceship
+        + inventory.skateboard * stepsPerSecond.skateboard
+        + inventory.bicycle * stepsPerSecond.bicycle
+        + inventory.car * stepsPerSecond.car
+        + inventory.train * stepsPerSecond.train
+        + inventory.plane * stepsPerSecond.plane
+        + inventory.spaceship * stepsPerSecond.spaceship
 }
 
 function updateCounts() {
@@ -53,7 +53,7 @@ function updateCounts() {
     $("#train-count").html("Trains: " + inventory.train);
     $("#plane-count").html("Planes: " + inventory.plane);
     $("#spaceship-count").html("Spaceships: " + inventory.spaceship);
-    
+
     $("#skateboard-info").html("+" + inventory.skateboard * stepsPerSecond.skateboard + " steps/second");
     $("#bicycle-info").html("+" + inventory.bicycle * stepsPerSecond.bicycle + " steps/second");
     $("#car-info").html("+" + inventory.car * stepsPerSecond.car + " steps/second");
@@ -176,8 +176,6 @@ function success(pos) {
         distance = calcDistance(previousCrd, crd);
         console.log("Distance:", distance);
         if (crd.accuracy > 25) {
-            console.log("Accuracy:", crd.accuracy);
-            console.log("Inaccurate, did not take position.");
         }
         if (isWalking()) {
             document.getElementById("walking-indicator").innerHTML = "You are walking and earning points!"
@@ -188,7 +186,7 @@ function success(pos) {
             document.getElementById("walking-indicator").innerHTML = "You aren't walking!";
         }
     }
-    
+
     updateCounts();
     previousCrd = pos.coords;
 }
@@ -214,8 +212,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-function getPropertyName(id){
-    switch(id){
+function getPropertyName(id) {
+    switch (id) {
         case "skateboard-button":
             return "skateboard";
         case "bicycle-button":
@@ -231,8 +229,8 @@ function getPropertyName(id){
     }
 }
 
-function increaseInventoryCount(inventoryType){
-    switch(inventoryType){
+function increaseInventoryCount(inventoryType) {
+    switch (inventoryType) {
         case "skateboard":
             inventory.skateboard++;
             break;
@@ -257,13 +255,77 @@ function increaseInventoryCount(inventoryType){
     updateCounts();
 }
 
-$(".game-button").click(function(){
+function createParticleDiv(e) {
+    var bezier_params = {
+        start: {
+            x: e.pageX - 20,
+            y: e.pageY - 20,
+        },
+        end: {
+            x: e.pageX + ((Math.round(Math.random()) * 2 - 1) * (Math.random() * 100)),
+            y: e.pageY + ((Math.round(Math.random()) * 2 - 1) * (Math.random() * 100)),
+            length: Math.random()
+        }
+    };
+
+    console.log(bezier_params);
+
+    $(function () {
+        $("<div></div>")
+            .hide()
+            .css({
+                "position": "absolute",
+                "left": (e.pageX - 20) + 'px',
+                "top": (e.pageY - 20) + 'px',
+                "z-index": "1000000",
+                "pointer-events": "none",
+
+            })
+            .append($('<img src="images/skateboard.png" alt="myimage" />'))
+            .appendTo("#particles")
+            .fadeIn("fast")
+            .animate({path : new $.path.bezier(bezier_params)})
+            .delay(500)
+            .fadeOut("fast");
+    });
+    /*
+        var div = $('<div class="image-wrapper">')
+            .css({
+                "position": "absolute",
+                "left": (e.pageX - 20) + 'px',
+                "top": (e.pageY - 20) + 'px',
+                "z-index": "1000000",
+                "animation": "fadeIn ease 2s",
+                "pointer-events": "none",
+    
+            })
+            .append($('<img src="images/position_marker.png" alt="myimage" />'))
+            .appendTo($("#particles"));
+    
+        $(div).fadeIn("slow", function(){
+            setTimeout(function () {
+            
+                div.addClass('fade-out');
+                setTimeout(function () { div.remove(); }, 0);
+            }, 1000);   
+        });*/
+
+}
+
+
+
+function spawnText(e) {
+    createParticleDiv(e);
+}
+
+$(".game-button").click(function (e) {
     buttonType = $(this).attr("id");
     inventoryType = getPropertyName(buttonType);
-    
+
     price = calcGrowth(basePrices[inventoryType], inventory[inventoryType]);
-    if (userScore >= price){
+    if (userScore >= price) {
         userScore -= price;
         increaseInventoryCount(inventoryType);
+        spawnText(e);
     }
 });
