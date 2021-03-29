@@ -79,6 +79,10 @@
     height: 300px;
 }
 
+.result-hover:hover {
+    color: #124a83;
+}
+
 #map {
     width: auto;
     height: 50vh;
