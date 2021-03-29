@@ -23,7 +23,6 @@ var updateScoreTimer = window.setInterval(function () {
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
     var score = db.collection("scores").doc(user.uid);
-    console.log("Logged ID:", user.uid);
     score.get().then((doc) => {
         if (doc.exists) {
             userScore = parseInt(doc.data()["score"]);
