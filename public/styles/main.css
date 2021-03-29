@@ -5,11 +5,22 @@ body{
 .inventory-area{
     background-image: url("../images/texture.jpg");
     display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 1px;
+}
+
+.inventory-label{
+    font-size: 1.5em;
+}
+
+.inventory-item-info{
+    display: grid;
+    row-gap: 0px;
 }
 
 #page-main-content{
-    margin-left: 5vw;
-    margin-right: 5vw;
+    margin-left: 25vw;
+    margin-right: 25vw;
 }
 
 .game-button{

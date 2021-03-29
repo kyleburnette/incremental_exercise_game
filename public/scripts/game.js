@@ -16,8 +16,8 @@ var intervalId = window.setInterval(function () {
 
 //updates database every X seconds determined by update rate
 var updateScoreTimer = window.setInterval(function () {
-    writeUserScore();
-    writeUserInventory();
+    //writeUserScore();
+    //writeUserInventory();
 }, updateRate);
 
 function retrieveUserScore() {
@@ -46,12 +46,12 @@ function calcTotalStepsPerSecond() {
 }
 
 function updateCounts() {
-    $("#skateboard-count").html("Skateboards: " + inventory.skateboard);
-    $("#bicycle-count").html("Bicycles: " + inventory.bicycle);
-    $("#car-count").html("Cars: " + inventory.car);
-    $("#train-count").html("Trains: " + inventory.train);
-    $("#plane-count").html("Planes: " + inventory.plane);
-    $("#spaceship-count").html("Spaceships: " + inventory.spaceship);
+    $("#skateboard-count").html(inventory.skateboard);
+    $("#bicycle-count").html(inventory.bicycle);
+    $("#car-count").html(inventory.car);
+    $("#train-count").html(inventory.train);
+    $("#plane-count").html(inventory.plane);
+    $("#spaceship-count").html(inventory.spaceship);
 
     $("#skateboard-info").html("+" + inventory.skateboard * stepsPerSecond.skateboard + " steps/second");
     $("#bicycle-info").html("+" + inventory.bicycle * stepsPerSecond.bicycle + " steps/second");
