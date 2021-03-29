@@ -242,7 +242,7 @@ function increaseInventoryCount(inventoryType) {
     updateCounts();
 }
 
-function createParticleDiv(e) {
+function createParticleDiv(e, inventoryType) {
     var bezier_params = {
         start: {
             x: e.pageX - 20,
@@ -266,9 +266,10 @@ function createParticleDiv(e) {
                 "top": (e.pageY - 20) + 'px',
                 "z-index": "1000000",
                 "pointer-events": "none",
+                "max-width": "25px"
 
             })
-            .append($('<img src="images/skateboard.png" alt="myimage" />'))
+            .append($('<img src="images/' + inventoryType + '.png" alt="myimage" />'))
             .appendTo("#particles")
             .fadeIn("fast")
             .animate({ path: new $.path.bezier(bezier_params) })
@@ -285,7 +286,7 @@ $(".game-button").click(function (e) {
     if (userScore >= price) {
         userScore -= price;
         increaseInventoryCount(inventoryType);
-        createParticleDiv(e);
+        createParticleDiv(e, inventoryType);
     }
 });
 
