@@ -1,6 +1,78 @@
 var loggedInUser = null;
+var currentID;
+
+var startPosition = {
+    'latitude': 0,
+    'longitude': 0
+}
+var destinationPosition = {
+    'latitude': 0,
+    'longitude': 0
+}
+
+var positionMarker;
+var destinationMarker;
+const destination_marker = "images/destination_marker.png";
+const location_marker = "images/position_marker.png";
+var userPath;
+var pathCoordinates = [];
+
+$("#mapModal").on('shown.bs.modal', function () {
+    initMapView();
+    google.maps.event.trigger(map, "resize");
+});
+
+function initMapView() {
+    updateMapView();
+}
+
+function updateMapView() {
+    const mapView = new google.maps.Map(document.getElementById("map"), {
+        center: {
+            lat: startPosition.latitude,
+            lng: startPosition.longitude
+        },
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: true,
+        zoom: 12,
+    });
+
+    destinationMarker = new google.maps.Marker({
+        position: {
+            lat: destinationPosition.latitude,
+            lng: destinationPosition.longitude
+        },
+        icon: destination_marker,
+    });
+    destinationMarker.setMap(mapView);
+
+    // user's current position pin
+    positionMarker = new google.maps.Marker({
+        position: {
+            lat: startPosition.latitude,
+            lng: startPosition.longitude
+        },
+        icon: location_marker,
+    });
+    positionMarker.setMap(mapView);
+
+    // draw path taken by user
+    userPath = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#93E62E",
+        strokeOpacity: 0.7,
+        strokeWeight: 6,
+      });
+    userPath.setMap(mapView);
+}
 
 function openReview(id) {
+    currentID = id;
     var sessionDate;
     var time;
     var distance;
@@ -11,6 +83,9 @@ function openReview(id) {
     db.collection("user").doc(loggedInUser.uid).collection("sessions").doc(id)
     .get().then((doc) => {
         if (doc.exists) {
+            startPosition = doc.data().startPosition;
+            destinationPosition = doc.data().destinationPosition;
+            pathCoordinates = doc.data().path;
             sessionDate = (doc.data().date).toDate();
             time = doc.data().totalTime;
             distance = doc.data().distanceTravelled;
