@@ -15,6 +15,7 @@
 
     <!-- Optional styles and scripts of your own -->
     <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
 
 </head>
@@ -53,84 +54,90 @@
             </div>
         </div>
     </nav>
-
     <div class="alert alert-success alert-dismissible fade show" id="test" role="alert">
         Successfully logged in!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div class="container">
+    <div id="page-main-content">
         <div id="total-steps-per-second"></div>
         <div id="debug"></div>
         <div id="walking-indicator">You aren't walking!</div>
-        <div class="h2" id="inventory">Your inventory</div>
-        <div id="skateboard">
-            <p id="skateboard-count">Skateboards: 0</p>
-            <p id="skateboard-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="skateboard-button">Buy 1 Skateboard
-                (Cost: <span id="skateboard-cost">10</span> steps)</button>
+        <div class="h2" id="inventory">Inventory</div>
+
+        <div class="h-100 row align-items-center">
+            <button type="button" class="btn btn-lg game-button game-button skateboard-button inventory-area"
+                id="skateboard-button">
+                <p id="skateboard-count">Skateboards: 0</p>
+                <p id="skateboard-info"></p>
+                <p>Buy 1 Skateboard<br />Cost: <span id="skateboard-cost">10</span> steps</p>
+            </button>
+
+            <button type="button" class="btn btn-lg game-button game-button bicycle-button inventory-area"
+                id="bicycle-button">
+                <p id="bicycle-count">Skateboards: 0</p>
+                <p id="bicycle-info"></p>
+                <p>Buy 1 Bicycle<br />Cost: <span id="bicycle-cost">10</span> steps</p>
+            </button>
+
+            <button type="button" class="btn btn-lg game-button game-button car-button inventory-area" id="car-button">
+                <p id="car-count">Skateboards: 0</p>
+                <p id="car-info"></p>
+                <p>Buy 1 Car<br />Cost: <span id="car-cost">10</span> steps</p>
+            </button>
+
+            <button type="button" class="btn btn-lg game-button game-button train-button inventory-area"
+                id="train-button">
+                <p id="train-count">Skateboards: 0</p>
+                <p id="train-info"></p>
+                <p>Buy 1 Train<br />Cost: <span id="train-cost">10</span> steps</p>
+            </button>
+
+            <button type="button" class="btn btn-lg game-button game-button plane-button inventory-area"
+                id="plane-button">
+                <p id="plane-count">Skateboards: 0</p>
+                <p id="plane-info"></p>
+                <p>Buy 1 Plane<br />Cost: <span id="plane-cost">10</span> steps</p>
+            </button>
+
+            <button type="button" class="btn btn-lg game-button game-button spaceship-button inventory-area"
+                id="spaceship-button">
+                <p id="spaceship-count">Skateboards: 0</p>
+                <p id="spaceship-info"></p>
+                <p>Buy 1 Spaceship<br />Cost: <span id="spaceship-cost">10</span> steps</p>
+            </button>
+
         </div>
-        <div id="bicycle">
-            <p id="bicycle-count">Bicycles: 0</p>
-            <p id="bicycle-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="bicycle-button">Buy 1 Bicycle (Cost:
-                <span id="bicycle-cost">200</span> steps)</button>
+
+        <div class="container mt-3">
+            <div class="current-goal">
+                <h2 class="display-6">Current Goal</h2>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                    aria-valuemax="100">25%</div>
+            </div>
+            <div class="mt-3">
+                <a href="goal.html" class="btn btn-outline-primary btn-lg btn-block">View Goals</a>
+            </div>
         </div>
-        <div id="car">
-            <p id="car-count">Cars: 0</p>
-            <p id="car-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="car-button">Buy 1 Car (Cost: <span
-                    id="car-cost">500</span> steps)</button>
+
+        <hr />
+
+        <div class="container mt-3">
+            <h2 class="display-6">News</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#" aria-current="page">Dev Log #3 | Incomplete JavaScript</a></li>
+                <li class="list-group-item"><a href="#" aria-current="page">Feature Release #1 | Pages Created</a></li>
+                <li class="list-group-item"><a href="#" aria-current="page">Dev Log #2 | Features Planned</a></li>
+                <li class="list-group-item"><a href="#" aria-current="page">Dev Log #1 | Project Group</a></li>
+            </ul>
         </div>
-        <div id="train">
-            <p id="train-count">Trains: 0</p>
-            <p id="train-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="train-button">Buy 1 Train (Cost: <span
-                    id="train-cost">1000</span> steps)</button>
-        </div>
-        <div id="plane">
-            <p id="plane-count">Planes: 0</p>
-            <p id="plane-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="plane-button">Buy 1 Plane (Cost: <span
-                    id="plane-cost">5000</span> steps)</button>
-        </div>
-        <div id="spaceship">
-            <p id="spaceship-count">Spaceships: 0</p>
-            <p id="spaceship-info"></p>
-            <button type="button" class="btn btn-primary btn-lg game-button" id="spaceship-button">Buy 1 Spaceship
-                (Cost: <span id="spaceship-cost">10000</span> steps)</button>
-        </div>
+
+        <div id="particles"></div>
+
+        <div class="filler"></div>
     </div>
-
-    <div class="container mt-3">
-        <div class="current-goal">
-            <h2 class="display-6">Current Goal</h2>
-        </div>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-                aria-valuemax="100">25%</div>
-        </div>
-        <div class="mt-3">
-            <a href="goal.html" class="btn btn-outline-primary btn-lg btn-block">View Goals</a>
-        </div>
-    </div>
-
-    <hr />
-
-    <div class="container mt-3">
-        <h2 class="display-6">News</h2>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><a href="#" aria-current="page">Dev Log #3 | Incomplete JavaScript</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">Feature Release #1 | Pages Created</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">Dev Log #2 | Features Planned</a></li>
-            <li class="list-group-item"><a href="#" aria-current="page">Dev Log #1 | Project Group</a></li>
-        </ul>
-    </div>
-
-    <div id="particles"></div>
-
-    <div class="filler"></div>
-
     <!-- Footer Navigation Bar -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid">

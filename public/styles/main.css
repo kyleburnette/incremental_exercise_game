@@ -1,0 +1,31 @@
+body{
+    margin: 0;
+}
+
+.inventory-area{
+    background-image: url("../images/texture.jpg");
+    display: grid;
+}
+
+#page-main-content{
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
+.game-button{
+    color: black;
+    margin-top: 5px;
+}
+
+.game-button:hover{
+    color: black;
+}
+
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
+
+#page-main-content{
+    text-align: center;
+}
