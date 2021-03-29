@@ -1,4 +1,4 @@
-var updateRate = 5000; //ms
+var updateRate = 20000; //ms
 var pollingRate = 1000; //ms
 
 var growthRate = 0.15;
