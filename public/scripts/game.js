@@ -187,12 +187,10 @@ function success(pos) {
     if (previousCrd != null) {
         distance = calcDistance(previousCrd, crd);
         console.log("Distance:", distance);
-        if (crd.accuracy > minAccuracy) {
-            checkIsWalking();
-            if (isWalking){
-                handleUserScore();
-                distance = calcDistance(previousCrd, crd);
-            }
+        checkIsWalking();
+        if (isWalking){
+            handleUserScore();
+            distance = calcDistance(previousCrd, crd);
         }
     }
 

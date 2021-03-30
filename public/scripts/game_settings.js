@@ -1,6 +1,6 @@
 var updateRate = 20000; //ms
 var pollingRate = 1000; //ms
-var minAccuracy = 5; //meters
+var maxAccuracy = 5; //meters
 
 var growthRate = 0.15;
 
