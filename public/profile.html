@@ -61,8 +61,8 @@
                 Featured
             </div>
             <div class="card-body">
-                <h5 class="card-title">Quote of the day</h5>
-                <p class="card-text">~<span id="quote-goes-here"></span></p>
+                <h5 class="card-title">Random Quote for YOU!</h5>
+                <p class="card-text">~<span id="quote-go-here"></span></p>
                 <a href="goal.html" class="btn btn-primary">Set a Goal</a>
             </div>
 
@@ -132,7 +132,7 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script src="scripts/upload_profilePic.js"></script>
-    <script>
+    <!-- <script>
         function readQuote() {
             db.collection("messages").doc("monday")
                 .onSnapshot(function (snap) {
@@ -145,7 +145,23 @@
                 })
         }
         readQuote();
-    </script>
+    </script> -->
+    <script>
+    function displayQuote() {
+        db.collection("messages")
+            .where ("position", ">", Math.floor(Math.random() * 1000))
+            .limit(1)
+            .get()
+            .then(function (snap) {
+                snap.forEach(function (doc) {
+                    var n = doc.data().message;
+                    console.log(n);
+                    var messagesString = "<p> " + n + "</p";
+                    $("#quote-go-here").append(messagesString);
+                })
+            })
+      }
+      displayQuote();</script>
 
 </body>
 
