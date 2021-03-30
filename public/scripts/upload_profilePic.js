@@ -73,6 +73,21 @@ firebase.auth().onAuthStateChanged(function (user) {
   }
 });
 
+$(document).ready(function () {
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            loggedInUser = user;
+            console.log("Logged in as", loggedInUser.displayName);
+            retrieveMultiplier();
+            retrieveUserInventory();
+            retrieveUserScore();
+        } else {
+            console.warn("No user detected!");
+            window.location.href = "login.html";
+        }
+    });
+});
+
 /* var fileInput = document.getElementById("mypic-input");
 const preview = document.getElementById("preview-image");
 

@@ -1,0 +1,18 @@
+.entry-color {
+    color: #2190FF;
+}
+
+.result-hover:hover {
+    color: #124a83;
+}
+
+#map {
+    width: auto;
+    height: 50vh;
+}
+
+#mapView {
+    display: none;
+    width: auto;
+    height: 55vh;
+}

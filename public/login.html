@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-        </script>
+    </script>
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
 
 </head>
@@ -62,7 +62,7 @@
     <!----------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
@@ -75,23 +75,23 @@
     <script src="scripts/firebase_api.js"> </script>
 
     <script>
-        function writeNewInventory(user){
+        function writeNewInventory(user) {
             db.collection("inventory").doc(user.uid).set({
-                            skateboard: 0,
-                            bicycle: 0,
-                            car: 0,
-                            train: 0,
-                            plane: 0,
-                            spaceship: 0,
-                        }, {
-                            merge: true
-                        }).then(function () {
-                            console.log("New user's score set to 0.");
-                            window.location.assign("main.html");
-                        })
-                            .catch(function (error) {
-                                console.log("Error adding new user: " + error);
-                            });
+                    skateboard: 0,
+                    bicycle: 0,
+                    car: 0,
+                    train: 0,
+                    plane: 0,
+                    spaceship: 0,
+                }, {
+                    merge: true
+                }).then(function () {
+                    console.log("New user's score set to 0.");
+                    window.location.assign("main.html");
+                })
+                .catch(function (error) {
+                    console.log("Error adding new user: " + error);
+                });
         }
         // Initialize the FirebaseUI Widget using Firebase.
         var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -110,15 +110,15 @@
                     // The Firestore rules must allow the user to write. 
                     //------------------------------------------------------------------------------------------
                     var user = authResult.user;
-                    if (authResult.additionalUserInfo.isNewUser) {         //if new user
-                        db.collection("users").doc(user.uid).set({         //write to firestore
-                            name: user.displayName,                    //"users" collection
-                            email: user.email,                              //with authenticated user's ID (user.uid)
-                            profilePic: user.photoURL                          //photoURL of user.
-                        }).then(function () {
-                            console.log("New user added to firestore");
-                            writeNewInventory(user);
-                        })
+                    if (authResult.additionalUserInfo.isNewUser) { //if new user
+                        db.collection("users").doc(user.uid).set({ //write to firestore
+                                name: user.displayName, //"users" collection
+                                email: user.email, //with authenticated user's ID (user.uid)
+                                profilePic: user.photoURL //photoURL of user.
+                            }).then(function () {
+                                console.log("New user added to firestore");
+                                writeNewInventory(user);
+                            })
                             .catch(function (error) {
                                 console.log("Error adding new user: " + error);
                             });
