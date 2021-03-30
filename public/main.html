@@ -60,84 +60,91 @@
     </div>
 
     <div id="page-main-content">
-        <div id="total-steps-per-second"></div>
+        <div class="h2" id="inventory">Info</div>
+        <div id="total-steps-per-second">Steps per second: 0</div>
+        <div id="total-steps">Total Steps: 0</div>
         <div id="debug"></div>
-        <div id="walking-indicator">You aren't walking!</div>
         <div class="h2" id="inventory">Inventory</div>
 
         <div class="h-100 row align-items-center">
-            <button type="button" class="btn btn-lg game-button game-button skateboard-button inventory-area"
-                id="skateboard-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="skateboard-label">Skateboards</div>
-                    <div>Cost: <span id="skateboard-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="skateboard-count">0</div>
-                    <div id="skateboard-info"></div>
-                </div>
-            </button>
+            <div id="button-container">
+                <button type="button" class="btn btn-lg game-button skateboard-button"
+                    id="skateboard-button">
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="skateboard-label">Skateboard</div>
+                        <div>Cost: <span id="skateboard-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/skateboard.png">
+                    <div class="inventory-item-count">
+                        <div id="skateboard-count">0</div>
+                    </div>
+                </button>
 
-            <button type="button" class="btn btn-lg game-button game-button bicycle-button inventory-area"
-                id="bicycle-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="bicycle-label">Bicycles</div>
-                    <div>Cost: <span id="bicycle-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="bicycle-count">0</div>
-                    <div id="bicycle-info"></div>
-                </div>
-            </button>
+                <button type="button" class="btn btn-lg game-button bicycle-button"
+                    id="bicycle-button">
+                    
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="bicycle-label">Bicycle</div>
+                        <div>Cost: <span id="bicycle-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/bicycle.png">
+                    <div class="inventory-item-count">
+                        <div id="bicycle-count">0</div>
+                    </div>
+                </button>
 
-            <button type="button" class="btn btn-lg game-button game-button car-button inventory-area"
-                id="car-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="car-label">Cars</div>
-                    <div>Cost: <span id="car-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="car-count">0</div>
-                    <div id="car-info"></div>
-                </div>
-            </button>
+                <button type="button" class="btn btn-lg game-button car-button"
+                    id="car-button">
+                    
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="car-label">Car</div>
+                        <div>Cost: <span id="car-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/car.png">
+                    <div class="inventory-item-count">
+                        <div id="car-count">0</div>
+                    </div>
+                </button>
 
-            <button type="button" class="btn btn-lg game-button game-button train-button inventory-area"
-                id="train-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="train-label">Train</div>
-                    <div>Cost: <span id="train-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="train-count">0</div>
-                    <div id="train-info"></div>
-                </div>
-            </button>
+                <button type="button" class="btn btn-lg game-button train-button"
+                    id="train-button">
+                    
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="train-label">Train</div>
+                        <div>Cost: <span id="train-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/train.png">
+                    <div class="inventory-item-count">
+                        <div id="train-count">0</div>
+                    </div>
+                </button>
 
-            <button type="button" class="btn btn-lg game-button game-button plane-button inventory-area"
-                id="plane-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="plane-label">Planes</div>
-                    <div>Cost: <span id="plane-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="plane-count">0</div>
-                    <div id="plane-info"></div>
-                </div>
-            </button>
+                <button type="button" class="btn btn-lg game-button plane-button"
+                    id="plane-button">
+                    
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="plane-label">Plane</div>
+                        <div>Cost: <span id="plane-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/plane.png">
+                    <div class="inventory-item-count">
+                        <div id="plane-count">0</div>
+                    </div>
+                </button>
 
-            <button type="button" class="btn btn-lg game-button game-button spaceship-button inventory-area"
-                id="spaceship-button">
-                <div class="inventory-item-info">
-                    <div class="inventory-label" id="spaceship-label">Spaceships</div>
-                    <div>Cost: <span id="spaceship-cost">10</span> steps</div>
-                </div>
-                <div class="inventory-item-count">
-                    <div id="spaceship-count">0</div>
-                    <div id="spaceship-info"></div>
-                </div>
-            </button>
-
+                <button type="button" class="btn btn-lg game-button spaceship-button"
+                    id="spaceship-button">
+                   
+                    <div class="inventory-item-info">
+                        <div class="inventory-label" id="spaceship-label">Spaceship</div>
+                        <div>Cost: <span id="spaceship-cost">10</span> steps</div>
+                    </div>
+                    <img class="inventory-img" src="images/spaceship.png">
+                    <div class="inventory-item-count">
+                        <div id="spaceship-count">0</div>
+                    </div>
+                </button>
+            </div>
         </div>
 
         <div id="particles"></div>
@@ -159,7 +166,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>

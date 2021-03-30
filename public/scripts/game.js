@@ -7,11 +7,12 @@ var options = {
     maximumAge: 0
 };
 var userScore = 0;
+var isWalking = false;
 loggedInUser = null;
 
 //polls current location every X seconds determined by polling rate
 var intervalId = window.setInterval(function () {
-    navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.getCurrentPosition(success, error, options);  
 }, pollingRate);
 
 //updates database every X seconds determined by update rate
@@ -36,13 +37,18 @@ function retrieveUserScore() {
 }
 
 function calcTotalStepsPerSecond() {
-    return 1
+    if (isWalking){
+        return 1
         + inventory.skateboard * stepsPerSecond.skateboard
         + inventory.bicycle * stepsPerSecond.bicycle
         + inventory.car * stepsPerSecond.car
         + inventory.train * stepsPerSecond.train
         + inventory.plane * stepsPerSecond.plane
-        + inventory.spaceship * stepsPerSecond.spaceship
+        + inventory.spaceship * stepsPerSecond.spaceship;
+    } else {
+        return 0;
+    }
+
 }
 
 function updateCounts() {
@@ -67,8 +73,8 @@ function updateCounts() {
     $("#plane-cost").html(Math.round(calcGrowth(basePrices.plane, inventory.plane)));
     $("#spaceship-cost").html(Math.round(calcGrowth(basePrices.spaceship, inventory.spaceship)));
 
-    $("#total-steps-per-second").html("Total steps per second: " + calcTotalStepsPerSecond());
-    $("#debug").html(`Total Steps: ` + Math.round(userScore));
+    $("#total-steps-per-second").html("Steps per second: " + calcTotalStepsPerSecond());
+    $("#total-steps").html(`Total Steps: ` + Math.round(userScore));
 }
 
 function retrieveUserInventory() {
@@ -83,7 +89,6 @@ function retrieveUserInventory() {
             inventory.skateboard = parseInt(doc.data()["skateboard"]);
             inventory.spaceship = parseInt(doc.data()["spaceship"]);
             inventory.train = parseInt(doc.data()["train"]);
-
             updateCounts();
         } else {
             // doc.data() will be undefined in this case
@@ -155,8 +160,16 @@ function logOut() {
         });
 }
 
-function isWalking() {
-    return travelSpeed() > 1.5 //meters per second
+function checkIsWalking() {
+    if (debug){
+        isWalking = true;
+    } else {
+        if (travelSpeed() > 1.5){
+            isWalking = true;
+        } else {
+            isWalking = false;
+        }
+    }
 }
 
 function handleUserScore() {
@@ -174,19 +187,19 @@ function success(pos) {
     if (previousCrd != null) {
         distance = calcDistance(previousCrd, crd);
         console.log("Distance:", distance);
-        if (crd.accuracy > 25) {
-        }
-        if (isWalking()) {
-            document.getElementById("walking-indicator").innerHTML = "You are walking and earning points!"
-            handleUserScore();
-            distance = calcDistance(previousCrd, crd);
-        } else {
-            handleUserScore();
-            document.getElementById("walking-indicator").innerHTML = "You aren't walking!";
+        if (crd.accuracy > minAccuracy) {
+            checkIsWalking();
+            if (isWalking){
+                handleUserScore();
+                distance = calcDistance(previousCrd, crd);
+            }
         }
     }
 
     updateCounts();
+    if(textDebug){
+        $("#debug").html("isWalking: " + isWalking);
+    }
     previousCrd = pos.coords;
 }
 
