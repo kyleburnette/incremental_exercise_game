@@ -10,13 +10,12 @@ body{
 .game-button{
     background-image: url("../images/texture.jpg");
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 1px;
-    font-size: 5vh;
+    grid-template-columns: 10% 50% 40%;
+    font-size: 1.5vh;
 }
 
 .inventory-label{
-    font-size: 5vh;
+    font-size: 3vh;
 }
 
 .game-button{
@@ -26,8 +25,8 @@ body{
 
 .inventory-img{
     float: right;
-    padding-top: 30%;
-    width: 45vw;
+    max-width: 10vw;
+
 }
 
 .game-button:hover{
