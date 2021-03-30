@@ -1,16 +1,3 @@
-/**
- * More stuff here
- * to make it build
- * test
- * test
- * test
- * test
- * test
- * test
- * test
- * test
- * test
- */
 var deviceType = "Mobile";
 
 var crd = {
@@ -391,7 +378,7 @@ function endExercise() {
 
     if (routeError == true) {
         $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
-    } else if (flagCounter > 5) {
+    } else if (flagCounter > 30) {
         $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving. Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
     } else if (totalDistance <= 0) {
         $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
@@ -415,14 +402,13 @@ function endExercise() {
     console.log(tempScore);
     $("#bonusScore").html(`${Math.round(tempScore)}`);
 
-    if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
+    if (routeError == false && flagCounter <= 30 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
         userScore = userScore * calcTotalStepsPerSecond();
         console.log(userScore);
         $("#bonusScore").html(`${Math.round(userScore)}`);
         writeUserScore();
-        //if (checkTime(endTime) >= 3) {
-        if (routeError == false) {
+        if (checkTime(endTime) >= 3) {
             // Create a database entry of exercise and then move on to feedback and adjustments
             var user = firebase.auth().currentUser;
 
@@ -539,9 +525,9 @@ function success(pos) {
         } else {
             distance = calcDistance(previousCrd, crd);
             if (trackingState) {
-                if (distance > 200) {
+                if (distance > 35) {
                     flagCounter++;
-                    if (flagCounter <= 10) {
+                    if (flagCounter <= 30) {
                         console.warn("Abnormal distance tracked:", distance, "ignoring update.");
                     } else {
                         endExercise();
