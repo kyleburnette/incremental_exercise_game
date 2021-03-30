@@ -17,8 +17,8 @@ var intervalId = window.setInterval(function () {
 
 //updates database every X seconds determined by update rate
 var updateScoreTimer = window.setInterval(function () {
-    //writeUserScore();
-    //writeUserInventory();
+    writeUserScore();
+    writeUserInventory();
 }, updateRate);
 
 function retrieveUserScore() {
