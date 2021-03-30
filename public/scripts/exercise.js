@@ -13,6 +13,9 @@ var destinationPosition = {
     'longitude': 0
 }
 
+var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
+var stepsPerSecond = {skateboard: 1, bicycle: 2, car: 5, train: 8, plane: 9, spaceship: 10};
+
 var destinationLat = 0;
 var destinationLng = 0;
 var dateObj = new Date();
@@ -32,7 +35,8 @@ var destinationSet = false;
 
 var duration;
 var timer = 0;
-var currentScore = 0;
+var savedScore;
+var userScore = 0;
 
 function startView() {
     var heading = "Map View - ";
@@ -396,8 +400,11 @@ function endExercise() {
 
     if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
+        userScore = userScore * calcTotalStepsPerSecond();
+        $("#bonusScore").html(`${Math.round(userScore)}`);
         writeUserScore();
-        if (checkTime(endTime) >= 3) {
+        //if (checkTime(endTime) >= 3) {
+        if (routeError == false) {
             // Create a database entry of exercise and then move on to feedback and adjustments
             var user = firebase.auth().currentUser;
 
@@ -677,8 +684,8 @@ function retrieveUserScore() {
     console.log("Logged ID:", user.uid);
     score.get().then((doc) => {
         if (doc.exists) {
-            userScore = parseInt(doc.data()["score"]);
-            console.log("Starting Score:", userScore);
+            savedScore = parseInt(doc.data()["score"]);
+            console.log("Starting Score:", savedScore);
         } else {
             // doc.data() will be undefined in this case
             console.warn("No such document!");
@@ -696,11 +703,41 @@ function writeUserScore(text) {
         window.location.href = "login.html";
     } else {
         updateScore.doc(loggedInUser.uid).set({
-            score: userScore
+            score: savedScore + userScore
         }, {
             merge: true
         })
     }
+}
+
+function calcTotalStepsPerSecond() {
+    return 1
+        + inventory.skateboard * stepsPerSecond.skateboard
+        + inventory.bicycle * stepsPerSecond.bicycle
+        + inventory.car * stepsPerSecond.car
+        + inventory.train * stepsPerSecond.train
+        + inventory.plane * stepsPerSecond.plane
+        + inventory.spaceship * stepsPerSecond.spaceship
+}
+
+function retrieveUserInventory() {
+    var user = firebase.auth().currentUser;
+    var inventoryDB = db.collection("inventory").doc(user.uid);
+    inventoryDB.get().then((doc) => {
+        if (doc.exists) {
+            inventory.bicycle = parseInt(doc.data()["bicycle"]);
+            inventory.car = parseInt(doc.data()["car"]);
+            inventory.plane = parseInt(doc.data()["plane"]);
+            inventory.skateboard = parseInt(doc.data()["skateboard"]);
+            inventory.spaceship = parseInt(doc.data()["spaceship"]);
+            inventory.train = parseInt(doc.data()["train"]);
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
 }
 
 $("#destinationModal").on('shown.bs.modal', function () {
@@ -715,6 +752,7 @@ $(document).ready(function () {
             loggedInUser = user;
             console.log("Logged in as", loggedInUser.displayName);
             retrieveMultiplier();
+            retrieveUserInventory();
             retrieveUserScore();
         } else {
             console.warn("No user detected!");
