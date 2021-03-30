@@ -88,6 +88,8 @@ $(document).ready(function () {
     });
 });
 
+
+//writeQuotes();
 /* var fileInput = document.getElementById("mypic-input");
 const preview = document.getElementById("preview-image");
 
