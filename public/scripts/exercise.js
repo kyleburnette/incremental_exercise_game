@@ -397,10 +397,15 @@ function endExercise() {
         totalMaxCalories = (totalSteps / 100) * 4;
         $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
+    var tempScore = scoreMultiplier(totalDistance);
+    tempScore = tempScore * calcTotalStepsPerSecond();
+    console.log(tempScore);
+    $("#bonusScore").html(`${Math.round(tempScore)}`);
 
     if (routeError == false && flagCounter <= 5 && totalDistance > 0) {
         userScore += scoreMultiplier(totalDistance);
         userScore = userScore * calcTotalStepsPerSecond();
+        console.log(userScore);
         $("#bonusScore").html(`${Math.round(userScore)}`);
         writeUserScore();
         //if (checkTime(endTime) >= 3) {
@@ -449,7 +454,7 @@ function endExercise() {
                 console.error("Error added document:", error);
             })
         } else {
-            console.warn("Session not longer than 5 minutes, not saving.");
+            console.warn("Session not longer than 3 minutes, not saving.");
         }
     } else {
         console.warn("Error was detected, database will not be updated.");
