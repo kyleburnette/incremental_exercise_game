@@ -25,6 +25,79 @@ function initMapView() {
     updateMapView();
 }
 
+// Move destination marker on user input
+function moveDestinationMarker(map, event) {
+    destinationMarker.setPosition(event.latLng);
+    destinationMarker.setMap(map);
+    destinationMarker.setIcon(destination_marker);
+    destinationLat = event.latLng.lat();
+    destinationLng = event.latLng.lng();
+    console.log("Destination:", destinationLat, destinationLng);
+}
+
+// Move initial destination marker on user input
+function moveInitialDestinationMarker(map, event) {
+    destinationMarker = new google.maps.Marker({
+        position: event.latLng,
+        map: map,
+        icon: destination_marker,
+    });
+    destinationLat = event.latLng.lat();
+    destinationLng = event.latLng.lng();
+    console.log("Destination:", destinationLat, destinationLng);
+    destinationSet = true;
+}
+
+// Add destination click listener to update position
+function addDestinationListener(map) {
+    map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Move destination marker
+        if (destinationSet) {
+            moveDestinationMarker(map, mapsMouseEvent);
+        } else {
+            moveInitialDestinationMarker(map, mapsMouseEvent);
+        }
+    });
+}
+
+// Set static destination marker for map view
+function setDestinationMarker(mapView) {
+    destinationMarker = new google.maps.Marker({
+        position: { lat: destinationLat, lng: destinationLng },
+        icon: destination_marker,
+    });
+    destinationMarker.setMap(mapView);
+}
+
+// Shows the info window for passed map parameter
+function showInfoWindow(map) {
+    infoWindow = new google.maps.InfoWindow({
+        content: "Click on the map to place your destination pin",
+        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
+    });
+    infoWindow.open(map);
+}
+
+// Sets marker for current position for passed map parameter
+function setCurrentPosition(map) {
+    new google.maps.Marker({
+        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
+        map: map,
+        icon: location_marker,
+    });
+}
+
+// Sets marker for start position for mapView
+function setMapViewStartPos(mapView) {
+    positionMarker = new google.maps.Marker({
+        position: { lat: crd.lat, lng: crd.lng },
+        icon: location_marker,
+    });
+    positionMarker.setMap(mapView);
+}
+
 // Initializes map components and handles updates for destination on user input
 function updateMap(val) {
     crd = { 'lat': val[0], 'lng': val[1] };
@@ -38,45 +111,33 @@ function updateMap(val) {
         fullscreenControl: true,
         zoom: 12,
     });
-
     // Create the initial InfoWindow.
-    let infoWindow = new google.maps.InfoWindow({
-        content: "Click on the map to place your destination pin",
-        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
-    });
-    infoWindow.open(map);
-
-    // Configure the click listener.
-    map.addListener("click", (mapsMouseEvent) => {
-        // Close the current InfoWindow.
-        infoWindow.close();
-        // Move destination marker
-        if (destinationSet) {
-            destinationMarker.setPosition(mapsMouseEvent.latLng);
-            destinationMarker.setMap(map);
-            destinationMarker.setIcon(destination_marker);
-            destinationLat = mapsMouseEvent.latLng.lat();
-            destinationLng = mapsMouseEvent.latLng.lng();
-            console.log("Destination:", destinationLat, destinationLng);
-        } else {
-            destinationMarker = new google.maps.Marker({
-                position: mapsMouseEvent.latLng,
-                map: map,
-                icon: destination_marker,
-            });
-            destinationLat = mapsMouseEvent.latLng.lat();
-            destinationLng = mapsMouseEvent.latLng.lng();
-            console.log("Destination:", destinationLat, destinationLng);
-            destinationSet = true;
-        }
-    });
-
+    showInfoWindow(map);
+    // Configure the click listener to set destination pin.
+    addDestinationListener(map);
     // user's current position pin
-    new google.maps.Marker({
-        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
-        map: map,
-        icon: location_marker,
-    });
+    setCurrentPosition(map);
+}
+
+// Calculate and display the route to destination
+function createRoute(mapView) {
+    directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    directionsDisplay.setMap(mapView);
+    findRoute(directionsService, directionsDisplay);
+}
+
+// Set up initial path coordinates and point for Polyline
+function setInitialPath(mapView) {
+    pathCoordinates = [{ lat: crd.lat , lng: crd.lng }];
+    userPath = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#93E62E",
+        strokeOpacity: 0.7,
+        strokeWeight: 6,
+      });
+    userPath.setMap(mapView);
 }
 
 // Initializes the Map View for session with all specified values by user
@@ -91,43 +152,16 @@ function updateMapView() {
         fullscreenControl: true,
         zoom: 12,
     });
-
-    destinationMarker = new google.maps.Marker({
-        position: { lat: destinationLat, lng: destinationLng },
-        icon: destination_marker,
-    });
-    destinationMarker.setMap(mapView);
-
+    // set destination marker for map view
+    setDestinationMarker(mapView);
     // user's current position pin
-    positionMarker = new google.maps.Marker({
-        position: { lat: crd.lat, lng: crd.lng },
-        icon: location_marker,
-    });
-    positionMarker.setMap(mapView);
-
+    setMapViewStartPos(mapView);
     // create the optimal route to destination
-    if (routeOption == "off") {
-        console.log("Route not specified, ignoring request.");
-    } else {
-        var directionsService = new google.maps.DirectionsService();
-        var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
-        directionsDisplay.setMap(mapView);
-        findRoute(directionsService, directionsDisplay);
-    };
-
-    pathCoordinates = [
-        { lat: crd.lat , lng: crd.lng }
-    ];
-
-    // draw path taken by user
-    userPath = new google.maps.Polyline({
-        path: pathCoordinates,
-        geodesic: true,
-        strokeColor: "#93E62E",
-        strokeOpacity: 0.7,
-        strokeWeight: 6,
-      });
-    userPath.setMap(mapView);
+    if (routeOption == "on") {
+        createRoute(mapView);
+    }
+    // set initial path point to current position
+    setInitialPath(mapView);
 }
 
 // Sets value for routeOption to on, if the user wants optimal routing
@@ -182,7 +216,6 @@ function toggleMapViewElements() {
     $(".stop-button").css("display", "block");
     $(".map-line").css("display", "block");
     $(".setup-button").css("display", "none");
-
 }
 
 // Calculate time required to destination with Distance Matrix API
@@ -190,8 +223,7 @@ function calcTimeRequired() {
     var origin = new google.maps.LatLng(crd.lat, crd.lng);
     var destination = new google.maps.LatLng(destinationLat, destinationLng);
     var service = new google.maps.DistanceMatrixService();
-    service.getDistanceMatrix(
-        {
+    service.getDistanceMatrix({
             origins: [origin],
             destinations: [destination],
             travelMode: 'WALKING',
@@ -218,7 +250,6 @@ function toggleMap() {
             updateTime(timer);
         }
     }, 1000);
-
     // only do this if the user sets a destination
     if (destinationSet == true) {
         // show timer and estimated time required
@@ -231,7 +262,18 @@ function toggleMap() {
     startView();
 }
 
-// Updates the timer
+// Displays timer in html
+function displayTimer(hours, minutes, seconds) {
+    if (hours > 0) {
+        $("#timeTaken").html(`${hours}h ${minutes}m ${seconds}s`);
+    } else if (minutes > 0) {
+        $("#timeTaken").html(`${minutes}m ${seconds}s`);
+    } else {
+        $("#timeTaken").html(`${seconds}s`);
+    }
+}
+
+// Calculates and updates the timer
 function updateTime(time) {
     var hours = 0;
     var minutes = 0;
@@ -245,26 +287,21 @@ function updateTime(time) {
         time = time % 60;
     }
     seconds = time % 3600;
-    if (hours > 0) {
-        $("#timeTaken").html(`${hours}h ${minutes}m ${seconds}s`);
-    } else if (minutes > 0) {
-        $("#timeTaken").html(`${minutes}m ${seconds}s`);
-    } else {
-        $("#timeTaken").html(`${seconds}s`);
-    }
+    displayTimer(hours, minutes, seconds);
 }
 
 // Formats the passed integer (in milliseconds) to a human-readable String
 function formatDate(endTime) {
+    // Get the time between the start and end time
     var diff = (dateObj.getTime() - endTime.getTime());
+    // Calculate seconds, minutes, and hours with millisecond difference
     var seconds = diff / 1000;
     var minutes = seconds / 60;
     var hours = minutes / 60;
-
+    // Convert to hour / minute / second format
     var secondsF = Math.abs(Math.round(seconds)) % 60;
     var minutesF = Math.abs(Math.round(minutes)) % 60;
     var hoursF = Math.abs(Math.round(hours));
-
     return `${hoursF}h ${minutesF}m ${secondsF}s`;
 }
 
@@ -277,12 +314,12 @@ function checkTime(endTime) {
 
 // Sets the values for time and duration bonus score multipliers
 function setMultipliers(doc) {
-    allowedTimeMultiplier = Math.max(0.25, parseFloat(doc.data()["timeMultiplier"]));
-    allowedTimeMultiplier = Math.min(3, allowedTimeMultiplier);
-    console.log("Permitted Time Multiplier:", allowedTimeMultiplier);
-    durationMultiplier = Math.max(0.25, parseFloat(doc.data()["durationMultiplier"]));
-    durationMultiplier = Math.min(3, durationMultiplier);
-    console.log("Permitted Duration Multiplier:", durationMultiplier);
+    // Set multipliers to a min of minMultiplier and max of maxMultiplier
+    allowedTimeMultiplier = Math.max(minMultiplier, parseFloat(doc.data()["timeMultiplier"]));
+    allowedTimeMultiplier = Math.min(maxMultiplier, allowedTimeMultiplier);
+
+    durationMultiplier = Math.max(minMultiplier, parseFloat(doc.data()["durationMultiplier"]));
+    durationMultiplier = Math.min(maxMultiplier, durationMultiplier);
 }
 
 // Applies the score multipliers to the bonus score and returns the bonus score
@@ -301,31 +338,27 @@ function scoreMultiplier(distance) {
     }).catch((error) => {
         console.warn("Error getting document:", error);
     });
-    const baseMultiplier = 0.25;
+    const baseMultiplier = 0.5; // 0.5x of multiplier to distance for bonus score
     var timeMultiplier = 1;
     if (destinationSet == true) {
         var timeCap = timespanMillis(duration) * durationMultiplier * allowedTimeMultiplier;
         timeMultiplier = timeCap / timer;
         if (timeMultiplier < 1) {
-            timeMultiplier = Math.max(timeMultiplier, 0.25);
+            timeMultiplier = Math.max(timeMultiplier, minMultiplier);
         } else if (timeMultiplier > 1) {
-            timeMultiplier = Math.min(timeMultiplier, 3);
+            timeMultiplier = Math.min(timeMultiplier, maxMultiplier);
         } else {
             timeMultiplier = 1;
         }
     }
 
     var bonusScore = totalDistance * baseMultiplier;
-    console.log("Time Multipler:", timeMultiplier);
     bonusScore *= timeMultiplier;
     return totalDistance + bonusScore;
 }
 
-// Ends the session, calculates statistics and score, and writes stats and score to database
-function endExercise() {
-    trackingState = false;
-    endTime = new Date();
-
+// Closes the map view elements and shows end card
+function endMapViewElements() {
     $("#mapView").css("display", "none");
     $("#disclaimer").css("display", "block");
     $(".timer").css("display", "none");
@@ -334,17 +367,23 @@ function endExercise() {
     $(".map-line").css("display", "none");
     $(".setup-button").css("display", "block");
     $(".exercise-heading").html("Exercise Setup");
+}
 
+// Check for any errors during exercise
+function checkExerciseError() {
     if (routeError == true) {
         $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
-    } else if (flagCounter > 30) {
-        $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving. Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
+    } else if (flagCounter > flagThreshold) {
+        $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving.Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
     } else if (totalDistance <= 0) {
         $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
     } else if (checkTime(endTime) < 3) {
         $("#error-message").html("<h4>Session time is less than 3 minutes, this session will not be recorded.</h4><hr />");
     }
+}
 
+// Display exercise session statistics
+function displayStats() {
     $("#totalTime").html(formatDate(endTime));
     $("#distanceTravelled").html(`${(totalDistance / 1000).toFixed(2)}km`);
     totalSteps = Math.round(totalDistance * 1.3123);
@@ -358,19 +397,33 @@ function endExercise() {
     }
     var tempScore = scoreMultiplier(totalDistance);
     tempScore = tempScore * calcTotalStepsPerSecond();
-    console.log(tempScore);
     $("#bonusScore").html(`${Math.round(tempScore)}`);
+}
 
-    if (routeError == false && flagCounter <= 30 && totalDistance > 0) {
-        userScore += scoreMultiplier(totalDistance);
-        userScore = userScore * calcTotalStepsPerSecond();
-        console.log(userScore);
-        $("#bonusScore").html(`${Math.round(userScore)}`);
-        writeUserScore();
+// Calculates the bonus score
+function calculateBonus() {
+    userScore += scoreMultiplier(totalDistance);
+    userScore = userScore * calcTotalStepsPerSecond();
+    $("#bonusScore").html(`${Math.round(userScore)}`);
+    writeUserScore();
+}
+
+// Ends the session, calculates statistics and score, and writes stats and score to database
+function endExercise() {
+    // stop tracking position
+    trackingState = false;
+    // get the time session is ended
+    endTime = new Date();
+
+    checkExerciseError();
+    displayStats();
+
+    // Write to database if errors are not detected
+    if (routeError == false && flagCounter <= flagThreshold && totalDistance > 0) {
+        calculateBonus();
         if (checkTime(endTime) >= 3) {
             // Create a database entry of exercise and then move on to feedback and adjustments
             var user = firebase.auth().currentUser;
-
             var step = db.collection("user").doc(user.uid);
             step.get().then((doc) => {
                 if (doc.exists) {
@@ -472,15 +525,15 @@ function success(pos) {
     };
 
     if (previousCrd != null) {
-        if (crd.accuracy > 30) {
+        if (crd.accuracy > minAccuracy) {
             console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not take position.");
         } else {
             distance = calcDistance(previousCrd, crd);
             if (trackingState) {
-                if (distance > 35) {
+                if (distance > 25) {
                     flagCounter++;
-                    if (flagCounter <= 30) {
+                    if (flagCounter <= flagThreshold) {
                         console.warn("Abnormal distance tracked:", distance, "ignoring update.");
                     } else {
                         endExercise();
@@ -504,7 +557,7 @@ function success(pos) {
         }
     }
     if (trackingState) {
-        if (crd.accuracy > 30) {
+        if (crd.accuracy > minAccuracy) {
             console.log("Accuracy:", crd.accuracy);
             console.log("Inaccurate, did not change previous coordinate.");
         } else {
@@ -514,7 +567,7 @@ function success(pos) {
         }
         if (destinationSet) {
             console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
-            if (calcDistance(startPosition, destinationPosition) < 25) {
+            if (calcDistance(startPosition, destinationPosition) < withinDestination) {
                 console.log("Arrived at destination");
                 $("#completedModal").modal("toggle");
                 endExercise();
@@ -547,12 +600,12 @@ function applyFeedback() {
             durationMultiplier = parseFloat(doc.data()["durationMultiplier"]);
             // Min multiplier of 0.25 and max of 3
             var newDifficulty = difficultyRating * allowedTimeMultiplier;
-            newDifficulty = Math.max(0.25, (newDifficulty));
-            newDifficulty = Math.min(3, (newDifficulty));
+            newDifficulty = Math.max(minMultiplier, (newDifficulty));
+            newDifficulty = Math.min(maxMultiplier, (newDifficulty));
             // Min multiplier of 0.25 and max of 3
             var newDuration = durationRating * durationMultiplier;
-            newDuration = Math.max(0.25, (newDuration));
-            newDuration = Math.min(3, (newDuration));
+            newDuration = Math.max(minMultiplier, (newDuration));
+            newDuration = Math.min(maxMultiplier, (newDuration));
 
             if (loggedInUser == null) {
                 console.warn("User is not logged in!");
@@ -711,13 +764,8 @@ function checkDevice() {
     console.log("Device Type:", deviceType);
 }
 
-$("#destinationModal").on('shown.bs.modal', function () {
-    initMap();
-    google.maps.event.trigger(map, "resize");
-});
-
-$(document).ready(function () {
-    // Check if the user is signed in, redirect to login if not signed in
+// Check if there is a user logged in, or redirect if not
+function checkUser() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
@@ -730,7 +778,17 @@ $(document).ready(function () {
             window.location.href = "login.html";
         }
     });
+}
 
+// Ensure the map is displayed by using a resize trick to update it
+$("#destinationModal").on('shown.bs.modal', function () {
+    initMap();
+    google.maps.event.trigger(map, "resize");
+});
+
+$(document).ready(function () {
+    // Check if the user is signed in, redirect to login if not signed in
+    checkUser();
     // The code that runs all the functions required to start the exercise
     checkDevice();
     if (deviceType == "Mobile") {

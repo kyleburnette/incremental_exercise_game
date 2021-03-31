@@ -5,12 +5,16 @@ var options = {
     maximumAge: 0
 };
 
+// Threshold options
+const minAccuracy = 30; // tracks inaccuracy
+const withinDestination = 25; // in meters
+const flagThreshold = 30; // maximum of 30 flags before session force ends
+
 // Keep the device type to verify if the user can use exercise.html
 var deviceType = "Mobile";
 
 // Flag counter tracking if the user is in a vehicle
 var flagCounter = 0;
-
 
 // Sets variable to the user on firebase
 var loggedInUser = firebase.auth().currentUser;
@@ -53,6 +57,8 @@ var durationRating;
 var recentFeedback
 
 // Default score multipliers
+const minMultiplier = 0.25;
+const maxMultiplier = 3;
 var allowedTimeMultiplier = 1;
 var durationMultiplier = 1;
 
@@ -68,9 +74,12 @@ var destinationLng = 0;
 var duration;
 var timer = 0;
 
-// Map markers and file path for custom images
+// Map elements and file path for custom images
 var positionMarker;
 var destinationMarker;
+var directionsService;
+var directionsDisplay;
+var infoWindow;
 const destination_marker = "images/destination_marker.png";
 const location_marker = "images/position_marker.png";
 

@@ -107,14 +107,6 @@ function openReview(id) {
     $("#reviewModal").modal("toggle");
 }
 
-function addEventListeners() {
-    var entries = document.querySelectorAll(".entries");
-
-    for (var i = 0; i < entries.length; i++) {
-        entries[i].addEventListener('click', openReview(this.id), false);
-    }
-}
-
 function displaySessions() {
     var list = document.getElementById("list-entries");
     if (loggedInUser != null) {
@@ -147,7 +139,6 @@ $(document).ready(function () {
             loggedInUser = user;
             console.log("Logged in as", loggedInUser.displayName);
             displaySessions();
-            // addEventListeners();
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";
