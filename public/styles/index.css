@@ -2,14 +2,14 @@
     box-shadow: 3px 5px 6px rgb(107, 107, 107);
 }
 
+.animated {
+    animation-duration: 3s;
+}
+
 .banner-img {
     filter: brightness(90%);
     width: 100%;
     height: auto;
-}
-
-.animated {
-    animation-duration: 3s;
 }
 
 .banner-txt {
@@ -17,6 +17,10 @@
     width: 55%;
     left: 40%;
     z-index: 100;
+}
+
+.play-button {
+    width: 100%;
 }
 
 .btn-lg {
