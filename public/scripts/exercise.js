@@ -1,3 +1,4 @@
+
 // Updates the page to show the Map View with current date of session
 function startView() {
     var heading = "Map View - ";
@@ -12,11 +13,14 @@ function initMap() {
     destinationLng = 0;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
             updateMap([pos.lat, pos.lng]);
         });
     } else {
-        console.log("Unsupported browser.");
+        console.warn("Unsupported browser.");
     }
 }
 
@@ -32,7 +36,6 @@ function moveDestinationMarker(map, event) {
     destinationMarker.setIcon(destination_marker);
     destinationLat = event.latLng.lat();
     destinationLng = event.latLng.lng();
-    console.log("Destination:", destinationLat, destinationLng);
 }
 
 // Move initial destination marker on user input
@@ -44,7 +47,6 @@ function moveInitialDestinationMarker(map, event) {
     });
     destinationLat = event.latLng.lat();
     destinationLng = event.latLng.lng();
-    console.log("Destination:", destinationLat, destinationLng);
     destinationSet = true;
 }
 
@@ -65,7 +67,10 @@ function addDestinationListener(map) {
 // Set static destination marker for map view
 function setDestinationMarker(mapView) {
     destinationMarker = new google.maps.Marker({
-        position: { lat: destinationLat, lng: destinationLng },
+        position: {
+            lat: destinationLat,
+            lng: destinationLng
+        },
         icon: destination_marker,
     });
     destinationMarker.setMap(mapView);
@@ -75,7 +80,10 @@ function setDestinationMarker(mapView) {
 function showInfoWindow(map) {
     infoWindow = new google.maps.InfoWindow({
         content: "Click on the map to place your destination pin",
-        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
+        position: {
+            lat: parseFloat(crd.lat),
+            lng: parseFloat(crd.lng)
+        },
     });
     infoWindow.open(map);
 }
@@ -83,7 +91,10 @@ function showInfoWindow(map) {
 // Sets marker for current position for passed map parameter
 function setCurrentPosition(map) {
     new google.maps.Marker({
-        position: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
+        position: {
+            lat: parseFloat(crd.lat),
+            lng: parseFloat(crd.lng)
+        },
         map: map,
         icon: location_marker,
     });
@@ -92,7 +103,10 @@ function setCurrentPosition(map) {
 // Sets marker for start position for mapView
 function setMapViewStartPos(mapView) {
     positionMarker = new google.maps.Marker({
-        position: { lat: crd.lat, lng: crd.lng },
+        position: {
+            lat: crd.lat,
+            lng: crd.lng
+        },
         icon: location_marker,
     });
     positionMarker.setMap(mapView);
@@ -100,9 +114,15 @@ function setMapViewStartPos(mapView) {
 
 // Initializes map components and handles updates for destination on user input
 function updateMap(val) {
-    crd = { 'lat': val[0], 'lng': val[1] };
+    crd = {
+        'lat': val[0],
+        'lng': val[1]
+    };
     const map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: parseFloat(crd.lat), lng: parseFloat(crd.lng) },
+        center: {
+            lat: parseFloat(crd.lat),
+            lng: parseFloat(crd.lng)
+        },
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: true,
@@ -122,28 +142,36 @@ function updateMap(val) {
 // Calculate and display the route to destination
 function createRoute(mapView) {
     directionsService = new google.maps.DirectionsService();
-    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    directionsDisplay = new google.maps.DirectionsRenderer({
+        suppressMarkers: true
+    });
     directionsDisplay.setMap(mapView);
     findRoute(directionsService, directionsDisplay);
 }
 
 // Set up initial path coordinates and point for Polyline
 function setInitialPath(mapView) {
-    pathCoordinates = [{ lat: crd.lat , lng: crd.lng }];
+    pathCoordinates = [{
+        lat: crd.lat,
+        lng: crd.lng
+    }];
     userPath = new google.maps.Polyline({
         path: pathCoordinates,
         geodesic: true,
         strokeColor: "#93E62E",
         strokeOpacity: 0.7,
         strokeWeight: 6,
-      });
+    });
     userPath.setMap(mapView);
 }
 
 // Initializes the Map View for session with all specified values by user
 function updateMapView() {
     const mapView = new google.maps.Map(document.getElementById("mapView"), {
-        center: { lat: crd.lat, lng: crd.lng },
+        center: {
+            lat: crd.lat,
+            lng: crd.lng
+        },
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: true,
@@ -167,19 +195,19 @@ function updateMapView() {
 // Sets value for routeOption to on, if the user wants optimal routing
 function setRouteOption() {
     routeOption = $("input[name=routingOption]:checked").val();
-    console.log("Selected Route Option:", routeOption);
 }
 
 // Finds the optimal route to the destination specified by the user
 function findRoute(directionsService, directionsDisplay) {
-    var destinationCrd = {'lat': destinationLat, 'lng': destinationLng};
-    console.log("Location:", crd);
-    console.log("Destination:", destinationCrd.lat, destinationCrd.lng);
+    var destinationCrd = {
+        'lat': destinationLat,
+        'lng': destinationLng
+    };
     directionsService.route({
         origin: crd,
         destination: destinationCrd,
         travelMode: 'WALKING'
-    }, function(response, status) {
+    }, function (response, status) {
         if (status == 'OK') {
             directionsDisplay.setDirections(response);
         } else {
@@ -200,12 +228,10 @@ function drawPath(pos) {
     tempPos.lat = holdPos.latitude;
     tempPos.lng = holdPos.longitude;
     pathCoordinates.push(tempPos);
-    console.log("New Point Coordinates: ", pathCoordinates);
 }
 
 // Takes coordinates from drawPath
 function updatePath() {
-    console.log("Updating path");
     userPath.setPath(pathCoordinates);
 }
 
@@ -224,11 +250,11 @@ function calcTimeRequired() {
     var destination = new google.maps.LatLng(destinationLat, destinationLng);
     var service = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix({
-            origins: [origin],
-            destinations: [destination],
-            travelMode: 'WALKING',
-            unitSystem: google.maps.UnitSystem.METRIC
-        }, response_data);
+        origins: [origin],
+        destinations: [destination],
+        travelMode: 'WALKING',
+        unitSystem: google.maps.UnitSystem.METRIC
+    }, response_data);
     function response_data(responseDis, status) {
         if (status !== google.maps.DistanceMatrixStatus.OK || status != "OK") {
             console.warn("Error:", status);
@@ -317,7 +343,6 @@ function setMultipliers(doc) {
     // Set multipliers to a min of minMultiplier and max of maxMultiplier
     allowedTimeMultiplier = Math.max(minMultiplier, parseFloat(doc.data()["timeMultiplier"]));
     allowedTimeMultiplier = Math.min(maxMultiplier, allowedTimeMultiplier);
-
     durationMultiplier = Math.max(minMultiplier, parseFloat(doc.data()["durationMultiplier"]));
     durationMultiplier = Math.min(maxMultiplier, durationMultiplier);
 }
@@ -351,7 +376,6 @@ function scoreMultiplier(distance) {
             timeMultiplier = 1;
         }
     }
-
     var bonusScore = totalDistance * baseMultiplier;
     bonusScore *= timeMultiplier;
     return totalDistance + bonusScore;
@@ -372,13 +396,18 @@ function endMapViewElements() {
 // Check for any errors during exercise
 function checkExerciseError() {
     if (routeError == true) {
-        $("#error-message").html("<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
+        $("#error-message").html(
+            "<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
     } else if (flagCounter > flagThreshold) {
-        $("#error-message").html("<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving.Otherwise your GPS may be too inaccurate to use this application.</h4><hr />");
+        $("#error-message").html(
+            "<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving.Otherwise your GPS may be too inaccurate to use this application.</h4><hr />"
+            );
     } else if (totalDistance <= 0) {
-        $("#error-message").html("<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
+        $("#error-message").html(
+            "<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
     } else if (checkTime(endTime) < 3) {
-        $("#error-message").html("<h4>Session time is less than 3 minutes, this session will not be recorded.</h4><hr />");
+        $("#error-message").html(
+            "<h4>Session time is less than 3 minutes, this session will not be recorded.</h4><hr />");
     }
 }
 
@@ -408,62 +437,70 @@ function calculateBonus() {
     writeUserScore();
 }
 
+// Write steps to database
+function writeSteps() {
+    var user = firebase.auth().currentUser;
+    var step = db.collection("user").doc(user.uid);
+    step.get().then((doc) => {
+        if (doc.exists) {
+            var oldStep;
+            if (oldStep == NaN || oldStep == null) {
+                oldStep = 0;
+            } else {
+                oldStep = parseInt(doc.data()["step"]);
+            }
+            step.set({
+                steps: oldStep + totalSteps
+            }, {
+                merge: true
+            })
+        } else {
+            // doc.data() will be undefined in this case
+            console.warn("No such document!");
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+}
+
+// Write an exercise 
+function writeEntry() {
+    var sessionDb = db.collection("user").doc(user.uid).collection("sessions");
+    sessionDb.add({
+        date: dateObj,
+        routeOption: routeOption,
+        startPosition: startPosition,
+        destinationPosition: destinationPosition,
+        totalTime: formatDate(endTime),
+        distanceTravelled: (totalDistance / 1000).toFixed(2),
+        stepsTaken: totalSteps,
+        minCaloriesBurned: totalMinCalories.toFixed(2),
+        maxCaloriesBurned: totalMaxCalories.toFixed(2),
+        path: pathCoordinates
+    }).then((docRef) => {
+        console.log("Entry written to:", docRef.id);
+    }).catch((error) => {
+        console.error("Error added document:", error);
+    })
+}
+
 // Ends the session, calculates statistics and score, and writes stats and score to database
 function endExercise() {
     // stop tracking position
     trackingState = false;
     // get the time session is ended
     endTime = new Date();
-
+    // check for errors and display statistics in modal
     checkExerciseError();
     displayStats();
-
     // Write to database if errors are not detected
     if (routeError == false && flagCounter <= flagThreshold && totalDistance > 0) {
         calculateBonus();
         if (checkTime(endTime) >= 3) {
+            // Update cumulative steps for the user
+            writeSteps();
             // Create a database entry of exercise and then move on to feedback and adjustments
-            var user = firebase.auth().currentUser;
-            var step = db.collection("user").doc(user.uid);
-            step.get().then((doc) => {
-                if (doc.exists) {
-                    var oldStep;
-                    if (oldStep == NaN || oldStep == null) {
-                        oldStep = 0;
-                    } else {
-                        oldStep = parseInt(doc.data()["step"]);
-                    }
-                    console.log(oldStep);
-                    step.set({
-                        steps: oldStep + totalSteps
-                    }, {
-                        merge: true
-                    })
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.warn("No such document!");
-                }
-            }).catch((error) => {
-                console.warn("Error getting document:", error);
-            });
-
-            var sessionDb = db.collection("user").doc(user.uid).collection("sessions");
-            sessionDb.add({
-                date: dateObj,
-                routeOption: routeOption,
-                startPosition: startPosition,
-                destinationPosition: destinationPosition,
-                totalTime: formatDate(endTime),
-                distanceTravelled: (totalDistance / 1000).toFixed(2),
-                stepsTaken: totalSteps,
-                minCaloriesBurned: totalMinCalories.toFixed(2),
-                maxCaloriesBurned: totalMaxCalories.toFixed(2),
-                path: pathCoordinates
-            }).then((docRef) => {
-                console.log("Entry written to:", docRef.id);
-            }).catch((error) => {
-                console.error("Error added document:", error);
-            })
+            writeEntry();
         } else {
             console.warn("Session not longer than 3 minutes, not saving.");
         }
@@ -473,23 +510,24 @@ function endExercise() {
 }
 
 // Function to convert a String of time to milliseconds
-var timespanMillis = (function() {
+var timespanMillis = (function () {
     var tMillis = {
         second: 1000,
         min: 60 * 1000,
         minute: 60 * 1000,
         hour: 60 * 60 * 1000 // etc.
     };
-    return function(s) {
-        var regex = /(\d+)\s*(second|min|minute|hour)/g, ms=0, m, x;
+    return function (s) {
+        var regex = /(\d+)\s*(second|min|minute|hour)/g,
+            ms = 0,
+            m, x;
         while (m = regex.exec(s)) {
-            x = Number(m[1]) * (tMillis[m[2]]||0);
+            x = Number(m[1]) * (tMillis[m[2]] || 0);
             ms += x;
         }
         return x ? ms : NaN;
     };
 })();
-
 
 // Formula to calculate the distance from the previously tracked coordinate to the current coordinate
 function calcDistance(previousCrd, currentCrd) {
@@ -498,23 +536,15 @@ function calcDistance(previousCrd, currentCrd) {
     const φ2 = currentCrd.latitude * Math.PI / 180;
     const Δφ = (currentCrd.latitude - previousCrd.latitude) * Math.PI / 180;
     const Δλ = (currentCrd.longitude - previousCrd.longitude) * Math.PI / 180;
-
     const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
         Math.cos(φ1) * Math.cos(φ2) *
         Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
     return d = R * c; // in metres
 }
 
-/****************************************************************
- * Function performed upon position tracked successfully,
- * performs many other tasks to run the exercise session
- * and updating map as well as handling invalid values
- ****************************************************************/
-function success(pos) {
-    var updateCrd = true;
-    var crd = pos.coords;
+// Sets start and end positions
+function setPositionCrd(crd) {
     startPosition = {
         'latitude': crd.latitude,
         'longitude': crd.longitude
@@ -523,67 +553,147 @@ function success(pos) {
         'latitude': destinationLat,
         'longitude': destinationLng
     };
+}
 
-    if (previousCrd != null) {
-        if (crd.accuracy > minAccuracy) {
-            console.log("Accuracy:", crd.accuracy);
-            console.log("Inaccurate, did not take position.");
-        } else {
-            distance = calcDistance(previousCrd, crd);
-            if (trackingState) {
-                if (distance > 25) {
-                    flagCounter++;
-                    if (flagCounter <= flagThreshold) {
-                        console.warn("Abnormal distance tracked:", distance, "ignoring update.");
-                    } else {
-                        endExercise();
-                    }
-                    updateCrd = false;
-                } else if (distance > 5) {
-                    flagCounter = 0;
-                    console.log("Updated position");
-                    updateMarker(crd);
-                    drawPath(crd);
-                    updatePath();
-                    totalDistance += distance;
-                    console.log("Total Distance:", totalDistance);
-                    updateCrd = true;
-                } else {
-                    flagCounter = 0;
-                    console.log("Distance travelled insignificant, ignoring update.");
-                    updateCrd = false;
-                }
-            }
-        }
-    }
+// Update previous coordinate
+function updatePrevCrd(crd, pos) {
     if (trackingState) {
+        // If inaccuracy is too high, do not update previous coordinate
         if (crd.accuracy > minAccuracy) {
-            console.log("Accuracy:", crd.accuracy);
-            console.log("Inaccurate, did not change previous coordinate.");
+            console.warn("Inaccurate, did not change previous coordinate.");
         } else {
             if (updateCrd) {
                 previousCrd = pos.coords;
             }
         }
         if (destinationSet) {
-            console.log("Distance to destination:", calcDistance(startPosition, destinationPosition));
+            // When destination is close enough to user, end exercise
             if (calcDistance(startPosition, destinationPosition) < withinDestination) {
-                console.log("Arrived at destination");
                 $("#completedModal").modal("toggle");
                 endExercise();
-            } 
+            }
         }
     }
 }
 
+// Update cumulative distance and update polyline path on map view
+function updateDistancePath(crd) {
+    flagCounter = 0;
+    updateMarker(crd);
+    drawPath(crd);
+    updatePath();
+    totalDistance += distance;
+    updateCrd = true;
+}
+
+// Increase user's flag count and end exercise if threshold is reached.
+function flagUser() {
+    flagCounter++;
+    if (flagCounter <= flagThreshold) {
+        console.warn("Abnormal distance tracked:", distance, "ignoring update.");
+    } else {
+        endExercise();
+    }
+    updateCrd = false;
+}
+
+// Reset user's flag count
+function resetFlag() {
+    flagCounter = 0;
+    console.warn("Distance travelled insignificant, ignoring update.");
+    updateCrd = false;
+}
+
+// Check and update current coordinate of user
+function updateCurrentCrd(crd) {
+    if (previousCrd != null) {
+        // If the inaccuracy is too high
+        if (crd.accuracy > minAccuracy) {
+            console.warn("Inaccurate, did not take position.");
+        } else {
+            distance = calcDistance(previousCrd, crd);
+            if (trackingState) {
+                // If the distance travelled in one second is too far, flag the user once
+                if (distance > 25) {
+                    flagUser();
+                    // If the user travels at least 3 meters, update position tracker
+                } else if (distance >= 3) {
+                    updateDistancePath(crd);
+                } else {
+                    resetFlag();
+                }
+            }
+        }
+    }
+}
+
+/****************************************************************
+ * Function performed upon position tracked successfully,
+ * performs many other tasks to run the exercise session
+ * and updating map as well as handling invalid values
+ ****************************************************************/
+function success(pos) {
+    var crd = pos.coords;
+    // Set start and destination coords
+    setPositionCrd(crd);
+    // Update user's coords
+    updateCurrentCrd(crd)
+    // Update previously tracked coordinates
+    updatePrevCrd(crd, pos);
+}
+
 // Updates the position of the user's location marker on the map view
 function updateMarker(pos) {
-    positionMarker.setPosition({ lat: pos.latitude, lng: pos.longitude });
+    positionMarker.setPosition({
+        lat: pos.latitude,
+        lng: pos.longitude
+    });
 }
 
 // Error handler, sends warning to the console
 function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+// Writes new multipliers to server side
+function writeMultiplier(userDb, newDifficulty, newDuration) {
+    if (loggedInUser == null) {
+        console.warn("User is not logged in!");
+        window.location.href = "login.html";
+    } else {
+        var checkFeedback = db.collection("user");
+        userDb.get().then((doc) => {
+            if (doc.exists) {
+                checkFeedback.doc(loggedInUser.uid).set({
+                    timeMultiplier: newDifficulty,
+                    durationMultiplier: newDuration,
+                    recentFeedback: recentFeedback
+                }, {
+                    merge: true
+                })
+            } else {
+                console.warn("Document does not exist!")
+            }
+        }).catch((error) => {
+            console.warn("Error getting document:", error);
+        });
+    }
+}
+
+// Retrieve server side multipliers and update local multipliers
+function updateLocalMultiplier(userDb, doc) {
+    // Get multipliers from database as floats
+    allowedTimeMultiplier = parseFloat(doc.data()["timeMultiplier"]);
+    durationMultiplier = parseFloat(doc.data()["durationMultiplier"]);
+    // Min multiplier of 0.25 and max of 3
+    var newDifficulty = difficultyRating * allowedTimeMultiplier;
+    newDifficulty = Math.max(minMultiplier, (newDifficulty));
+    newDifficulty = Math.min(maxMultiplier, (newDifficulty));
+    // Min multiplier of 0.25 and max of 3
+    var newDuration = durationRating * durationMultiplier;
+    newDuration = Math.max(minMultiplier, (newDuration));
+    newDuration = Math.min(maxMultiplier, (newDuration));
+    writeMultiplier(userDb, newDifficulty, newDuration);
 }
 
 // Writes the adjustments and feedback by the user to the database
@@ -592,45 +702,10 @@ function applyFeedback() {
     durationRating = $("input[name=durationRating]:checked").val();
     recentFeedback = $("input[name=exerciseRating]").val();
     var userDb = db.collection("user").doc(loggedInUser.uid);
-
     userDb.get().then((doc) => {
         if (doc.exists) {
-            // Get multipliers from database as floats
-            allowedTimeMultiplier = parseFloat(doc.data()["timeMultiplier"]);
-            durationMultiplier = parseFloat(doc.data()["durationMultiplier"]);
-            // Min multiplier of 0.25 and max of 3
-            var newDifficulty = difficultyRating * allowedTimeMultiplier;
-            newDifficulty = Math.max(minMultiplier, (newDifficulty));
-            newDifficulty = Math.min(maxMultiplier, (newDifficulty));
-            // Min multiplier of 0.25 and max of 3
-            var newDuration = durationRating * durationMultiplier;
-            newDuration = Math.max(minMultiplier, (newDuration));
-            newDuration = Math.min(maxMultiplier, (newDuration));
-
-            if (loggedInUser == null) {
-                console.warn("User is not logged in!");
-                window.location.href = "login.html";
-            } else {
-                var checkFeedback = db.collection("user");
-                userDb.get().then((doc) => {
-                    if (doc.exists) {
-                        checkFeedback.doc(loggedInUser.uid).set({
-                            timeMultiplier: newDifficulty,
-                            durationMultiplier: newDuration,
-                            recentFeedback: recentFeedback
-                        }, {
-                            merge: true
-                        })
-                    } else {
-                        console.warn("Document does not exist!")
-                    }
-                }).catch((error) => {
-                    console.warn("Error getting document:", error);
-                });
-            }
-            console.log("New Difficulty Rating:", newDifficulty);
-            console.log("New Duration Rating:", newDuration);
-            console.log("Exercise Rating:", recentFeedback);
+            // Update multipliers based on feedback
+            updateLocalMultiplier(userDb, doc);
         } else {
             // doc.data() will be undefined in this case
             console.warn("No such document!");
@@ -639,6 +714,30 @@ function applyFeedback() {
         console.warn("Error getting document:", error);
     });
     setTimeout(() => window.location.reload(), 1000);
+}
+
+// Check if time multiplier is null, set default if null
+function checkNullTime(doc) {
+    if (doc.data()["timeMultiplier"] == null) {
+        console.log("Set new time multiplier");
+        checkMultiplier.doc(loggedInUser.uid).set({
+            timeMultiplier: 1
+        }, {
+            merge: true
+        })
+    }
+}
+
+// Check if duration multiplier is null, set default if null
+function checkNullDuration(doc) {
+    if (doc.data()["durationMultiplier"] == null) {
+        console.log("Set new duration multiplier");
+        checkMultiplier.doc(loggedInUser.uid).set({
+            durationMultiplier: 1
+        }, {
+            merge: true
+        })
+    }
 }
 
 // Gets the multiplier from the user
@@ -651,22 +750,8 @@ function retrieveMultiplier() {
         var userDb = db.collection("user").doc(loggedInUser.uid);
         userDb.get().then((doc) => {
             if (doc.exists) {
-                if (doc.data()["timeMultiplier"] == null) {
-                    console.log("Set new time multiplier");
-                    checkMultiplier.doc(loggedInUser.uid).set({
-                        timeMultiplier: 1
-                    }, {
-                        merge: true
-                    })
-                }
-                if (doc.data()["durationMultiplier"] == null) {
-                    console.log("Set new duration multiplier");
-                    checkMultiplier.doc(loggedInUser.uid).set({
-                        durationMultiplier: 1
-                    }, {
-                        merge: true
-                    })
-                }
+                checkNullTime(doc);
+                checkNullDuration(doc);
             } else {
                 console.log("Create user document with base multipliers");
                 checkMultiplier.doc(loggedInUser.uid).set({
@@ -719,13 +804,13 @@ function writeUserScore(text) {
 
 // Calculates the user's total steps per second with all items
 function calcTotalStepsPerSecond() {
-    return 1
-        + inventory.skateboard * stepsPerSecond.skateboard
-        + inventory.bicycle * stepsPerSecond.bicycle
-        + inventory.car * stepsPerSecond.car
-        + inventory.train * stepsPerSecond.train
-        + inventory.plane * stepsPerSecond.plane
-        + inventory.spaceship * stepsPerSecond.spaceship
+    return 1 +
+        inventory.skateboard * stepsPerSecond.skateboard +
+        inventory.bicycle * stepsPerSecond.bicycle +
+        inventory.car * stepsPerSecond.car +
+        inventory.train * stepsPerSecond.train +
+        inventory.plane * stepsPerSecond.plane +
+        inventory.spaceship * stepsPerSecond.spaceship
 }
 
 // Retrieves number of all items in user's inventory from the database
@@ -757,7 +842,8 @@ function checkDevice() {
         $(".setup-button").css("display", "block");
     } else {
         deviceType = "Desktop";
-        $("#desktop-warning").html("Sorry! This application does not work on desktop, please switch to a mobile device.");
+        $("#desktop-warning").html(
+            "Sorry! This application does not work on desktop, please switch to a mobile device.");
         $("#desktop-warning").css("margin-bottom", "20px");
         $(".setup-button").css("display", "none");
     }

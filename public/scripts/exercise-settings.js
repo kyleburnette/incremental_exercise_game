@@ -63,6 +63,7 @@ var allowedTimeMultiplier = 1;
 var durationMultiplier = 1;
 
 // Session settings and tracking variables
+var updateCrd = true;
 var routeOption = "off";
 var routeError = false;
 var trackingState = false;
