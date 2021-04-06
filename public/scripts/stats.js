@@ -1,31 +1,48 @@
-var loggedInUser = null;
-var currentID;
-
-var startPosition = {
-    'latitude': 0,
-    'longitude': 0
-}
-var destinationPosition = {
-    'latitude': 0,
-    'longitude': 0
-}
-
-var positionMarker;
-var destinationMarker;
-const destination_marker = "images/destination_marker.png";
-const location_marker = "images/position_marker.png";
-var userPath;
-var pathCoordinates = [];
-
+// Update map to show when modal is opened
 $("#mapModal").on('shown.bs.modal', function () {
     initMapView();
     google.maps.event.trigger(map, "resize");
 });
 
+// Create the map
 function initMapView() {
     updateMapView();
 }
 
+// Set the destination marker for map view
+function setDestinationMarker() {
+    destinationMarker = new google.maps.Marker({
+        position: {
+            lat: destinationPosition.latitude,
+            lng: destinationPosition.longitude
+        },
+        icon: destination_marker,
+    });
+}
+
+// Set the position marker for map view
+function setPositionMarker() {
+    positionMarker = new google.maps.Marker({
+        position: {
+            lat: startPosition.latitude,
+            lng: startPosition.longitude
+        },
+        icon: location_marker,
+    });
+}
+
+// Set the user path for map view
+function drawUserPath() {
+    userPath = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#93E62E",
+        strokeOpacity: 0.7,
+        strokeWeight: 6,
+    });
+}
+
+// Create all the map elements
 function updateMapView() {
     const mapView = new google.maps.Map(document.getElementById("map"), {
         center: {
@@ -40,63 +57,48 @@ function updateMapView() {
         fullscreenControl: true,
         zoom: 12,
     });
-
-    destinationMarker = new google.maps.Marker({
-        position: {
-            lat: destinationPosition.latitude,
-            lng: destinationPosition.longitude
-        },
-        icon: destination_marker,
-    });
+    // Set the destination marker on map
+    setDestinationMarker();
     destinationMarker.setMap(mapView);
-
-    // user's current position pin
-    positionMarker = new google.maps.Marker({
-        position: {
-            lat: startPosition.latitude,
-            lng: startPosition.longitude
-        },
-        icon: location_marker,
-    });
+    // Set the user's start position on map
+    setPositionMarker();
     positionMarker.setMap(mapView);
-
-    // draw path taken by user
-    userPath = new google.maps.Polyline({
-        path: pathCoordinates,
-        geodesic: true,
-        strokeColor: "#93E62E",
-        strokeOpacity: 0.7,
-        strokeWeight: 6,
-      });
+    // Draw path taken by user on map
+    drawUserPath();
     userPath.setMap(mapView);
 }
 
+// Retrieve statistics from the document
+function getStats(doc) {
+    startPosition = doc.data().startPosition;
+    destinationPosition = doc.data().destinationPosition;
+    pathCoordinates = doc.data().path;
+    sessionDate = (doc.data().date).toDate();
+    time = doc.data().totalTime;
+    distance = doc.data().distanceTravelled;
+    steps = doc.data().stepsTaken;
+    minCalories = doc.data().minCaloriesBurned;
+    maxCalories = doc.data().maxCaloriesBurned;
+}
+
+// Set statistics in modal
+function setModalStats() {
+    $("#dateLabel").html(sessionDate);
+    $("#totalTime").html(time);
+    $("#distanceTravelled").html(`${distance}km`);
+    $("#estimatedSteps").html(`${steps} steps`);
+    $("#estimatedCalories").html(`${minCalories}-${maxCalories} calories`);
+}
+
+// Update statistics in modal from database when an entry is selected
 function openReview(id) {
     currentID = id;
-    var sessionDate;
-    var time;
-    var distance;
-    var steps;
-    var minCalories;
-    var maxCalories;
 
     db.collection("user").doc(loggedInUser.uid).collection("sessions").doc(id)
     .get().then((doc) => {
         if (doc.exists) {
-            startPosition = doc.data().startPosition;
-            destinationPosition = doc.data().destinationPosition;
-            pathCoordinates = doc.data().path;
-            sessionDate = (doc.data().date).toDate();
-            time = doc.data().totalTime;
-            distance = doc.data().distanceTravelled;
-            steps = doc.data().stepsTaken;
-            minCalories = doc.data().minCaloriesBurned;
-            maxCalories = doc.data().maxCaloriesBurned;
-            $("#dateLabel").html(sessionDate);
-            $("#totalTime").html(time);
-            $("#distanceTravelled").html(`${distance}km`);
-            $("#estimatedSteps").html(`${steps} steps`);
-            $("#estimatedCalories").html(`${minCalories}-${maxCalories} calories`);
+            getStats(doc);
+            setModalStats();
         } else {
             // doc.data() will be undefined in this case
             console.warn("No such document!");
@@ -107,6 +109,7 @@ function openReview(id) {
     $("#reviewModal").modal("toggle");
 }
 
+// Create entry element for the list
 function createEntry(doc, list) {
     var id = doc.id;
     var date = (doc.data().date).toDate();
@@ -118,6 +121,7 @@ function createEntry(doc, list) {
     list.appendChild(newdom);
 }
 
+// Display 5 recent sessions in a list
 function displaySessions() {
     var list = document.getElementById("list-entries");
     if (loggedInUser != null) {
