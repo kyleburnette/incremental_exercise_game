@@ -273,8 +273,9 @@ function createParticleDiv(e, inventoryType) {
             .appendTo("#particles")
             .fadeIn("fast")
             .animate({ path: new $.path.bezier(bezier_params) })
-            .delay(500)
-            .fadeOut("fast");
+            .fadeOut(500, function(){
+                $(this).remove();
+            });
     });
 }
 
