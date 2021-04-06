@@ -107,6 +107,17 @@ function openReview(id) {
     $("#reviewModal").modal("toggle");
 }
 
+function createEntry(doc, list) {
+    var id = doc.id;
+    var date = (doc.data().date).toDate();
+    var newdom = document.createElement("li");
+    newdom.id = id;
+    newdom.innerHTML = date;
+    newdom.setAttribute("class", "list-group-item entry-color entries result-hover");
+    newdom.addEventListener('click', function() {openReview(id)});
+    list.appendChild(newdom);
+}
+
 function displaySessions() {
     var list = document.getElementById("list-entries");
     if (loggedInUser != null) {
@@ -116,14 +127,7 @@ function displaySessions() {
         .get()
         .then(function (snap) {
             snap.forEach(function (doc) {
-                var id = doc.id;
-                var date = (doc.data().date).toDate();
-                var newdom = document.createElement("li");
-                newdom.id = id;
-                newdom.innerHTML = date;
-                newdom.setAttribute("class", "list-group-item entry-color entries result-hover");
-                newdom.addEventListener('click', function() {openReview(id)});
-                list.appendChild(newdom);
+                createEntry(doc, list);
             })
         })
     } else {

@@ -30,7 +30,8 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="index.html">Globetrotter</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                ontoggle="adjustBannerSize()">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -48,8 +49,14 @@
 
     <div id="banner">
         <img src="images/banner.png" class="banner-img" />
+        <img src="images/banner-text.png" class="banner-txt animated fadeInRight" />
     </div>
+    <hr />
     <div class="container">
+        <div class="d-grid gap-2 mt-3">
+            <button type="button" class="btn btn-primary btn-lg animated fadeInBottom" onclick="playNow()">Play
+                Now!</button>
+        </div>
     </div>
 
     <div class="filler"></div>

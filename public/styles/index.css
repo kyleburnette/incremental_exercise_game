@@ -1,6 +1,54 @@
+#banner {
+    box-shadow: 3px 5px 6px rgb(107, 107, 107);
+}
+
 .banner-img {
     filter: brightness(90%);
     width: 100%;
     height: auto;
 }
-  
+
+.animated {
+    animation-duration: 3s;
+}
+
+.banner-txt {
+    position: absolute;
+    width: 55%;
+    left: 40%;
+    z-index: 100;
+}
+
+.btn-lg {
+    font-size: 2.5em;
+}
+
+.fadeInRight {
+    animation-name: fadeInRight;
+}
+
+.fadeInBottom {
+    animation-name: fadeInBottom;
+}
+
+@keyframes fadeInRight {
+    0% {
+       opacity: 0;
+       transform: translateX(30px);
+    }
+    100% {
+       opacity: 1;
+       transform: translateX(0);
+    }
+ }
+
+ @keyframes fadeInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        tranform: translateY(0);
+    }
+ }
