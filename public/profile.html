@@ -70,8 +70,7 @@
         <!-- // using pointer 1 from upload_profilePic.js // -->
 
         <div class="card mt-2 profile-card" style="width: 18rem;">
-            <img id="mypic-goes-here"
-                class="card-img-top" alt="Profile Image of User" />
+            <img id="mypic-goes-here" class="card-img-top" alt="Profile Image of User" />
             <input type="file" id="mypic-input" name="filename">
             <div class="card-body">
                 <h5 class="card-title"><span id=></span></h5>
@@ -79,7 +78,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <div class="filler"></div>
 
@@ -93,7 +92,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="preview">
-                        <img id="preview-image" src="" width="300px" height="300px"/> <!-- Preview of picture goes here -->
+                        <img id="preview-image" src="" width="300px" height="300px" />
+                        <!-- Preview of picture goes here -->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -126,43 +126,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
-    <script src="scripts/firebase_api.js"></script>
 
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
+    <script src="scripts/firebase_api.js"></script>
     <script src="scripts/upload_profilePic.js"></script>
-    <!-- <script>
-        function readQuote() {
-            db.collection("messages").doc("monday")
-                .onSnapshot(function (snap) {
-                    console.log(snap.data()); //.data() returns data object
-                    document.getElementById("quote-goes-here").innerHTML = snap.data().message;
-                    //using vanilla javascript
-                    //$('#quote-goes-here').text(c.data().quote);                             //using jquery object dot notation
-                    //$("#quote-goes-here").text(c.data()["quote"]);                          //using json object indexing
-                    // delete after getDate() is implemented;
-                })
-        }
-        readQuote();
-    </script> -->
-    <script>
-    function displayQuote() {
-        db.collection("messages")
-            .where ("position", ">", Math.floor(Math.random() * 1000))
-            .limit(1)
-            .get()
-            .then(function (snap) {
-                snap.forEach(function (doc) {
-                    var n = doc.data().message;
-                    console.log(n);
-                    var messagesString = "<p> " + n + "</p";
-                    $("#quote-go-here").append(messagesString);
-                })
-            })
-      }
-      displayQuote();
-      </script>
+    <script src="scripts/goal.js" type="text/javascript"></script>
+    <script src="scripts/logout.js" type="text/javascript"></script>
 
 </body>
 

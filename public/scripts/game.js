@@ -150,16 +150,6 @@ function travelSpeed() {
     return distanceThisCycle / (pollingRate / 1000); //meters per second
 }
 
-function logOut() {
-    firebase.auth().signOut()
-        .then(function () {
-            window.location.href = "index.html";
-        })
-        .catch(function (error) {
-            // An error happened
-        });
-}
-
 function checkIsWalking() {
     if (debug){
         isWalking = true;
