@@ -50,3 +50,7 @@ body{
 #page-main-content{
     text-align: center;
 }
+
+.particle{
+    max-width: 150px;
+}
