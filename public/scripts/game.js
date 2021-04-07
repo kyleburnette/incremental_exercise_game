@@ -269,12 +269,13 @@ function createParticleDiv(e, inventoryType) {
                 "max-width": "25px"
 
             })
-            .append($('<img src="images/' + inventoryType + '.png" alt="myimage" />'))
+            .append($('<img class="particle" src="images/' + inventoryType + '.png" alt="myimage" />'))
             .appendTo("#particles")
             .fadeIn("fast")
             .animate({ path: new $.path.bezier(bezier_params) })
-            .delay(500)
-            .fadeOut("fast");
+            .fadeOut(500, function(){
+                $(this).remove();
+            });
     });
 }
 

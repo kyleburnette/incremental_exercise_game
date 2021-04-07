@@ -4,7 +4,7 @@ var maxAccuracy = 5; //meters
 
 var growthRate = 0.15;
 
-var debug = false;
+var debug = true;
 var textDebug = true;
 
 stepsPerSecond = {skateboard: 1, bicycle: 2, car: 5, train: 8, plane: 9, spaceship: 10};

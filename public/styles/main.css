@@ -11,8 +11,9 @@ body{
 .game-button{
     background-image: url("../images/texture.jpg");
     display: grid;
-    grid-template-columns: 10% 50% 40%;
+    grid-template-columns: 20% 20% 40%;
     font-size: 1.5vh;
+    height: 100px;
 }
 
 .inventory-label{
@@ -25,9 +26,16 @@ body{
 }
 
 .inventory-img{
-    float: right;
-    max-width: 10vw;
+    max-width: 50%;
+}
 
+.inventory-item-info{
+    font-size: 2em;
+}
+
+.inventory-item-count{
+    transform: translateY(50%);
+    font-size: 2em;
 }
 
 .game-button:hover{
@@ -41,4 +49,8 @@ body{
 
 #page-main-content{
     text-align: center;
+}
+
+.particle{
+    max-width: 150px;
 }
