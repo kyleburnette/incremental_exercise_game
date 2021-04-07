@@ -11,7 +11,7 @@ function scoreQuery() {
                 var highScore = doc.data().score;
                 console.log(n);
                 console.log(highScore);
-                var newdom = n + " " + highScore ;
+                var newdom = n + " " + highScore;
                 console.log(newdom);
                 //$("#score-goes-here").append(newdom);
                 //document.getElementById("cities-go-here").innerHTML = newdom;
@@ -47,6 +47,7 @@ $(document).ready(function () {
         if (user) {
             userName = user;
             console.log("Logged in as", userName.displayName);
+            displayGoal();
             //retrieveUserScore();
             //retrieveUserInventory();
         } else {
@@ -61,14 +62,14 @@ function writeStepGoal(Number) {
     var stepGoals = db.collection("user");
     var user = firebase.auth().currentUser;
     stepGoals.doc(user.uid).set({
-        goal: Number,
-        user: user.displayName
-    }, {
-        merge: true
-    })
-    .then(function () {
-        window.location.href = "goal.html";
-    });
+            goal: Number,
+            user: user.displayName
+        }, {
+            merge: true
+        })
+        .then(function () {
+            window.location.href = "goal.html";
+        });
 }
 
 // Writes the Step Goal 
@@ -84,3 +85,51 @@ function getStepGoal() {
     });
 }
 getStepGoal();
+
+
+// Redeem Step Goal
+// add merge here.
+function redeemGoal() {
+    var user = firebase.auth().currentUser;
+    var stepGoals = db.collection("user");
+    var goalReset = 1;
+    stepGoals.doc(user.uid).set({
+            goal: goalReset
+        }, {
+            merge: true
+        })
+        .then(function () {
+            //window.location.href = "goal.html";
+        });
+}
+
+// Redeem Goal Button click from user
+function redeemGoalButton() {
+    document.getElementById("button-redeem").addEventListener('click', function () {
+        redeemGoal();
+        console.log("hello");
+    });
+}
+redeemGoalButton();
+
+// Displays Current Goal Count
+function displayGoal(){
+    var userGoal = 0;
+    var user = firebase.auth().currentUser;
+    var stepGoals = db.collection("user").doc(user.uid);
+    var div = document.getElementById('currentGoal');
+    stepGoals.get().then((doc) => {
+        if (doc.exists) {
+            userGoal = doc.data().goal;      
+            div.appendChild(userGoal);    
+        } else {
+            userGoal = 0;
+            console.log("Goal Default");
+            //$("#goal-display").attr(userGoal);
+            div.appendChild(userGoal);    
+
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+}
