@@ -1,13 +1,27 @@
+//The user's current inventory.
 var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
+
+//The previous coordinate. Used to calculate distance between
+//polled locations.
 var previousCrd = null;
+
+//Distance travelled between now and the previous coordinate.
 var distanceThisCycle = 0;
+
+//Options to be used for the geolocation API.
 var options = {
     enableHighAccuracy: true,
     timeout: 2000,
     maximumAge: 0
 };
+
+//the user's current score.
 var userScore = 0;
+
+//Global variable that says if user is walking or not.
 var isWalking = false;
+
+//A reference to the currently logged in user.
 loggedInUser = null;
 
 //polls current location every X seconds determined by polling rate
@@ -21,6 +35,9 @@ var updateScoreTimer = window.setInterval(function () {
     writeUserInventory();
 }, updateRate);
 
+/*
+Retrieves user's score from Firebase.
+*/
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
     var score = db.collection("scores").doc(user.uid);
@@ -36,6 +53,11 @@ function retrieveUserScore() {
     });
 }
 
+/*
+Calculates users's total steps per second based on
+whether they are walking or not and also their
+current inventory.
+*/
 function calcTotalStepsPerSecond() {
     if (isWalking){
         return 1
@@ -51,6 +73,10 @@ function calcTotalStepsPerSecond() {
 
 }
 
+/*
+Updates DOM elements for all inventory items, including 
+counts and costs.
+*/
 function updateCounts() {
     $("#skateboard-count").html(inventory.skateboard);
     $("#bicycle-count").html(inventory.bicycle);
@@ -77,6 +103,9 @@ function updateCounts() {
     $("#total-steps").html(`Total Steps: ` + Math.round(userScore));
 }
 
+/*
+Fetches user's inventory from the database.
+*/
 function retrieveUserInventory() {
     var user = firebase.auth().currentUser;
     var inventoryDB = db.collection("inventory").doc(user.uid);
@@ -99,6 +128,9 @@ function retrieveUserInventory() {
     });
 }
 
+/*
+Writes user's current score to the database.
+*/
 function writeUserScore(text) {
     var updateScore = db.collection("scores");
     userScore = Math.round(userScore);
@@ -113,6 +145,9 @@ function writeUserScore(text) {
     }
 }
 
+/*
+Writes user's current inventory to the database.
+*/
 function writeUserInventory(text) {
     var updateInv = db.collection("inventory");
     if (loggedInUser == null) {
@@ -131,6 +166,10 @@ function writeUserInventory(text) {
     }
 }
 
+/*
+Calculates the distance a user has traveled since the
+last poll.
+*/
 function calcDistance(previousCrd, currentCrd) {
     const R = 6371e3; // meters
     const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
@@ -146,15 +185,22 @@ function calcDistance(previousCrd, currentCrd) {
     return d = R * c; // in meters
 }
 
+/**
+ Calculates user's walking speed.
+ */
 function travelSpeed() {
     return distanceThisCycle / (pollingRate / 1000); //meters per second
 }
 
+/*
+Checks if a user is walking by comparing their 
+travel speed to a minimum walking speed.
+*/
 function checkIsWalking() {
     if (debug){
         isWalking = true;
     } else {
-        if (travelSpeed() > 1.5){
+        if (travelSpeed() > minimumWalkingSpeed){
             isWalking = true;
         } else {
             isWalking = false;
@@ -162,6 +208,9 @@ function checkIsWalking() {
     }
 }
 
+/*
+Calculates user's score for their given inventory.
+*/
 function handleUserScore() {
     userScore += 1
         + (inventory.bicycle * stepsPerSecond.bicycle)
@@ -172,6 +221,11 @@ function handleUserScore() {
         + (inventory.plane * stepsPerSecond.plane);
 }
 
+/*
+Called when user's location is successfully obtained.
+This function checks if the user is walking, and if
+they are, it adds score.
+*/
 function success(pos) {
     var crd = pos.coords;
     if (previousCrd != null) {
@@ -180,7 +234,6 @@ function success(pos) {
         checkIsWalking();
         if (isWalking){
             handleUserScore();
-            distance = calcDistance(previousCrd, crd);
         }
     }
 
@@ -195,10 +248,18 @@ function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+/*
+Calculates exponential growth of item based on how
+many of that item the user currently has.
+*/
 function calcGrowth(base, x) {
     return base * Math.pow((1 + growthRate), x)
 }
 
+/*
+Returns appropriate string for whatever the id
+was of the button that was clicked.
+*/
 function getPropertyName(id) {
     switch (id) {
         case "skateboard-button":
@@ -216,6 +277,10 @@ function getPropertyName(id) {
     }
 }
 
+/*
+Based on whatever the user purchases, 
+increments inventory count.
+*/
 function increaseInventoryCount(inventoryType) {
     switch (inventoryType) {
         case "skateboard":
@@ -242,6 +307,11 @@ function increaseInventoryCount(inventoryType) {
     updateCounts();
 }
 
+/*
+Spawns an animation when a user purchases an item.
+Using bezier curves, this animation is randomly
+generated.
+*/
 function createParticleDiv(e, inventoryType) {
     var bezier_params = {
         start: {
@@ -279,6 +349,12 @@ function createParticleDiv(e, inventoryType) {
     });
 }
 
+/*
+This function updates the prices of items when you purchase/click an
+item. It also makes sure you have enough score to purchase that 
+item, and if so, increases your inventory count and spawns an
+animation.
+*/
 $(".game-button").click(function (e) {
     buttonType = $(this).attr("id");
     inventoryType = getPropertyName(buttonType);
@@ -291,6 +367,12 @@ $(".game-button").click(function (e) {
     }
 });
 
+/*
+When firebase verifies that a verified user has logged in,
+retrieves user score and inventory from the database.
+
+If there is no user logged in, returns to login.html.
+*/
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
