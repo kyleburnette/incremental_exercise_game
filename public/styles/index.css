@@ -19,10 +19,6 @@
     z-index: 100;
 }
 
-.play-button {
-    width: 100%;
-}
-
 .btn-lg {
     font-size: 2.5em;
 }
@@ -33,6 +29,18 @@
 
 .fadeInBottom {
     animation-name: fadeInBottom;
+}
+
+.play-button {
+    width: 100%;
+}
+
+.tutorial-head {
+    color: #BE7609;
+}
+
+.tutorial-text {
+    color: #D69C43;
 }
 
 @keyframes fadeInRight {
@@ -49,7 +57,7 @@
  @keyframes fadeInBottom {
     0% {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     100% {
         opacity: 1;

@@ -15,10 +15,10 @@ function scoreQuery() {
                 console.log(newdom);
                 //$("#score-goes-here").append(newdom);
                 //document.getElementById("cities-go-here").innerHTML = newdom;
-                var body = document.body,
-                    tbl = document.createElement('table');
-                tbl.style.width = '500px';
-                tbl.style.border = '1px solid black';
+                var div = document.getElementById('leaderboard');
+                var tbl = document.createElement('table');
+                tbl.style.width = '100%';
+                tbl.style.borderBottom = '1px solid black';
 
                 for (var i = 0; i < 2; i++) {
                     var tr = tbl.insertRow();
@@ -28,15 +28,14 @@ function scoreQuery() {
                         } else {
                             var td = tr.insertCell();
                             td.append(n);
-                            td.style.border = '1px solid black';
-                            
+                            //td.style.border = '1px solid black';
                             //if(i == 1 && j == 1){
                             //td.setAttribute('rowSpan', '3');
                             //}
                         }
                     }
                 }
-                body.appendChild(tbl);
+                div.appendChild(tbl);
 
             })
         })
