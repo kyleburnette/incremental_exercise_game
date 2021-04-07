@@ -1,6 +1,3 @@
-
-const defaultPic = "https://firebasestorage.googleapis.com/v0/b/comp1800project.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=fe2e2a67-f843-4b28-b83e-7516e584d689";
-
 function writeNewInventory(user) {
     db.collection("inventory").doc(user.uid).set({
             skateboard: 0,
@@ -40,9 +37,7 @@ var uiConfig = {
                 db.collection("user").doc(user.uid).set({ //write to firestore
                         name: user.displayName, //"users" collection
                         email: user.email, //with authenticated user's ID (user.uid)
-                        profilePic: defaultPic //photoURL of user.
-                    }, {
-                        merge: true
+                        profilePic: user.photoURL //photoURL of user.
                     }).then(function () {
                         console.log("New user added to firestore");
                         writeNewInventory(user);
