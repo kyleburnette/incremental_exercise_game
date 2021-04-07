@@ -1,5 +1,4 @@
 const defaultPic = "https://firebasestorage.googleapis.com/v0/b/comp1800project.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=fe2e2a67-f843-4b28-b83e-7516e584d689";
-
 firebase.auth().onAuthStateChanged(function (user) {
     var user = firebase.auth().currentUser;
     if (user != null) {
@@ -76,31 +75,42 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-function displayDefaultUserProfilePic() {
-    console.log("Display Pic12334");
-    //firebase.auth().onAuthStateChanged(function (user) { //get user object
-       // db.collection("users").doc(user.uid) //use user's uid
-        //    .get() //READ the doc
-        //    .then(function (doc) {
-                var picUrl = defaultPic; //extract pic url
-
-                // use this line if "mypicdiv" is a "div"
-                //$("#mypicdiv").append("<img src='" + picUrl + "'>")
-
-                // use this line if "mypic-goes-here" is an "img" 
-                $("#mypic-goes-here").attr("src", picUrl);
-           // })
-    //})
-    
+function defaultProfilePic() {
+    var user = firebase.auth().currentUser;
+    var picture = db.collection("users").doc(user.uid);
+    //console.log("Logged ID:", user.uid);
+    picture.get().then((doc) => {
+        if (doc.exists) {
+            picUrl = doc.data().profilePic;      
+            $("#mypic-goes-here").attr("src", picUrl);      
+        } else {
+            picUrl = defaultPic;
+            console.log("No such document!");
+            $("#mypic-goes-here").attr("src", picUrl);
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
 }
-displayDefaultUserProfilePic();
+
+
+// function displayDefaultUserProfilePic() {
+//     var picUrl = defaultPic;
+
+//     // use this line if "mypicdiv" is a "div"
+//     //$("#mypicdiv").append("<img src='" + picUrl + "'>")
+//     // use this line if "mypic-goes-here" is an "img" 
+//     $("#mypic-goes-here").attr("src", picUrl);
+// }
+
 
 
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);            
+            console.log("Logged in as", loggedInUser.displayName);
+            defaultProfilePic();
             retrieveMultiplier();
             retrieveUserInventory();
             retrieveUserScore();
