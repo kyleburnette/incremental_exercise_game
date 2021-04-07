@@ -1,0 +1,12 @@
+.navbar-custom {
+    background-color: #C1E884
+}
+
+.navbar-custom .navbar-brand,
+        .navbar-custom .navbar-text {
+            color: #E1F2C8;
+        }
+
+body {
+    background-color: #FFFEF5
+}
