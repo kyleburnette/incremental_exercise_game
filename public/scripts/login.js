@@ -1,4 +1,5 @@
 
+//Writes a blank inventory into the database for a new user.
 function writeNewInventory(user) {
     db.collection("inventory").doc(user.uid).set({
             skateboard: 0,
