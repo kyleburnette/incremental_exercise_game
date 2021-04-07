@@ -37,7 +37,7 @@ firebase.auth().onAuthStateChanged(function (user) {
               storageRef.getDownloadURL()
                   .then(function (url) {   // Get URL of the uploaded file
                       console.log(url);    // Save the URL into users collection
-                      db.collection("users").doc(user.uid).update({
+                      db.collection("users").doc(user.uid).set({
                           "profilePic": url
                       })
                       .then(function(){
