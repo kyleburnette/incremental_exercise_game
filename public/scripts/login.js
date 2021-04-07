@@ -33,18 +33,8 @@ var uiConfig = {
             // The Firestore rules must allow the user to write. 
             //------------------------------------------------------------------------------------------
             var user = authResult.user;
-            if (authResult.additionalUserInfo.isNewUser) { //if new user
-                db.collection("user").doc(user.uid).set({ //write to firestore
-                        name: user.displayName, //"users" collection
-                        email: user.email, //with authenticated user's ID (user.uid)
-                        profilePic: user.photoURL //photoURL of user.
-                    }).then(function () {
-                        console.log("New user added to firestore");
-                        writeNewInventory(user);
-                    })
-                    .catch(function (error) {
-                        console.log("Error adding new user: " + error);
-                    });
+            if (authResult.additionalUserInfo.isNewUser) { // if new user
+                writeNewInventory(user);
             } else {
                 return true;
             }
