@@ -718,8 +718,9 @@ function applyFeedback() {
 
 // Check if time multiplier is null, set default if null
 function checkNullTime(doc) {
-    if (doc.data()["timeMultiplier"] == null) {
-        console.log("Set new time multiplier");
+    var checkMultiplier = db.collection("user");
+    var check = doc.data()["timeMultiplier"];
+    if (check == null || check == undefined || isNaN(check)) {
         checkMultiplier.doc(loggedInUser.uid).set({
             timeMultiplier: 1
         }, {
@@ -730,8 +731,9 @@ function checkNullTime(doc) {
 
 // Check if duration multiplier is null, set default if null
 function checkNullDuration(doc) {
-    if (doc.data()["durationMultiplier"] == null) {
-        console.log("Set new duration multiplier");
+    var checkMultiplier = db.collection("user");
+    var check = doc.data()["durationMultiplier"];
+    if (check == null || check == undefined || isNaN(check)) {
         checkMultiplier.doc(loggedInUser.uid).set({
             durationMultiplier: 1
         }, {
@@ -753,7 +755,6 @@ function retrieveMultiplier() {
                 checkNullTime(doc);
                 checkNullDuration(doc);
             } else {
-                console.log("Create user document with base multipliers");
                 checkMultiplier.doc(loggedInUser.uid).set({
                     timeMultiplier: 1,
                     durationMultiplier: 1

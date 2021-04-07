@@ -41,6 +41,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                             console.log(url); // Save the URL into users collection
                             db.collection("users").doc(user.uid).set({
                                     "profilePic": url
+                                }, {
+                                    merge: true
                                 })
                                 .then(function () {
                                     console.log('Added Profile Pic URL to Firestore.');
@@ -54,7 +56,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         function displayUserProfilePic() {
             console.log("Display Pic");
             firebase.auth().onAuthStateChanged(function (user) { //get user object
-                db.collection("users").doc(user.uid) //use user's uid
+                db.collection("user").doc(user.uid) //use user's uid
                     .get() //READ the doc
                     .then(function (doc) {
                         var picUrl = doc.data().profilePic; //extract pic url
@@ -77,7 +79,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 function defaultProfilePic() {
     var user = firebase.auth().currentUser;
-    var picture = db.collection("users").doc(user.uid);
+    var picture = db.collection("user").doc(user.uid);
     //console.log("Logged ID:", user.uid);
     picture.get().then((doc) => {
         if (doc.exists) {

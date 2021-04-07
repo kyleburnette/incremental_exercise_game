@@ -63,6 +63,8 @@ function writeStepGoal(Number) {
     stepGoals.doc(user.uid).set({
         goal: Number,
         user: user.displayName
+    }, {
+        merge: true
     })
     .then(function () {
         window.location.href = "goal.html";
@@ -73,8 +75,12 @@ function writeStepGoal(Number) {
 function getStepGoal() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var goal = document.getElementById("goal-input").value;
-        console.log(goal);
-        writeStepGoal(goal);
+        if (goal < 1 || goal > 10000) {
+            $('#warningModal').modal('show');
+        } else {
+            goal = Math.floor(goal);
+            writeStepGoal(goal);
+        }
     });
 }
 getStepGoal();

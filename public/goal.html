@@ -61,7 +61,7 @@
             <div class="Current Goal">
                 <h2 class="display-6">Current Goal</h2>
             </div>
-            <div class="progress">
+            <div class="progress mt-3">
                 <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100">25%</div>
             </div>
@@ -79,12 +79,12 @@
                         </div> -->
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Enter New Step Goal</label>
-                        <textarea class="form-control" id="goal-input" placeholder="000000"></textarea>
+                        <textarea class="form-control mt-3" id="goal-input" placeholder="1 to 10000"></textarea>
                         <div class="d-flex justify-content-between">
                             <button type="submit" id="button-submit" name="btn-search"
-                                class="btn btn-primary btn-lg mt-2">
+                                class="btn btn-primary btn-lg mt-3">
                                 Submit New Goal</button>
-                            <button class="btn btn-outline-secondary btn-lg mt-2" type="button"
+                            <button class="btn btn-outline-secondary btn-lg mt-3" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#collapseGoal" aria-expanded="false"
                                 aria-controls="collapseGoal">Cancel</button>
                         </div>
@@ -176,6 +176,26 @@
             <a href="stats.html" class="footer-btn stat-btn"><i class="fa fa-chart-bar"></i></a>
         </div>
     </nav>
+
+    <!-- Step Goal Warning -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="warningLabel">Invalid Step Goal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Your step goal must be a valid number from 1 to 1000
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
