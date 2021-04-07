@@ -11,31 +11,31 @@ body{
 .game-button{
     background-image: url("../images/texture.jpg");
     display: grid;
-    grid-template-columns: 20% 20% 40%;
-    font-size: 1.5vh;
+    grid-template-columns: 33% 33% 33%;
     height: 100px;
 }
 
 .inventory-label{
-    font-size: 3vh;
+
 }
 
 .game-button{
     color: black;
+    width: 100%;
     margin-top: 5px;
 }
 
 .inventory-img{
-    max-width: 50%;
+    max-height: 85px;
+    max-width: 90%;
 }
 
 .inventory-item-info{
-    font-size: 2em;
+    font-size: clamp(12px, 4vw, 30px);
 }
 
 .inventory-item-count{
-    transform: translateY(50%);
-    font-size: 2em;
+    font-size: clamp(12px, 4vw, 48px);
 }
 
 .game-button:hover{
