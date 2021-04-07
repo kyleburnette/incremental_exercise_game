@@ -51,6 +51,6 @@ Tips for file naming files and folders:
 
 ## Contributors
 
-- Kyle Burnette - index.html
-- Jacky Tsoi - main.html
-- Alex Wong - profile.html
+- Kyle Burnette - The incremental game in main.html, user feedback and bug report submission in bugreport.html, feedback.html, gamesuggestion.html, and submissionreceived.html.
+- Jacky Tsoi - Majority of the graphical elements (including the landing page in index.html), the exercise with live map in exercise.html, statistics and calculation formulas in stats.html.
+- Alex Wong - Profile picture, daily quotes, and global leaderboard in profile.html, goal tracking in goal.html.
