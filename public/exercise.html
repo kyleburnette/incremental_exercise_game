@@ -29,8 +29,9 @@
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Globetrotter</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -113,7 +114,7 @@
     <div class="filler"></div>
 
     <!-- Footer Navigation Bar -->
-    <nav class="navbar fixed-bottom navbar-light bg-light">
+    <nav class="navbar fixed-bottom footbar-custom">
         <div class="container-fluid">
             <a href="main.html" class="footer-btn home-btn"><i class="fa fa-home"></i></a>
             <a href="#" aria-current="page" class="footer-btn start-btn"><i
@@ -175,29 +176,29 @@
                         <h6>Difficulty (Time Limit)</h6>
                         <input type="radio" class="btn-check" name="difficultyRating" id="option1" autocomplete="off"
                             value="1.25">
-                        <label class="btn btn-secondary" for="option1">Easier</label>
+                        <label class="btn btn-difficulty" for="option1">Easier</label>
 
                         <input type="radio" class="btn-check" name="difficultyRating" id="option2" autocomplete="off"
                             value="1" checked>
-                        <label class="btn btn-secondary" for="option2">Equal</label>
+                        <label class="btn btn-difficulty" for="option2">Equal</label>
 
                         <input type="radio" class="btn-check" name="difficultyRating" id="option3" autocomplete="off"
                             value="0.75">
-                        <label class="btn btn-secondary" for="option3">Harder</label>
+                        <label class="btn btn-difficulty" for="option3">Harder</label>
                     </div>
                     <div class="container mt-3">
                         <h6>Duration (Time to Destination)</h6>
                         <input type="radio" class="btn-check" name="durationRating" id="option2-1" autocomplete="off"
                             value="1.25">
-                        <label class="btn btn-secondary" for="option2-1">Easier</label>
+                        <label class="btn btn-difficulty" for="option2-1">Easier</label>
 
                         <input type="radio" class="btn-check" name="durationRating" id="option2-2" autocomplete="off"
                             value="1" checked>
-                        <label class="btn btn-secondary" for="option2-2">Equal</label>
+                        <label class="btn btn-difficulty" for="option2-2">Equal</label>
 
                         <input type="radio" class="btn-check" name="durationRating" id="option2-3" autocomplete="off"
                             value="0.75">
-                        <label class="btn btn-secondary" for="option2-3">Harder</label>
+                        <label class="btn btn-difficulty" for="option2-3">Harder</label>
                     </div>
                     <div class="container mt-3">
                         <label for="customRange3" class="form-label">Rate the Session</label>

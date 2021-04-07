@@ -6,22 +6,30 @@
 
 .exercise-btn {
     font-size: 1em;
+    color: #6DAF08;
 }
 
 .home-btn {
     padding: 2px 8px;
+    color: #6DAF08;
 }
 
 .start-btn {
     padding: 2px 13px;
+    color: #6DAF08;
 }
 
 .stat-btn {
     padding: 2px 10px;
+    color: #6DAF08;
+}
+
+a:hover, a:focus {
+    color:#C1E884;
 }
 
 .footer-btn-active {
-    color: gray;
+    color: #C1E884;
 }
 
 .navbar {

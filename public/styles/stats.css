@@ -1,9 +1,9 @@
 .entry-color {
-    color: #2190FF;
+    color: #90C63E;
 }
 
-.result-hover:hover {
-    color: #124a83;
+.result-hover:hover, .result-hover:active {
+    color: #6DAF08;
 }
 
 #map {
