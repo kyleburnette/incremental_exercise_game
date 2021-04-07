@@ -1,3 +1,4 @@
+
 function writeNewInventory(user) {
     db.collection("inventory").doc(user.uid).set({
             skateboard: 0,
@@ -33,7 +34,7 @@ var uiConfig = {
             // The Firestore rules must allow the user to write. 
             //------------------------------------------------------------------------------------------
             var user = authResult.user;
-            if (authResult.additionalUserInfo.isNewUser) { // if new user
+            if (authResult.additionalUserInfo.isNewUser) {
                 writeNewInventory(user);
             } else {
                 return true;
