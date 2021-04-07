@@ -138,7 +138,8 @@ function writeUserScore(text) {
         console.warn("User is not logged in!");
     } else {
         updateScore.doc(loggedInUser.uid).set({
-            score: userScore
+            score: userScore,
+            name: loggedInUser.displayName // alex added
         }, {
             merge: true
         });

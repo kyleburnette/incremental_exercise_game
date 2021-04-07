@@ -1,18 +1,18 @@
 function scoreQuery() {
     db.collection("scores")
         .where("score", ">", 1)
-        //.where("hemisphere", "==", "south")
         .limit(10)
         //.orderBy("population")
         .orderBy("score", "desc")
         .get()
         .then(function (snap) {
             snap.forEach(function (doc) {
-                var n = doc.data();
+                var n = doc.data().name;
                 var highScore = doc.data().score;
                 console.log(n);
                 console.log(highScore);
-                var newdom = "<p> " + n + " " + highScore + "</p>";
+                var newdom = n + " " + highScore ;
+                console.log(newdom);
                 //$("#score-goes-here").append(newdom);
                 //document.getElementById("cities-go-here").innerHTML = newdom;
                 var body = document.body,
@@ -22,13 +22,14 @@ function scoreQuery() {
 
                 for (var i = 0; i < 2; i++) {
                     var tr = tbl.insertRow();
-                    for (var j = 0; j < 2; j++) {
+                    for (var j = 0; j < 3; j++) {
                         if (i == 0 && j == 0) {
                             break;
                         } else {
                             var td = tr.insertCell();
-                            td.append(highScore);
+                            td.append(n);
                             td.style.border = '1px solid black';
+                            
                             //if(i == 1 && j == 1){
                             //td.setAttribute('rowSpan', '3');
                             //}
@@ -56,27 +57,25 @@ $(document).ready(function () {
     });
 });
 
-// function tableCreate() {
-//     var body = document.body,
-//         tbl = document.createElement('table');
-//     tbl.style.width = '500px';
-//     tbl.style.border = '1px solid black';
+// Writes Step Goal
+function writeStepGoal(Number) {
+    var stepGoals = db.collection("user");
+    var user = firebase.auth().currentUser;
+    stepGoals.doc(user.uid).set({
+        goal: Number,
+        user: user.displayName
+    })
+    .then(function () {
+        window.location.href = "goal.html";
+    });
+}
 
-//     for (var i = 0; i < 11; i++) {
-//         var tr = tbl.insertRow();
-//         for (var j = 0; j < 3; j++) {
-//             if (i == 0 && j == 0) {
-//                 break;
-//             } else {
-//                 var td = tr.insertCell();
-//                 td.n;
-//                 td.style.border = '1px solid black';
-//                 //if(i == 1 && j == 1){
-//                 //td.setAttribute('rowSpan', '3');
-//                 //}
-//             }
-//         }
-//     }
-//     body.appendChild(tbl);
-// }
-// tableCreate();
+// Writes the Step Goal 
+function getStepGoal() {
+    document.getElementById("button-submit").addEventListener('click', function () {
+        var goal = document.getElementById("goal-input").value;
+        console.log(goal);
+        writeStepGoal(goal);
+    });
+}
+getStepGoal();

@@ -71,12 +71,18 @@
                 </button>
                 <div class="collapse" id="collapseGoal">
                     <hr />
-                    <div class="input-goal">
+                    <!-- <div class="input-goal">
                         <input type="text" class="form-control mt-2" placeholder="00000" aria-label="Number of Steps"
                             aria-describedby="basic-addon2">
-                        <div class="input-goal-append"></div>
+                        <div class="input-goal-append">
+                        </div> -->
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Enter New Step Goal</label>
+                        <textarea class="form-control" id="goal-input" placeholder="000000"></textarea>
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-primary btn-lg mt-2" type="button">Submit New Goal</button>
+                            <button type="submit" id="button-submit" name="btn-search"
+                                class="btn btn-primary btn-lg mt-2">
+                                Submit New Goal</button>
                             <button class="btn btn-outline-secondary btn-lg mt-2" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#collapseGoal" aria-expanded="false"
                                 aria-controls="collapseGoal">Cancel</button>
@@ -85,6 +91,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- <table class="table table-striped" id=myTable>
