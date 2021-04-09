@@ -39,7 +39,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     storageRef.getDownloadURL()
                         .then(function (url) { // Get URL of the uploaded file
                             console.log(url); // Save the URL into users collection
-                            db.collection("users").doc(user.uid).set({
+                            db.collection("user").doc(user.uid).set({
                                     "profilePic": url
                                 }, {
                                     merge: true
@@ -84,7 +84,8 @@ function defaultProfilePic() {
     picture.get().then((doc) => {
         if (doc.exists) {
             picUrl = doc.data().profilePic;      
-            $("#mypic-goes-here").attr("src", picUrl);      
+            $("#mypic-goes-here").attr("src", picUrl);
+            console.log("picture loaded.")      
         } else {
             picUrl = defaultPic;
             console.log("No such document!");
@@ -96,14 +97,14 @@ function defaultProfilePic() {
 }
 
 
-// function displayDefaultUserProfilePic() {
-//     var picUrl = defaultPic;
+/* function displayDefaultUserProfilePic() {
+    var picUrl = defaultPic;
 
-//     // use this line if "mypicdiv" is a "div"
-//     //$("#mypicdiv").append("<img src='" + picUrl + "'>")
-//     // use this line if "mypic-goes-here" is an "img" 
-//     $("#mypic-goes-here").attr("src", picUrl);
-// }
+    // use this line if "mypicdiv" is a "div"
+    //$("#mypicdiv").append("<img src='" + picUrl + "'>")
+    // use this line if "mypic-goes-here" is an "img" 
+    $("#mypic-goes-here").attr("src", picUrl);
+} */
 
 
 
