@@ -21,6 +21,7 @@ Technologies used for this project:
 
 - HTML, CSS
 - JavaScript
+- jQuery
 - Bootstrap
 - Firebase
 - Geolocation API
@@ -95,10 +96,6 @@ It has the following subfolders and files:
 ├── index.html               # the initial page of the app
         
 
-Firebase hosting files:
-├── .firebaserc...
-
-
 ```
 
 Tips for file naming files and folders:
@@ -111,11 +108,11 @@ Tips for file naming files and folders:
 **Kyle Burnette**
 - The main gameplay in main.html
 - user feedback and bug report submission in bugreport.html, feedback.html, gamesuggestion.html, and submissionreceived.html.
-- Implemented distance and movement calculation
+- Implemented distance and movement calculation  
 **Jacky Tsoi**
 - graphical elements
 - live map in exercise.html
-- statistics and calculation formulas in stats.html.
+- statistics and calculation formulas in stats.html.  
 **Alex Wong**
 - Profile picture
 - daily quotes
