@@ -32,13 +32,13 @@ Content of the project folder:
 
 ```
  Top level of project folder:
-├── .gitignore               # Git ignore file
 ├── .github                  # Github automatic deployment information
 ├── public                   # Folder containing the project files
+├── .gitignore               # Git ignore file
+├── firebase.json            # Firebase hosting information
 └── README.md
 
 It has the following subfolders and files:
-├── .git                     # Folder for git repo
 ├── images                   # Folder for images
     /banner-text.png      
     /banner.png
@@ -79,7 +79,21 @@ It has the following subfolders and files:
     /index.css
     /layout.css
     /main.css
-    /stats.css                
+    /stats.css
+├── pages                   # Folder for html pages
+    /404.html                # 404 page if page doesn't exist
+    /bugreport.html          # place for user to submit bug reports
+    /exercise.html
+    /feedback.html           # feedback landing page where user can select what type of feedback to submit
+    /gamesuggestion.html     # place for user to submit game suggestions
+    /goal.html
+    /login.html              # Allows the user to log in
+    /main.html               # the main gameplay page
+    /profile.html
+    /stats.html              
+    /submissionreceived.html # page displayed after bug report or suggestion submission
+├── index.html               # the initial page of the app
+        
 
 Firebase hosting files:
 ├── .firebaserc...
