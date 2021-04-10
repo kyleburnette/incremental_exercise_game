@@ -1,5 +1,6 @@
 .DS_Store
 firebase-tools-instant-win.exe
 .firebaserc
+.vscode
 bootstrap.css
 /.firebase
