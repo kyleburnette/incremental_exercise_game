@@ -23,8 +23,8 @@ var destinationPosition = {
 // Map elements and file path for custom images
 var positionMarker;
 var destinationMarker;
-const destination_marker = "images/destination_marker.png";
-const location_marker = "images/position_marker.png";
+const destination_marker = "images/destination-marker.png";
+const location_marker = "images/position-marker.png";
 
 // User path tracker to store coordinates for Polyline
 var userPath;
