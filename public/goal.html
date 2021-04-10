@@ -59,23 +59,26 @@
     <div class="container">
         <div class="container mt-3">
             <div class="Current Goal">
-                <h2 class="display-6" >Current Goal</h2>
-                <div class="container mt-3" id="currentGoal">
-                    <h3 class="display-6">goals placejolder</b>
-                </div>
+                <p class="display-6">Current Goal<span id="goal-display"></span></p>
+            <!--  <div class="container mt-3" id="currentGoal">
+                     <h2 class="display-6" >Number of Steps</h2>
+                    <p class="card-text"><span id="goal-display"></span></p> 
+                </div> -->
             </div>
             <div class="progress mt-3">
                 <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100">25%</div>
             </div>
-            <div class="mt-3">
+            <div class= "mt-3 d-flex justify-content-between">
                 <button class="btn btn-outline-primary btn-lg btn-block" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapseGoal" aria-expanded="false" aria-controls="collapseGoal">
                     Create New Goal
                 </button>
-                <button type="submit" id="button-redeem" name="btn-redeem-steps" class="btn btn-outline-primary btn-lg btn-block">
+                <button type="submit" id="button-redeem" name="btn-redeem-steps"
+                    class="btn btn-outline-primary btn-lg btn-block">
                     Redeem Steps
                 </button>
+                </div>
                 <div class="collapse" id="collapseGoal">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Enter New Step Goal</label>
@@ -99,7 +102,7 @@
         <h3 class="display-6">Leaderboard</b>
             <!-- Table goes here -->
     </div>
-    
+
 
     <div class="filler"></div>
 
@@ -122,7 +125,7 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        Your step goal must be a valid number from 1 to 1000
+                        Your step goal must be a valid number from 1 to 10000
                     </p>
                 </div>
                 <div class="modal-footer">

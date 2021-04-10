@@ -9,32 +9,38 @@ function scoreQuery() {
             snap.forEach(function (doc) {
                 var n = doc.data().name;
                 var highScore = doc.data().score;
-                console.log(n);
-                console.log(highScore);
-                var newdom = n + " " + highScore;
-                console.log(newdom);
-                //$("#score-goes-here").append(newdom);
-                //document.getElementById("cities-go-here").innerHTML = newdom;
                 var div = document.getElementById('leaderboard');
                 var tbl = document.createElement('table');
+                var highScoreString = highScore ;
                 tbl.style.width = '100%';
-                tbl.style.borderBottom = '1px solid black';
-
-                for (var i = 0; i < 2; i++) {
+                var header = tbl.createTHead();
+                var row = header.insertRow(0); 
+                //tbl.style.maxWidth = "100 px";
+                //tbl.style.borderBottom = '1px solid black';
+                tbl.className = "table table-bordered ";
+                
+/*                 for (var j = 0; j < 3; j++) {
+                    var tk = tbl.insertRow(0);
+                } */
+                //rows
+                for (var i = 0; i < 1; i++) 
                     var tr = tbl.insertRow();
-                    for (var j = 0; j < 3; j++) {
-                        if (i == 0 && j == 0) {
+                    var td = tr.insertCell();
+                    var tk = tr.insertCell();
+
+                        // values              
+                        for (var k = 0; k < 1; k++){
+                        if (i == 0 && k == 0) {
                             break;
                         } else {
-                            var td = tr.insertCell();
+                            //var tk = tk.insertCell();
+                            tk.append(highScoreString);
                             td.append(n);
-                            //td.style.border = '1px solid black';
-                            //if(i == 1 && j == 1){
-                            //td.setAttribute('rowSpan', '3');
-                            //}
+                            //tk.append(highScore);
                         }
+                        
                     }
-                }
+                
                 div.appendChild(tbl);
 
             })
@@ -88,18 +94,17 @@ getStepGoal();
 
 
 // Redeem Step Goal
-// add merge here.
 function redeemGoal() {
     var user = firebase.auth().currentUser;
     var stepGoals = db.collection("user");
-    var goalReset = 1;
+    var goalReset = 0;
     stepGoals.doc(user.uid).set({
             goal: goalReset
         }, {
             merge: true
         })
         .then(function () {
-            //window.location.href = "goal.html";
+            window.location.href = "goal.html";
         });
 }
 
@@ -107,7 +112,6 @@ function redeemGoal() {
 function redeemGoalButton() {
     document.getElementById("button-redeem").addEventListener('click', function () {
         redeemGoal();
-        console.log("hello");
     });
 }
 redeemGoalButton();
@@ -118,18 +122,24 @@ function displayGoal(){
     var user = firebase.auth().currentUser;
     var stepGoals = db.collection("user").doc(user.uid);
     var div = document.getElementById('currentGoal');
+
     stepGoals.get().then((doc) => {
         if (doc.exists) {
-            userGoal = doc.data().goal;      
-            div.appendChild(userGoal);    
+            userGoal = doc.data().goal;
+            //console.log(userGoal);
+            var userGoalString = " " + userGoal ;
+            //div.appendChild(userGoal);
+            $("#goal-display").append(userGoalString + " Steps");
+               
         } else {
-            userGoal = 0;
-            console.log("Goal Default");
-            //$("#goal-display").attr(userGoal);
-            div.appendChild(userGoal);    
+            $("#goal-display").append(userGoal + " Steps");
+            console.log(userGoal );
 
         }
     }).catch((error) => {
         console.log("Error getting document:", error);
     });
 }
+displayGoal;
+
+
