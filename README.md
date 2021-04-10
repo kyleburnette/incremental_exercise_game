@@ -109,10 +109,12 @@ Tips for file naming files and folders:
 - The main gameplay in main.html
 - user feedback and bug report submission in bugreport.html, feedback.html, gamesuggestion.html, and submissionreceived.html.
 - Implemented distance and movement calculation  
+
 **Jacky Tsoi**
 - graphical elements
 - live map in exercise.html
 - statistics and calculation formulas in stats.html.  
+
 **Alex Wong**
 - Profile picture
 - daily quotes
