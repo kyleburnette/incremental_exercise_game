@@ -5,6 +5,10 @@ var options = {
     maximumAge: 0
 };
 
+// Tracking rates
+var pollingRate = 1000; // The rate at which to poll the user's location (in ms)
+var updateRate = 20000; // The rate at which to write to the database (in ms)
+
 // Threshold options
 const minAccuracy = 30; // tracks inaccuracy
 const withinDestination = 25; // in meters
@@ -37,8 +41,8 @@ var destinationPosition = {
 };
 
 // Create an inventory and save value of each field to calculate bonus score
-var inventory = { bicycle: 0, car: 0, plane: 0, skateboard: 0, spaceship: 0, train: 0 };
-var stepsPerSecond = {skateboard: 1, bicycle: 2, car: 5, train: 8, plane: 9, spaceship: 10};
+var inventory = {skateboard: 0,  bicycle: 0, car: 0, train: 0, plane: 0, spaceship: 0};
+var stepsPerSecond = {skateboard: 1, bicycle: 10, car: 50, train: 100, plane: 500, spaceship: 1000};
 
 // Instantiate statistics for post-exercise session
 var dateObj = new Date(); // start date

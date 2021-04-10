@@ -424,9 +424,9 @@ function displayStats() {
         totalMaxCalories = (totalSteps / 100) * 4;
         $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
-    var tempScore = scoreMultiplier(totalDistance);
-    tempScore = tempScore * calcTotalStepsPerSecond();
-    $("#bonusScore").html(`${Math.round(tempScore)}`);
+    var score = scoreMultiplier(totalDistance);
+    score = score * calcTotalStepsPerSecond();
+    $("#bonusScore").html(`${Math.round(score)}`);
 }
 
 // Calculates the bonus score
@@ -788,7 +788,7 @@ function retrieveUserScore() {
 }
 
 // Updates user score on database
-function writeUserScore(text) {
+function writeUserScore() {
     var updateScore = db.collection("scores");
     userScore = Math.round(userScore);
     if (loggedInUser == null) {
@@ -888,7 +888,7 @@ $(document).ready(function () {
             } else {
                 console.warn("User is not on a mobile device, not running application.");
             }
-        }, 1000);
+        }, pollingRate);
     } else {
         console.warn("User is not on a mobile device, not running application.");
     }
