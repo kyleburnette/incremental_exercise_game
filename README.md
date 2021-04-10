@@ -81,7 +81,7 @@ It has the following subfolders and files:
     /layout.css
     /main.css
     /stats.css
-├── pages                   # Folder for html pages
+├── pages                    # Folder for html pages
     /404.html                # 404 page if page doesn't exist
     /bugreport.html          # place for user to submit bug reports
     /exercise.html
@@ -97,11 +97,6 @@ It has the following subfolders and files:
         
 
 ```
-
-Tips for file naming files and folders:
-
-- use lowercase with no spaces
-- use dashes (not underscore) for word separation
 
 ## Contributors
 
