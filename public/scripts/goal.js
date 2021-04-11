@@ -1,8 +1,8 @@
+// Retrives score from score db, sorts top 10 scores and displays.
 function scoreQuery() {
     db.collection("scores")
         .where("score", ">", 1)
         .limit(10)
-        //.orderBy("population")
         .orderBy("score", "desc")
         .get()
         .then(function (snap) {
@@ -13,10 +13,6 @@ function scoreQuery() {
                 var tbl = document.createElement('table');
                 var highScoreString = highScore;
                 tbl.style.width = '100%';
-                //var header = tbl.createTHead();
-                //var row = header.insertRow(0);
-                //tbl.style.maxWidth = "100 px";
-                //tbl.style.borderBottom = '1px solid black';
                 tbl.className = "table table-bordered ";
 
 
@@ -45,14 +41,15 @@ function scoreQuery() {
 }
 scoreQuery();
 
-
-
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             userName = user;
             console.log("Logged in as", userName.displayName);
             displayGoal();
+            displaySteps();
+            writeSteps();
+            getUserSteps();
             //retrieveUserScore();
             //retrieveUserInventory();
         } else {
@@ -77,7 +74,7 @@ function writeStepGoal(Number) {
         });
 }
 
-// Writes the Step Goal 
+// Writes the Step Goal inputted by user
 function getStepGoal() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var goal = document.getElementById("goal-input").value;
@@ -129,7 +126,7 @@ function displayGoal() {
 
         } else {
             $("#goal-display").append(userGoal + " Steps");
-            console.log(userGoal);
+            //console.log(userGoal);
 
         }
     }).catch((error) => {
@@ -137,3 +134,77 @@ function displayGoal() {
     });
 }
 displayGoal;
+
+
+// Write step if no step found, create new
+function writeSteps() {
+    var user = firebase.auth().currentUser;
+    var step = db.collection("user").doc(user.uid);
+    step.get().then((doc) => {
+        if (doc.exists) {
+            var oldStep;
+            if (oldStep == NaN || oldStep == null) {
+                oldStep = 0;
+            } else {
+                oldStep = parseInt(doc.data()["step"]);
+            }
+            step.set({
+                step: oldStep 
+            }, {
+                merge: true
+            })
+        } else {
+            // doc.data() will be undefined in this case
+            console.warn("No such document!");
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+}
+
+
+// Display amount of steps by user.
+function displaySteps() {
+    var user = firebase.auth().currentUser;
+    var stepNum = 0;
+    var step = db.collection("user").doc(user.uid);
+    step.get().then((doc) => {
+        if (doc.exists) {
+            stepNum = doc.data().step;
+            $("#step-display").append(stepNum + " : ");
+        } else {
+            $("#step-display").append(stepNum + " : ");
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+}
+displaySteps;
+
+// Get user steps use for progress bar
+function getUserSteps() {
+    var step = 0;
+    var stepGoal = 0;
+    var user = firebase.auth().currentUser;
+    var userStep = db.collection("user").doc(user.uid);
+
+    userStep.get().then((doc) => {
+        if (doc.exists) {
+            step = doc.data().step;
+            stepGoal = doc.data().goal;
+            var progress = step / stepGoal;
+            //console.log(progress);
+            $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
+        } else {
+            step = 0;
+            // step goal is 1 because 0/0 = bad so 0/1 good.
+            stepGoal = 1;
+            var progress = step / stepGoal;
+            $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
+
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+}
+
