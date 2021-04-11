@@ -400,7 +400,7 @@ function checkExerciseError() {
             "<h4>An error was detected in routing, this session will not be recorded.</h4><hr />");
     } else if (flagCounter > flagThreshold) {
         $("#error-message").html(
-            "<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving.Otherwise your GPS may be too inaccurate to use this application.</h4><hr />"
+            "<h4>Session was ended due to abnormal travel speed, this application will not work if you are driving. Otherwise your GPS may be too inaccurate to use this application.</h4><hr />"
             );
     } else if (totalDistance <= 0) {
         $("#error-message").html(
@@ -465,7 +465,7 @@ function writeSteps() {
 
 // Write an exercise 
 function writeEntry() {
-    var sessionDb = db.collection("user").doc(user.uid).collection("sessions");
+    var sessionDb = db.collection("user").doc(loggedInUser.uid).collection("sessions");
     sessionDb.add({
         date: dateObj,
         routeOption: routeOption,
@@ -592,6 +592,7 @@ function flagUser() {
     if (flagCounter <= flagThreshold) {
         console.warn("Abnormal distance tracked:", distance, "ignoring update.");
     } else {
+        $("#completedModal").modal("toggle");
         endExercise();
     }
     updateCrd = false;
