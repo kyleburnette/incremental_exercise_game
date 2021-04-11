@@ -95,25 +95,28 @@ displayGoal;
 
 // Write step if no step found, create new
 function writeSteps() {
+    var userSteps = 0;
     var user = firebase.auth().currentUser;
     var step = db.collection("user").doc(user.uid);
     step.get().then((doc) => {
         if (doc.exists) {
-            var oldStep;
-            if (oldStep == NaN || oldStep == null) {
-                oldStep = 0;
-            } else {
-                oldStep = parseInt(doc.data()["step"]);
-            }
+            userSteps = doc.data().steps;
+        } else {
+            //var oldStep;
+            //if (oldStep == NaN || oldStep == null) {
+            //    oldStep = 0;
+           // } else {
+            //    oldStep = parseInt(doc.data()["step"]);
+            //}
             step.set({
-                steps: oldStep 
+                steps: userSteps
             }, {
                 merge: true
             })
-        } else {
+        } //else {
             // doc.data() will be undefined in this case
-            console.warn("No such document!");
-        }
+        //    console.warn("No such document!");
+        //}
     }).catch((error) => {
         console.warn("Error getting document:", error);
     });
@@ -149,8 +152,9 @@ function getUserSteps() {
         if (doc.exists) {
             steps = doc.data().steps;
             stepGoal = doc.data().goal;
-            var progress = steps / stepGoal;
-            //console.log(progress);
+            var progress = (steps / stepGoal) * 100;
+            console.log(progress);
+            
             $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
         } else {
             steps = 0;
