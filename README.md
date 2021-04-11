@@ -3,6 +3,7 @@
 - [General info](#general-info)
 - [Technologies](#technologies)
 - [Contents](#content)
+- [Contributors](#contributors)
 
 ## General Info
 
@@ -26,6 +27,8 @@ Technologies used for this project:
 - Firebase
 - Geolocation API
 - Google Maps API
+- Directions API
+- Distance Matrix API
 
 ## Content
 
