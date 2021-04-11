@@ -18,7 +18,7 @@ $(document).ready(function () {
             loggedInUser = user;
             console.log("Logged in as", loggedInUser.displayName,
                 "and will redirecting to home.");
-            window.location.href = "main.html";
+            window.location.href = "pages/main.html";
         } else {
             console.warn("No user is logged in.");
         }
@@ -27,16 +27,16 @@ $(document).ready(function () {
 
 // When the user clicks the play button, it redirects them to the login screen
 function playNow() {
-    window.location.href = "login.html";
+    window.location.href = "pages/login.html";
 }
 
 // Change button image on / off hover
 $(".play-button").mouseover(function() {
-    $(".play-button").attr("src", "../images/button-down.png");
+    $(".play-button").attr("src", "images/button-down.png");
 })
 
 $(".play-button").mouseleave(function() {
-    $(".play-button").attr("src", "../images/button-top.png");
+    $(".play-button").attr("src", "images/button-top.png");
 })
 
 // Adjusts banner text when navbar opens
