@@ -149,7 +149,7 @@ function writeSteps() {
                 oldStep = parseInt(doc.data()["step"]);
             }
             step.set({
-                step: oldStep 
+                steps: oldStep 
             }, {
                 merge: true
             })
@@ -167,10 +167,10 @@ function writeSteps() {
 function displaySteps() {
     var user = firebase.auth().currentUser;
     var stepNum = 0;
-    var step = db.collection("user").doc(user.uid);
-    step.get().then((doc) => {
+    var steps = db.collection("user").doc(user.uid);
+    steps.get().then((doc) => {
         if (doc.exists) {
-            stepNum = doc.data().step;
+            stepNum = doc.data().steps;
             $("#step-display").append(stepNum + " : ");
         } else {
             $("#step-display").append(stepNum + " : ");
@@ -183,23 +183,23 @@ displaySteps;
 
 // Get user steps use for progress bar
 function getUserSteps() {
-    var step = 0;
+    var steps = 0;
     var stepGoal = 0;
     var user = firebase.auth().currentUser;
     var userStep = db.collection("user").doc(user.uid);
 
     userStep.get().then((doc) => {
         if (doc.exists) {
-            step = doc.data().step;
+            steps = doc.data().steps;
             stepGoal = doc.data().goal;
-            var progress = step / stepGoal;
+            var progress = steps / stepGoal;
             //console.log(progress);
             $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
         } else {
-            step = 0;
+            steps = 0;
             // step goal is 1 because 0/0 = bad so 0/1 good.
             stepGoal = 1;
-            var progress = step / stepGoal;
+            var progress = steps / stepGoal;
             $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
 
         }
