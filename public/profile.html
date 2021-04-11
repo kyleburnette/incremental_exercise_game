@@ -58,7 +58,7 @@
 
     <div class="container">
         <h1 class="display-4 mt-2">Profile</h1>
-        <div class="card text-center">
+        <div class="card text-center" >
             <div class="card-header">
                 Featured
             </div>
@@ -72,17 +72,28 @@
         <!-- // using pointer 1 from upload_profilePic.js // -->
 
         <div class="card mt-2 profile-card" style="width: 18rem;">
+            <h3>Profile Picture</h3>
             <img id="mypic-goes-here" class="card-img-top" alt="Profile Image of User" />
             <input type="file" id="mypic-input" name="filename">
-            <div class="card-body">
-                <h5 class="card-title"><span id=></span></h5>
+            <div class="card-body" style="width: 50%">
+                <h5 class="card-title"></h5>
                 <p class="card-text"></p>
+                
             </div>
         </div>
     </div>
 
 
-    <div class="filler"></div>
+    <div class="container mt-3" id="leaderboard">
+        <h3 class="display-6">Leaderboard</b>
+            <table class="table table-bordered" style= "width: 100%">
+                <tr>
+                    <td>Name</td>
+                    <td>Score </td>
+                </tr>
+            </table>
+            <!-- Table goes here -->
+    </div>
 
     <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="confirmLabel" aria-hidden="true">
