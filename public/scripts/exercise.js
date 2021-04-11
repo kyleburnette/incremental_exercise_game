@@ -614,7 +614,7 @@ function updateCurrentCrd(crd) {
             distance = calcDistance(previousCrd, crd);
             if (trackingState) {
                 // If the distance travelled in one second is too far, flag the user once
-                if (distance > 25) {
+                if (distance > maxDistance) {
                     flagUser();
                     // If the user travels at least 3 meters, update position tracker
                 } else if (distance >= 3) {

@@ -10,9 +10,10 @@ var pollingRate = 1000; // The rate at which to poll the user's location (in ms)
 var updateRate = 20000; // The rate at which to write to the database (in ms)
 
 // Threshold options
-const minAccuracy = 30; // tracks inaccuracy
+const minAccuracy = 1000; // tracks inaccuracy
 const withinDestination = 25; // in meters
 const flagThreshold = 30; // maximum of 30 flags before session force ends
+const maxDistance = 1000; // max distance travelled in a second
 
 // Keep the device type to verify if the user can use exercise.html
 var deviceType = "Mobile";
