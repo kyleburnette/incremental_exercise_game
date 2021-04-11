@@ -23,7 +23,9 @@ function scoreQuery() {
                 for (var i = 0; i < 1; i++) {
                     var tr = tbl.insertRow();
                     var td = tr.insertCell();
+                    td.className = "name-col";
                     var tk = tr.insertCell();
+                    tk.className = "score-col";
                 }
 
                 // Values              
@@ -129,11 +131,9 @@ function displayGoal() {
 
         } else {
             $("#goal-display").append(userGoal + " Steps");
-            console.log(userGoal);
-
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.error("Error getting document:", error);
     });
 }
 displayGoal;

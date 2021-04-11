@@ -7,7 +7,6 @@ function displayQuote() {
         .then(function (snap) {
             snap.forEach(function (doc) {
                 var n = doc.data().message;
-                console.log(n);
                 var messagesString = "<p> " + n + "</p";
                 $("#quote-go-here").append(messagesString);
             })

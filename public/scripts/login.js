@@ -11,11 +11,10 @@ function writeNewInventory(user) {
         }, {
             merge: true
         }).then(function () {
-            console.log("New user's score set to 0.");
             window.location.assign("main.html");
         })
         .catch(function (error) {
-            console.log("Error adding new user: " + error);
+            console.error("Error adding new user: " + error);
         });
 }
 // Initialize the FirebaseUI Widget using Firebase.

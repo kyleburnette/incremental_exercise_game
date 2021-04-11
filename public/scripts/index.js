@@ -20,7 +20,7 @@ $(document).ready(function () {
                 "and will redirecting to home.");
             window.location.href = "main.html";
         } else {
-            console.log("No user is logged in.");
+            console.warn("No user is logged in.");
         }
     });
 })
@@ -32,11 +32,11 @@ function playNow() {
 
 // Change button image on / off hover
 $(".play-button").mouseover(function() {
-    $(".play-button").attr("src", "images/button-down.png");
+    $(".play-button").attr("src", "../images/button-down.png");
 })
 
 $(".play-button").mouseleave(function() {
-    $(".play-button").attr("src", "images/button-top.png");
+    $(".play-button").attr("src", "../images/button-top.png");
 })
 
 // Adjusts banner text when navbar opens

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
-    <title>Globetrotter | Login</title>
+    <title>Globetrotter | Feedback </title>
     <meta name="comp1800 boilerplate code" content="my bcit project">
     <meta name="author" content="BCIT">
 
@@ -11,16 +11,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/bootstrap-color.css">
+    <link rel="stylesheet" href="../styles/bootstrap-color.css">
 
     <!-- Optional styles and scripts of your own -->
-    <link rel="icon" href="images/favicon-32x32.png">
-    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="icon" href="../images/favicon-32x32.png">
+    <link rel="stylesheet" href="../styles/layout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
 
 </head>
 
@@ -32,7 +28,7 @@
     <!-- Header Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">Globetrotter</a>
+            <a class="navbar-brand" href="main.html">Globetrotter</a>
             <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -41,23 +37,48 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="main.html">Home</a>
+                        <a class="nav-link" href="main.html">Home <i class="fa fa-home"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Login</a>
+                        <a class="nav-link" href="profile.html">Profile <i class="fa fa-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="exercise.html">Exercise <i class="fa fa-biking"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Feedback <i
+                                class="fa fa-envelope"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html" onclick="logOut()">Logout <i
+                                class="fa fa-sign-out-alt"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-3">
-        <h1 class="display-4">Globetrotter Login</h1>
-        <div id="firebaseui-auth-container"></div>
-        <div id="loader">Loading...</div>
+    <h1 class="text-center" style="padding-top: 50px;">What type of feedback would you like to submit?</h1>
+
+    <div class="form-row text-center">
+        <div class="col-12">
+            <div class="container d-grid">
+                <a href="bug-report.html" class="btn btn-primary mt-3">Bug Report</a>
+                <a href="game-suggestion.html" class="btn btn-primary mt-3">Game Suggestion</a>
+            </div>
+        </div>
     </div>
 
     <div class="filler"></div>
+
+    <!-- Footer Navigation Bar -->
+    <nav class="navbar fixed-bottom footbar-custom">
+        <div class="container-fluid">
+            <a href="main.html" class="footer-btn home-btn"><i class="fa fa-home"></i></a>
+            <a href="exercise.html" class="footer-btn start-btn"><i class="fa fa-running"></i></a>
+            <a href="stats.html" class="footer-btn stat-btn"><i class="fa fa-chart-bar"></i></a>
+        </div>
+    </nav>
 
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
@@ -72,12 +93,11 @@
     <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
 
-
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
-    <script src="scripts/firebase_api.js"> </script>
-    <script src="scripts/login.js" type="text/javascript"></script>
+    <script src="../scripts/firebase-api.js"></script>
+    <script src="../scripts/logout.js" type="text/javascript"></script>
 </body>
 
 </html>

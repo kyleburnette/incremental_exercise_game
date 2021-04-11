@@ -1,0 +1,20 @@
+.profile-card {
+    width: 100%;
+}
+
+.profile-card h3 {
+    padding-left: 10px;
+}
+
+.preview {
+    width: 100%;
+    height: auto;
+}
+
+.name-col {
+    width: 40%;
+}
+
+.score-col {
+    width: 60%;
+}

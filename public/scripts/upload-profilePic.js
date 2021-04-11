@@ -1,7 +1,9 @@
 const defaultPic = "https://firebasestorage.googleapis.com/v0/b/comp1800project.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=fe2e2a67-f843-4b28-b83e-7516e584d689";
 
+var user = null;
+
 firebase.auth().onAuthStateChanged(function (user) {
-    var user = firebase.auth().currentUser;
+    user = firebase.auth().currentUser;
     if (user != null) {
         // User is signed in.
         user.providerData.forEach(function (profile) {
@@ -100,17 +102,11 @@ function defaultProfilePic() {
     });
 }
 
-
-
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
             defaultProfilePic();
-            retrieveMultiplier();
-            retrieveUserInventory();
-            retrieveUserScore();
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";
@@ -165,7 +161,6 @@ function confirmProfilePic() {
         })
     window.location.reload();
 }
-confirmProfilePic();
 
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {

@@ -10,7 +10,7 @@ function writeFeedback(text) {
         feedback: text,
         timestamp: Date.now().toString()
     }).then(function () {
-        window.location.href = "submissionreceived.html";
+        window.location.href = "submission-received.html";
     });
 }
 
@@ -18,7 +18,6 @@ function writeFeedback(text) {
 function getFeedback() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var feedback = document.getElementById("feedback-input").value;
-        console.log(feedback);
         writeFeedback(feedback);
     });
 }

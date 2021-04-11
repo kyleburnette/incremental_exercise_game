@@ -121,10 +121,10 @@ function retrieveUserInventory() {
             updateCounts();
         } else {
             // doc.data() will be undefined in this case
-            console.log("No such document!");
+            console.error("No such document!");
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.error("Error getting document:", error);
     });
 }
 
@@ -231,7 +231,6 @@ function success(pos) {
     var crd = pos.coords;
     if (previousCrd != null) {
         distance = calcDistance(previousCrd, crd);
-        console.log("Distance:", distance);
         checkIsWalking();
         if (isWalking){
             handleUserScore();
@@ -340,7 +339,7 @@ function createParticleDiv(e, inventoryType) {
                 "max-width": "25px"
 
             })
-            .append($('<img class="particle" src="images/' + inventoryType + '.png" alt="myimage" />'))
+            .append($('<img class="particle" src="../images/' + inventoryType + '.png" alt="myimage" />'))
             .appendTo("#particles")
             .fadeIn("fast")
             .animate({ path: new $.path.bezier(bezier_params) })
