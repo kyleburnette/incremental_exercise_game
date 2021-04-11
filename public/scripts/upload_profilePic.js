@@ -26,6 +26,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     var file = e.target.files[0];
                     var blob = URL.createObjectURL(file);
                     image.src = blob; // display this image
+                    
 
                     //store using this name
                     var storageRef = storage.ref("images/" + user.uid + ".jpg");
@@ -55,7 +56,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         uploadUserProfilePic();
 
         function displayUserProfilePic() {
-            console.log("Display Pic");
+            //console.log("Display Pic");
             firebase.auth().onAuthStateChanged(function (user) { //get user object
                 db.collection("user").doc(user.uid) //use user's uid
                     .get() //READ the doc
@@ -74,10 +75,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
     } else {
         // No user is signed in.
-        console.log("user is not logged in")
+        console.log("User is not logged in")
     }
-});
+})
 
+// Default Profile Picture of User if none is uploaded.
 function defaultProfilePic() {
     var user = firebase.auth().currentUser;
     var picture = db.collection("user").doc(user.uid);
@@ -86,7 +88,8 @@ function defaultProfilePic() {
         if (doc.exists) {
             picUrl = doc.data().profilePic;
             $("#mypic-goes-here").attr("src", picUrl);
-            console.log("picture loaded.")
+            //console.log("picture loaded." + picUrl)
+
         } else {
             picUrl = defaultPic;
             console.log("No such document!");
@@ -96,16 +99,6 @@ function defaultProfilePic() {
         console.log("Error getting document:", error);
     });
 }
-
-
-/* function displayDefaultUserProfilePic() {
-    var picUrl = defaultPic;
-
-    // use this line if "mypicdiv" is a "div"
-    //$("#mypicdiv").append("<img src='" + picUrl + "'>")
-    // use this line if "mypic-goes-here" is an "img" 
-    $("#mypic-goes-here").attr("src", picUrl);
-} */
 
 
 
@@ -125,38 +118,10 @@ $(document).ready(function () {
     });
 });
 
-// function writeQuotes() {
-//   var messageRef = db.collection("messages");
-//   messageRef.add({
-//     position: Math.floor(Math.random() * 1000),
-//     message: "If people are doubting how far you can go, go so far that you can’t hear them anymore.” – Michele Ruiz",
-//   });
-//   messageRef.add({
-//     position: Math.floor(Math.random() * 1000),
-//     message: "live, laugh, love yourself",
-//   });
-// }
-//writeQuotes();
-
-function displayQuote() {
-    db.collection("messages")
-        .where("position", ">", Math.floor(Math.random() * 1000))
-        .limit(1)
-        .get()
-        .then(function (snap) {
-            snap.forEach(function (doc) {
-                var n = doc.data().messages;
-                console.log(n);
-                var messagesString = "<p> " + n + "</p";
-                $("#quotes-go-here").append(messagesString);
-            })
-        })
-}
-displayQuote();
-
 var fileInput = document.getElementById("mypic-input");
 const preview = document.getElementById("preview-image");
 
+// Uploads User Profile Picture in seperate window.
 function uploadUserProfilePic() {
     // Let's assume my storage is only enabled for authenticated users 
     // This is set in your firebase console storage "rules" tab
@@ -174,9 +139,10 @@ function uploadUserProfilePic() {
 }
 uploadUserProfilePic();
 
+// Confirms profile picture.
 function confirmProfilePic() {
     //store using this name
-    var storageRef = firebase.storage().ref("images/" + users.uid + ".jpg");
+    var storageRef = firebase.storage().ref("images/" + user.uid + ".jpg");
 
     //upload the picked file
     storageRef.put(file)
@@ -200,26 +166,6 @@ function confirmProfilePic() {
     window.location.reload();
 }
 confirmProfilePic();
-
-// function displayUserProfilePic() {
-//     console.log("Displaying profile picture");
-//     firebase.auth().onAuthStateChanged(function (user) { //get user object
-//         db.collection("users").doc(user.uid) //use user's uid
-//             .get() //READ the doc
-//             .then(function (doc) {
-//                 var picUrl = doc.data().userPic; //extract pic url
-//                 //if (profilePic === null){
-//                 //console.log("profile pic is not null")
-//                 //}
-//                 // use this line if "mypicdiv" is a "div"
-//                 //$("#mypicdiv").append("<img src='" + picUrl + "'>")
-
-//                 // use this line if "mypic-goes-here" is an "img" 
-//                 $("#mypic-goes-here").attr("src", profileUrl);
-//             })
-//     })
-// }
-// displayUserProfilePic();
 
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
