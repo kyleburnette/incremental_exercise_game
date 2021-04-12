@@ -55,7 +55,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 })
             })
         }
-        uploadUserProfilePic();
+        //uploadUserProfilePic();
 
         function displayUserProfilePic() {
             //console.log("Display Pic");

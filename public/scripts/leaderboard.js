@@ -11,11 +11,8 @@ function scoreQuery() {
                 var highScore = doc.data().score;
                 var div = document.getElementById('leaderboard');
                 var tbl = document.createElement('table');
-                var highScoreString = highScore;
                 tbl.style.width = '100%';
                 tbl.className = "table table-bordered ";
-
-
                 for (var i = 0; i < 1; i++) {
                     var tr = tbl.insertRow();
                     var td = tr.insertCell();
@@ -23,22 +20,18 @@ function scoreQuery() {
                     var tk = tr.insertCell();
                     tk.className = "score-col";
                 }
-
-                // Values              
                 for (var k = 0; k < 1; k++) {
                     if (i == 0 && k == 0) {
                         break;
                     } else {
-                        tk.append(highScoreString);
+                        tk.append(highScore);
                         td.append(n);
                     }
-
                 }
-
                 div.appendChild(tbl);
-
-
             })
         })
 }
 scoreQuery();
+
+

@@ -27,7 +27,7 @@ function writeGoalField() {
             goalStart = doc.data().goal;
             console.log("hi");
         } else {
-            goalField.set({
+            goalField.add({
                 goal: goalStart
             }, {
                 merge: true
@@ -83,7 +83,6 @@ function redeemGoal() {
             if (complete >= 1) {
                 var stepMinusGoal = stepsByUser - goalByUser;
                 stepGoals.set({
-                
                     goal: goalReset,
                     steps: stepMinusGoal
                 }, {
@@ -95,7 +94,7 @@ function redeemGoal() {
             } else {
                 $('#warningModalRedeemGoal').modal('show');
             }
-    }
+        }
     });
 }
 
@@ -112,16 +111,12 @@ function displayGoal() {
     var userGoal = 0;
     var user = firebase.auth().currentUser;
     var stepGoals = db.collection("user").doc(user.uid);
-
     stepGoals.get().then((doc) => {
         if (doc.exists) {
             userGoal = doc.data().goal;
             $("#goal-display").append(userGoal + " Steps");
-
         } else {
             $("#goal-display").append(userGoal + " Steps");
-            //console.log(userGoal);
-
         }
     }).catch((error) => {
         console.log("Error getting document:", error);
@@ -163,7 +158,6 @@ function displaySteps() {
             $("#step-display").append(stepNum + " : ");
         } else {
             $("#step-display").append(stepNum + " : ");
-
         }
     }).catch((error) => {
         console.error("Error getting document:", error);
@@ -183,12 +177,9 @@ function getUserSteps() {
             steps = doc.data().steps;
             stepGoal = doc.data().goal;
             var progress = (steps / stepGoal) * 100;
-            //console.log(progress);
-
             $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
         } else {
             steps = 0;
-            // step goal is 1 because 0/0 = bad so 0/1 good.
             stepGoal = 1;
             var progress = steps / stepGoal;
             $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
