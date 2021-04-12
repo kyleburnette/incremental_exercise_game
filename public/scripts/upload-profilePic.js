@@ -81,16 +81,38 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 })
 
-// Default Profile Picture of User if none is uploaded.
-function defaultProfilePic() {
+// Initializes the User profilePic field when user visits profile.html 1st time.
+function writeUserProfilePicField() {
+    var defaultPicForUser = defaultPic;
     var user = firebase.auth().currentUser;
     var picture = db.collection("user").doc(user.uid);
-    //console.log("Logged ID:", user.uid);
+    picture.get().then((doc) => {
+        if (doc.exists) {
+            defaultPicForUser = doc.data().goal;
+        } else {
+            picture.set({
+                profilePic : defaultPicForUser
+            }, {
+                merge: true
+            })
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+}
+
+
+
+// Default Profile Picture of User if none is uploaded.
+function defaultProfilePic() {
+    var picUrl = defaultPic;
+    var user = firebase.auth().currentUser;
+    var picture = db.collection("user").doc(user.uid);
     picture.get().then((doc) => {
         if (doc.exists) {
             picUrl = doc.data().profilePic;
             $("#mypic-goes-here").attr("src", picUrl);
-            //console.log("picture loaded." + picUrl)
+            //console.log("hello")
 
         } else {
             picUrl = defaultPic;
@@ -166,6 +188,7 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
+            writeUserProfilePicField();
             console.log("Logged in as", loggedInUser.displayName);
 
         } else {

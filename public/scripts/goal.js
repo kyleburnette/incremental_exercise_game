@@ -4,6 +4,7 @@ $(document).ready(function () {
             userName = user;
             console.log("Logged in as", userName.displayName);
             displayGoal();
+            writeGoalField();
             displaySteps();
             writeSteps();
             getUserSteps();
@@ -15,6 +16,27 @@ $(document).ready(function () {
         }
     });
 });
+
+//Initalize the goal field for user when they visit goal.html for 1st time.
+function writeGoalField() {
+    var goalStart = 0;
+    var user = firebase.auth().currentUser;
+    var goalField = db.collection("user").doc(user.uid);
+    goalField.get().then((doc) => {
+        if (doc.exists) {
+            goalStart = doc.data().goal;
+        } else {
+            goalField.set({
+                goal: goalStart
+            }, {
+                merge: true
+            })
+        }
+    }).catch((error) => {
+        console.warn("Error getting document:", error);
+    });
+}
+
 
 // Writes Step Goal
 function writeStepGoal(Number) {
@@ -78,8 +100,7 @@ function displayGoal() {
     stepGoals.get().then((doc) => {
         if (doc.exists) {
             userGoal = doc.data().goal;
-            var userGoalString = " " + userGoal;
-            $("#goal-display").append(userGoalString + " Steps");
+            $("#goal-display").append(userGoal + " Steps");
 
         } else {
             $("#goal-display").append(userGoal + " Steps");
@@ -102,21 +123,12 @@ function writeSteps() {
         if (doc.exists) {
             userSteps = doc.data().steps;
         } else {
-            //var oldStep;
-            //if (oldStep == NaN || oldStep == null) {
-            //    oldStep = 0;
-           // } else {
-            //    oldStep = parseInt(doc.data()["step"]);
-            //}
             step.set({
                 steps: userSteps
             }, {
                 merge: true
             })
-        } //else {
-            // doc.data() will be undefined in this case
-        //    console.warn("No such document!");
-        //}
+        }
     }).catch((error) => {
         console.warn("Error getting document:", error);
     });
@@ -134,6 +146,7 @@ function displaySteps() {
             $("#step-display").append(stepNum + " : ");
         } else {
             $("#step-display").append(stepNum + " : ");
+
         }
     }).catch((error) => {
         console.error("Error getting document:", error);
@@ -153,15 +166,15 @@ function getUserSteps() {
             steps = doc.data().steps;
             stepGoal = doc.data().goal;
             var progress = (steps / stepGoal) * 100;
-            console.log(progress);
-            
-            $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
+            //console.log(progress);
+
+            $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
         } else {
             steps = 0;
             // step goal is 1 because 0/0 = bad so 0/1 good.
             stepGoal = 1;
             var progress = steps / stepGoal;
-            $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
+            $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
 
         }
     }).catch((error) => {
@@ -169,24 +182,24 @@ function getUserSteps() {
     });
 }
 
-
+// Prevents user from enter any other characters besides Numbers into goal input field.
 function setInputFilter(textbox, inputFilter) {
-    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-      textbox.addEventListener(event, function() {
-        if (inputFilter(this.value)) {
-          this.oldValue = this.value;
-          this.oldSelectionStart = this.selectionStart;
-          this.oldSelectionEnd = this.selectionEnd;
-        } else if (this.hasOwnProperty("oldValue")) {
-          this.value = this.oldValue;
-          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-        } else {
-          this.value = "";
-        }
-      });
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
     });
-  }
+}
 
-  setInputFilter(document.getElementById("goal-input"), function(value) {
+setInputFilter(document.getElementById("goal-input"), function (value) {
     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
-  });
+});
