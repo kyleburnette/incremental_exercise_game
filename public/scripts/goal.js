@@ -3,10 +3,10 @@ $(document).ready(function () {
         if (user) {
             userName = user;
             console.log("Logged in as", userName.displayName);
-            displayGoal();
             writeGoalField();
-            displaySteps();
             writeSteps();
+            displayGoal();
+            displaySteps();
             getUserSteps();
             //retrieveUserScore();
             //retrieveUserInventory();
@@ -51,7 +51,7 @@ function writeStepGoal(Number) {
         .then(function () {
             window.location.href = "goal.html";
         });
-}
+}writeStepGoal;
 
 // Writes the Step Goal inputted by user
 function getStepGoal() {
@@ -66,7 +66,6 @@ function getStepGoal() {
     });
 }
 getStepGoal();
-
 
 // Redeem Step Goal
 function redeemGoal() {

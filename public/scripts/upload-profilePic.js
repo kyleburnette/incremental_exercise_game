@@ -129,6 +129,7 @@ $(document).ready(function () {
         if (user) {
             loggedInUser = user;
             defaultProfilePic();
+            //writeUserProfilePicField();
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";
@@ -188,7 +189,6 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            writeUserProfilePicField();
             console.log("Logged in as", loggedInUser.displayName);
 
         } else {
