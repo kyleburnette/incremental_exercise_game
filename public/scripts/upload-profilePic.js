@@ -129,7 +129,7 @@ $(document).ready(function () {
         if (user) {
             loggedInUser = user;
             defaultProfilePic();
-            //writeUserProfilePicField();
+            writeUserProfilePicField();
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";

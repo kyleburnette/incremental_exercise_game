@@ -70,16 +70,30 @@ getStepGoal();
 // Redeem Step Goal
 function redeemGoal() {
     var user = firebase.auth().currentUser;
-    var stepGoals = db.collection("user");
+    var stepGoals = db.collection("user").doc(user.uid);
     var goalReset = 0;
-    stepGoals.doc(user.uid).set({
-            goal: goalReset
-        }, {
-            merge: true
-        })
-        .then(function () {
-            window.location.href = "goal.html";
-        });
+    var stepsByUser;
+    var goalByUser;
+    stepGoals.get().then((doc) => {
+        if (doc.exists) {
+            stepsByUser = doc.data().steps;
+            goalByUser = doc.data().goal;
+            var complete = stepsByUser / goalByUser;
+            if (complete >= 1) {
+                stepGoals.set({
+                    goal: goalReset,
+                    steps: goalReset
+                }, {
+                    merge: true
+                })
+                .then(function () {
+                    window.location.href = "goal.html";
+                });
+            } else {
+                $('#warningModalRedeemGoal').modal('show');
+            }
+    }
+    });
 }
 
 // Redeem Goal Button click from user
