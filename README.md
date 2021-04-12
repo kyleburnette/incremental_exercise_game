@@ -3,6 +3,7 @@
 - [General info](#general-info)
 - [Technologies](#technologies)
 - [Contents](#content)
+- [Contributors](#contributors)
 
 ## General Info
 
@@ -26,6 +27,8 @@ Technologies used for this project:
 - Firebase
 - Geolocation API
 - Google Maps API
+- Directions API
+- Distance Matrix API
 
 ## Content
 
@@ -57,13 +60,13 @@ It has the following subfolders and files:
     /texture.png
     /train.png
 ├── scripts                  # Folder for scripts
-    /distance_functions.js
+    /distance-functions.js
     /exercise-settings.js
     /exercise.js
     /feedback.js
-    /firebase_api.js
-    /game_settings.js
+    /firebase-api.js
     /game.js
+    /game-settings.js
     /goal.js
     /index.js
     /jquery.path.js
@@ -73,27 +76,30 @@ It has the following subfolders and files:
     /stats-settings.js
     /stats.js
     /suggestion.js
-    /upload_profilePic.js
+    /upload-profilePic.js
 ├── styles                   # Folder for styles
     /bootstrap-color.css
     /exercise.css
+    /goal.css
     /index.css
     /layout.css
     /main.css
+    /profile.css
     /stats.css
 ├── pages                    # Folder for html pages
     /404.html                # 404 page if page doesn't exist
     /bugreport.html          # place for user to submit bug reports
-    /exercise.html
+    /exercise.html           # exercise session page to start a new exercise session
     /feedback.html           # feedback landing page where user can select what type of feedback to submit
     /gamesuggestion.html     # place for user to submit game suggestions
-    /goal.html
+    /goal.html               # goal page with leaderboard and step goal
     /login.html              # Allows the user to log in
     /main.html               # the main gameplay page
-    /profile.html
-    /stats.html              
+    /profile.html            # profile page with quote, profile picture, and leaderboard
+    /stats.html              # statistics page to review previous session stats         
     /submissionreceived.html # page displayed after bug report or suggestion submission
 ├── index.html               # the initial page of the app
+├── 404.html                 # 404 page if page doesn't exist
         
 
 ```
@@ -106,9 +112,11 @@ It has the following subfolders and files:
 - Implemented distance and movement calculation  
 
 **Jacky Tsoi**
+- landing page on index.html
 - graphical elements
-- live map in exercise.html
+- live map, including tracking and bonus score in exercise.html
 - statistics and calculation formulas in stats.html.  
+- colour palette and ui
 
 **Alex Wong**
 - Profile picture

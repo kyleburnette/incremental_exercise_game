@@ -1,48 +1,3 @@
-// Retrives score from score db, sorts top 10 scores and displays.
-function scoreQuery() {
-    db.collection("scores")
-        .where("score", ">", 1)
-        .limit(10)
-        .orderBy("score", "desc")
-        .get()
-        .then(function (snap) {
-            snap.forEach(function (doc) {
-                var n = doc.data().name;
-                var highScore = doc.data().score;
-                var div = document.getElementById('leaderboard');
-                var tbl = document.createElement('table');
-                var highScoreString = highScore;
-                tbl.style.width = '100%';
-                tbl.className = "table table-bordered ";
-
-
-                for (var i = 0; i < 1; i++) {
-                    var tr = tbl.insertRow();
-                    var td = tr.insertCell();
-                    td.className = "name-col";
-                    var tk = tr.insertCell();
-                    tk.className = "score-col";
-                }
-
-                // Values              
-                for (var k = 0; k < 1; k++) {
-                    if (i == 0 && k == 0) {
-                        break;
-                    } else {
-                        tk.append(highScoreString);
-                        td.append(n);
-                    }
-
-                }
-
-                div.appendChild(tbl);
-
-
-            })
-        })
-}
-scoreQuery();
-
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -140,25 +95,28 @@ displayGoal;
 
 // Write step if no step found, create new
 function writeSteps() {
+    var userSteps = 0;
     var user = firebase.auth().currentUser;
     var step = db.collection("user").doc(user.uid);
     step.get().then((doc) => {
         if (doc.exists) {
-            var oldStep;
-            if (oldStep == NaN || oldStep == null) {
-                oldStep = 0;
-            } else {
-                oldStep = parseInt(doc.data()["step"]);
-            }
+            userSteps = doc.data().steps;
+        } else {
+            //var oldStep;
+            //if (oldStep == NaN || oldStep == null) {
+            //    oldStep = 0;
+           // } else {
+            //    oldStep = parseInt(doc.data()["step"]);
+            //}
             step.set({
-                steps: oldStep 
+                steps: userSteps
             }, {
                 merge: true
             })
-        } else {
+        } //else {
             // doc.data() will be undefined in this case
-            console.warn("No such document!");
-        }
+        //    console.warn("No such document!");
+        //}
     }).catch((error) => {
         console.warn("Error getting document:", error);
     });
@@ -194,8 +152,9 @@ function getUserSteps() {
         if (doc.exists) {
             steps = doc.data().steps;
             stepGoal = doc.data().goal;
-            var progress = steps / stepGoal;
-            //console.log(progress);
+            var progress = (steps / stepGoal) * 100;
+            console.log(progress);
+            
             $('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
         } else {
             steps = 0;
@@ -210,3 +169,24 @@ function getUserSteps() {
     });
 }
 
+
+function setInputFilter(textbox, inputFilter) {
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+      textbox.addEventListener(event, function() {
+        if (inputFilter(this.value)) {
+          this.oldValue = this.value;
+          this.oldSelectionStart = this.selectionStart;
+          this.oldSelectionEnd = this.selectionEnd;
+        } else if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      });
+    });
+  }
+
+  setInputFilter(document.getElementById("goal-input"), function(value) {
+    return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+  });
