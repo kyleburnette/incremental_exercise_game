@@ -3,7 +3,7 @@ $(document).ready(function () {
         if (user) {
             userName = user;
             console.log("Logged in as", userName.displayName);
-            writeGoalField();
+            //writeGoalField();
             writeSteps();
             displayGoal();
             displaySteps();
@@ -25,6 +25,7 @@ function writeGoalField() {
     goalField.get().then((doc) => {
         if (doc.exists) {
             goalStart = doc.data().goal;
+            console.log("hi");
         } else {
             goalField.set({
                 goal: goalStart
@@ -51,7 +52,7 @@ function writeStepGoal(Number) {
         .then(function () {
             window.location.href = "goal.html";
         });
-}writeStepGoal;
+}
 
 // Writes the Step Goal inputted by user
 function getStepGoal() {
@@ -80,9 +81,11 @@ function redeemGoal() {
             goalByUser = doc.data().goal;
             var complete = stepsByUser / goalByUser;
             if (complete >= 1) {
+                var stepMinusGoal = stepsByUser - goalByUser;
                 stepGoals.set({
+                
                     goal: goalReset,
-                    steps: goalReset
+                    steps: stepMinusGoal
                 }, {
                     merge: true
                 })
@@ -124,7 +127,7 @@ function displayGoal() {
         console.log("Error getting document:", error);
     });
 }
-displayGoal;
+//displayGoal;
 
 
 // Write step if no step found, create new
@@ -146,6 +149,7 @@ function writeSteps() {
         console.warn("Error getting document:", error);
     });
 }
+writeSteps();
 
 
 // Display amount of steps by user.
@@ -165,7 +169,7 @@ function displaySteps() {
         console.error("Error getting document:", error);
     });
 }
-displaySteps;
+//displaySteps;
 
 // Get user steps use for progress bar
 function getUserSteps() {
