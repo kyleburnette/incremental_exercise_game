@@ -405,7 +405,7 @@ function checkExerciseError() {
     } else if (totalDistance <= 0) {
         $("#error-message").html(
             "<h4>Distance travelled is zero, this session will not be recorded.</h4><hr />");
-    } else if (checkTime(endTime) < 3) {
+    } else if (checkTime(endTime) < requiredTime) {
         $("#error-message").html(
             "<h4>Session time is less than 3 minutes, this session will not be recorded.</h4><hr />");
     }
@@ -496,7 +496,7 @@ function endExercise() {
     // Write to database if errors are not detected
     if (routeError == false && flagCounter <= flagThreshold && totalDistance > 0) {
         calculateBonus();
-        if (checkTime(endTime) >= 3) {
+        if (checkTime(endTime) >= requiredTime) {
             // Update cumulative steps for the user
             writeSteps();
             // Create a database entry of exercise and then move on to feedback and adjustments

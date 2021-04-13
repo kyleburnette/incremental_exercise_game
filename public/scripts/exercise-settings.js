@@ -14,6 +14,7 @@ const minAccuracy = 1000; // tracks inaccuracy
 const withinDestination = 25; // in meters
 const flagThreshold = 30; // maximum of 30 flags before session force ends
 const maxDistance = 10000; // max distance travelled in a second
+const requiredTime = 0;
 
 // Keep the device type to verify if the user can use exercise.html
 var deviceType = "Mobile";
