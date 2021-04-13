@@ -15,7 +15,7 @@ var minimumWalkingSpeed = 0.5
 var growthRate = 0.15;
 
 //Debug output options for development.
-var debug = false;
+var debug = true;
 var textDebug = false;
 
 //Holds base prices for items as well as their bonus steps per second.
