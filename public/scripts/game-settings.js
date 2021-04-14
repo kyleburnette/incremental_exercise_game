@@ -14,9 +14,8 @@ var minimumWalkingSpeed = 0.5
 //The exponential factor used to calculate costs.
 var growthRate = 0.15;
 
-//Debug output options for development.
+//When true, user will always "be walking" for development and demo purposes.
 var debug = true;
-var textDebug = false;
 
 //Holds base prices for items as well as their bonus steps per second.
 stepsPerSecond = {skateboard: 1, bicycle: 10, car: 50, train: 100, plane: 500, spaceship: 1000};

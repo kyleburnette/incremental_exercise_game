@@ -482,7 +482,10 @@ function writeEntry() {
         maxCaloriesBurned: totalMaxCalories.toFixed(2),
         path: pathCoordinates
     }).then((docRef) => {
+<<<<<<< HEAD
         // Entry is written
+=======
+>>>>>>> b21030af62d256b37e9cf4b7987c89e270f6dad6
     }).catch((error) => {
         console.error("Error added document:", error);
     })
