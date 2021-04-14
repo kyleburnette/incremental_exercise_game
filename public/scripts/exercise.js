@@ -478,7 +478,6 @@ function writeEntry() {
         maxCaloriesBurned: totalMaxCalories.toFixed(2),
         path: pathCoordinates
     }).then((docRef) => {
-        console.log("Entry written to:", docRef.id);
     }).catch((error) => {
         console.error("Error added document:", error);
     })
@@ -847,7 +846,6 @@ function checkDevice() {
         $("#desktop-warning").css("margin-bottom", "20px");
         $(".setup-button").css("display", "none");
     }
-    console.log("Device Type:", deviceType);
 }
 
 // Check if there is a user logged in, or redirect if not
@@ -855,7 +853,6 @@ function checkUser() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
             retrieveMultiplier();
             retrieveUserInventory();
             retrieveUserScore();

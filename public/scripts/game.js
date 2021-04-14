@@ -243,9 +243,6 @@ function success(pos) {
     }
 
     updateCounts();
-    if(textDebug){
-        $("#debug").html("isWalking: " + isWalking);
-    }
     previousCrd = pos.coords;
 }
 

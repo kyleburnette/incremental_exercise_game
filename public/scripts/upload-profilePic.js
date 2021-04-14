@@ -30,7 +30,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                     //get the URL of stored file
                     storageRef.getDownloadURL()
                         .then(function (url) { // Get URL of the uploaded file
-                            console.log(url); // Save the URL into users collection
                             db.collection("user").doc(user.uid).set({
                                     "profilePic": url
                                 }, {
@@ -43,16 +42,11 @@ firebase.auth().onAuthStateChanged(function (user) {
             })
         }
         uploadUserProfilePic();
-
-    } else {
-        // No user is signed in.
-        console.log("User is not logged in")
     }
 })
 
 // reads profilePic and displays image.
 function displayUserProfilePic() {
-    //console.log("Display Pic");
     firebase.auth().onAuthStateChanged(function (user) { //get user object
         db.collection("user").doc(user.uid) //use user's uid
             .get() //READ the doc
@@ -103,7 +97,6 @@ function defaultProfilePic() {
 
         } else {
             picUrl = defaultPic;
-            //console.log("No such document!");
             $("#mypic-goes-here").attr("src", picUrl);
         }
     }).catch((error) => {
@@ -158,7 +151,6 @@ function confirmProfilePic() {
     //get the URL of stored file
     storageRef.getDownloadURL()
         .then(function (url) { // Get URL of the uploaded file
-            console.log(url); // Save the URL into users collection
             db.collection("user").doc(user.uid).set({
                     "profilePic": url
                 }, {

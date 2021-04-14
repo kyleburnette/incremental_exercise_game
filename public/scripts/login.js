@@ -72,8 +72,6 @@ $(document).ready(function () {
         if (user) {
             loggedInUser = user;
             window.location.href = "main.html";
-        } else {
-            console.log("No user is logged in.");
         }
     });
 })

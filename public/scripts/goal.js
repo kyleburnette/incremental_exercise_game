@@ -2,14 +2,10 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             userName = user;
-            console.log("Logged in as", userName.displayName);
-            //writeGoalField();
             writeSteps();
             displayGoal();
             displaySteps();
             getUserSteps();
-            //retrieveUserScore();
-            //retrieveUserInventory();
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";
@@ -118,7 +114,7 @@ function displayGoal() {
             $("#goal-display").append(userGoal + " Steps");
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.warn("Error getting document:", error);
     });
 }
 //displayGoal;
@@ -185,7 +181,7 @@ function getUserSteps() {
 
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.warn("Error getting document:", error);
     });
 }
 
