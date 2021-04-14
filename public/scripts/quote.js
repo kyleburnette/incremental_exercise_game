@@ -13,18 +13,3 @@ function displayQuote() {
         })
 }
 displayQuote();
-
-/* Reserved for future use if need to add new quotes.
-function writeQuotes() {
-  var messageRef = db.collection("messages");
-  messageRef.add({
-    position: Math.floor(Math.random() * 1000),
-    message: "If people are doubting how far you can go, go so far that you can’t hear them anymore.” – Michele Ruiz",
-  });
-  messageRef.add({
-    position: Math.floor(Math.random() * 1000),
-    message: "live, laugh, love yourself",
-  });
-}
-writeQuotes(); 
-*/
