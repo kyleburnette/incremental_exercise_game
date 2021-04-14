@@ -41,7 +41,7 @@ Content of the project folder:
 ├── public                   # Folder containing the project files
 ├── .gitignore               # Git ignore file
 ├── firebase.json            # Firebase hosting information
-└── README.md
+└── README.md                # this README
 
 It has the following subfolders and files:
 ├── images                   # Folder for images
@@ -104,7 +104,7 @@ It has the following subfolders and files:
 ```
 
 ## References
--jquery.path.js by Jonah Fox is used under the MIT License.
+- jquery.path.js by Jonah Fox is used under the MIT License.
 
 ## Contributors
 
