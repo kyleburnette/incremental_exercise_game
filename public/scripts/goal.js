@@ -1,3 +1,11 @@
+/**  
+ * Writes step field for user when redeeming
+ * Displays goal field for user.
+ * Display steps taken so far for user.
+ * Retrieve user steps for display steps.
+ * 
+ * @param user for logged in users.
+ */
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -13,7 +21,9 @@ $(document).ready(function () {
     });
 });
 
-//Initalize the goal field for user when they visit goal.html for 1st time.
+/**  
+ * Writes goal field for user in database.
+ */
 function writeGoalField() {
     var goalStart = 0;
     var user = firebase.auth().currentUser;
@@ -49,7 +59,10 @@ function writeStepGoal(Number) {
         });
 }
 
-// Writes the Step Goal inputted by user
+/**  
+ * User inputted Step goal 
+ * must be between 1 - 10000, warning message if otherwise.
+ */
 function getStepGoal() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var goal = document.getElementById("goal-input").value;
@@ -63,7 +76,12 @@ function getStepGoal() {
 }
 getStepGoal();
 
-// Redeem Step Goal
+/**  
+ * Reads steps and goal fields 
+ * When user redeems goal, will reset the goal 
+ * for user and subtracts from steps field.
+ * updates Step and Goal field.
+ */
 function redeemGoal() {
     var user = firebase.auth().currentUser;
     var stepGoals = db.collection("user").doc(user.uid);
@@ -93,7 +111,10 @@ function redeemGoal() {
     });
 }
 
-// Redeem Goal Button click from user
+/** 
+ * Button function for redeemGoal().
+ *
+ */
 function redeemGoalButton() {
     document.getElementById("button-redeem").addEventListener('click', function () {
         redeemGoal();
@@ -101,7 +122,10 @@ function redeemGoalButton() {
 }
 redeemGoalButton();
 
-// Displays Current Goal Count
+/**  
+ * Display goal field for user.
+ *
+ */
 function displayGoal() {
     var userGoal = 0;
     var user = firebase.auth().currentUser;
@@ -117,10 +141,12 @@ function displayGoal() {
         console.warn("Error getting document:", error);
     });
 }
-//displayGoal;
 
 
-// Write step if no step found, create new
+/**  
+ * Write steps field for user.
+ *
+ */
 function writeSteps() {
     var userSteps = 0;
     var user = firebase.auth().currentUser;
@@ -142,7 +168,10 @@ function writeSteps() {
 writeSteps();
 
 
-// Display amount of steps by user.
+/**  
+ * Display steps field for user.
+ *
+ */
 function displaySteps() {
     var user = firebase.auth().currentUser;
     var stepNum = 0;
@@ -158,9 +187,11 @@ function displaySteps() {
         console.error("Error getting document:", error);
     });
 }
-//displaySteps;
 
-// Get user steps use for progress bar
+/**  
+ * Get user steps field for display goals.
+ *
+ */
 function getUserSteps() {
     var steps = 0;
     var stepGoal = 0;
@@ -185,7 +216,11 @@ function getUserSteps() {
     });
 }
 
-// Prevents user from enter any other characters besides Numbers into goal input field.
+/**  
+ * Only accepts numbers in the form.
+ * @param textbox input for text form.
+ * @param inputFilter prevents user from inputting anything else besides numbers.
+ */
 function setInputFilter(textbox, inputFilter) {
     ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
         textbox.addEventListener(event, function () {
@@ -203,6 +238,10 @@ function setInputFilter(textbox, inputFilter) {
     });
 }
 
+/**  
+ * points to goal-input in goal.html.
+ * prevents anything besides numbers.
+ */
 setInputFilter(document.getElementById("goal-input"), function (value) {
     return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
 });
