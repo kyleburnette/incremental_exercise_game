@@ -7,12 +7,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user != null) {
         // User is signed in.
         user.providerData.forEach(function (profile) {
-            // console.log("Sign-in provider: " + profile.providerId);
-            // console.log("  Provider-specific UID: " + profile.uid);
-            // console.log("  Name: " + profile.displayName);
-            // console.log("  Email: " + profile.email);
-            // console.log("  Photo URL: " + profile.photoURL);
-            // console.log("  uid " + user.uid);
         });
 
         function uploadUserProfilePic() {
@@ -43,7 +37,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     merge: true
                                 })
                                 .then(function () {
-                                    console.log('Added Profile Pic URL to Firestore.');
                                 })
                         })
                 })
@@ -114,7 +107,7 @@ function defaultProfilePic() {
             $("#mypic-goes-here").attr("src", picUrl);
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.warn("Error getting document:", error);
     });
 }
 
@@ -160,7 +153,6 @@ function confirmProfilePic() {
     //upload the picked file
     storageRef.put(file)
         .then(function () {
-            console.log('Uploaded to Cloud Storage.');
         })
 
     //get the URL of stored file
@@ -173,7 +165,6 @@ function confirmProfilePic() {
                     merge: true
                 })
                 .then(function () {
-                    console.log('Added Profile Pic URL to Firestore.');
                 })
         })
     window.location.reload();
@@ -183,8 +174,6 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
-
         } else {
             console.warn("No user detected!");
             window.location.href = "login.html";
