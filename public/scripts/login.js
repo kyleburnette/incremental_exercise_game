@@ -72,10 +72,6 @@ $(document).ready(function () {
         if (user) {
             loggedInUser = user;
             window.location.href = "main.html";
-<<<<<<< HEAD
-        } else {
-=======
->>>>>>> b21030af62d256b37e9cf4b7987c89e270f6dad6
         }
     });
 })
