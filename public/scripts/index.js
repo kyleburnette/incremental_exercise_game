@@ -16,8 +16,6 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName,
-                "and will redirecting to home.");
             window.location.href = "pages/main.html";
         } else {
             console.warn("No user is logged in.");

@@ -145,7 +145,6 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
             displaySessions();
         } else {
             console.warn("No user detected!");

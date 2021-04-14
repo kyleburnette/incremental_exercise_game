@@ -46,10 +46,10 @@ function retrieveUserScore() {
             userScore = parseInt(doc.data()["score"]);
         } else {
             // doc.data() will be undefined in this case
-            console.log("No such document!");
+            console.warn("No such document!");
         }
     }).catch((error) => {
-        console.log("Error getting document:", error);
+        console.warn("Error getting document:", error);
     });
 }
 
@@ -111,7 +111,6 @@ function updateCounts() {
 function retrieveUserInventory() {
     var user = firebase.auth().currentUser;
     var inventoryDB = db.collection("inventory").doc(user.uid);
-    console.log("Logged ID:", user.uid);
     inventoryDB.get().then((doc) => {
         if (doc.exists) {
             inventory.bicycle = parseInt(doc.data()["bicycle"]);
@@ -338,8 +337,6 @@ function createParticleDiv(e, inventoryType) {
         }
     };
 
-    console.log(bezier_params);
-
     $(function () {
         $("<div></div>")
             .hide()
@@ -391,7 +388,6 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
             retrieveUserScore();
             retrieveUserInventory();
         } else {

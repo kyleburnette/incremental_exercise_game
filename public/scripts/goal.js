@@ -25,7 +25,6 @@ function writeGoalField() {
     goalField.get().then((doc) => {
         if (doc.exists) {
             goalStart = doc.data().goal;
-            console.log("hi");
         } else {
             goalField.add({
                 goal: goalStart
