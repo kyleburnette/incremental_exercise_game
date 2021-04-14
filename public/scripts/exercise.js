@@ -815,7 +815,10 @@ function applyFeedback() {
     setTimeout(() => window.location.reload(), 1000);
 }
 
-// Check if time multiplier is null, set default if null
+/********************************************************************************
+ * Check if time multiplier is null, set default if null
+ * doc - Document object from firestore
+ ********************************************************************************/ 
 function checkNullTime(doc) {
     var checkMultiplier = db.collection("user");
     var check = doc.data()["timeMultiplier"];
@@ -828,7 +831,10 @@ function checkNullTime(doc) {
     }
 }
 
-// Check if duration multiplier is null, set default if null
+/********************************************************************************
+ * Check if duration multiplier is null, set default if null
+ * doc - Document object from firestore
+ ********************************************************************************/ 
 function checkNullDuration(doc) {
     var checkMultiplier = db.collection("user");
     var check = doc.data()["durationMultiplier"];
