@@ -33,7 +33,7 @@ function initMapView() {
  * Move destination marker on user input
  * map - Map object to set destination marker to
  * event - Mouse event handler
- **********************************************/ 
+ **********************************************/
 function moveDestinationMarker(map, event) {
     destinationMarker.setPosition(event.latLng);
     destinationMarker.setMap(map);
@@ -42,7 +42,11 @@ function moveDestinationMarker(map, event) {
     destinationLng = event.latLng.lng();
 }
 
-// Move initial destination marker on user input
+/**********************************************
+ * Move initial destination marker on user input
+ * map - Map object to set initial destination marker to
+ * event - Mouse event handler
+ **********************************************/
 function moveInitialDestinationMarker(map, event) {
     destinationMarker = new google.maps.Marker({
         position: event.latLng,
@@ -54,7 +58,10 @@ function moveInitialDestinationMarker(map, event) {
     destinationSet = true;
 }
 
-// Add destination click listener to update position
+/**********************************************
+ * Add destination click listener to update position
+ * map - Map object to add click listener
+ **********************************************/
 function addDestinationListener(map) {
     map.addListener("click", (mapsMouseEvent) => {
         // Close the current InfoWindow.
@@ -68,7 +75,10 @@ function addDestinationListener(map) {
     });
 }
 
-// Set static destination marker for map view
+/**********************************************
+ * Set static destination marker for map view
+ * mapView - Map object to add static marker
+ **********************************************/
 function setDestinationMarker(mapView) {
     destinationMarker = new google.maps.Marker({
         position: {
@@ -80,7 +90,10 @@ function setDestinationMarker(mapView) {
     destinationMarker.setMap(mapView);
 }
 
-// Shows the info window for passed map parameter
+/**********************************************
+ * Shows the info window for passed map parameter
+ * map - Map object to add info window
+ **********************************************/
 function showInfoWindow(map) {
     infoWindow = new google.maps.InfoWindow({
         content: "Click on the map to place your destination pin",
@@ -92,7 +105,10 @@ function showInfoWindow(map) {
     infoWindow.open(map);
 }
 
-// Sets marker for current position for passed map parameter
+/**********************************************
+ * Sets marker for current position for passed map parameter
+ * map - Map object to add current marker
+ **********************************************/
 function setCurrentPosition(map) {
     new google.maps.Marker({
         position: {
@@ -104,7 +120,10 @@ function setCurrentPosition(map) {
     });
 }
 
-// Sets marker for start position for mapView
+/**********************************************
+ * Sets marker for start position for mapView
+ * map - Map object to set the marker to
+ **********************************************/
 function setMapViewStartPos(mapView) {
     positionMarker = new google.maps.Marker({
         position: {
@@ -116,7 +135,10 @@ function setMapViewStartPos(mapView) {
     positionMarker.setMap(mapView);
 }
 
-// Initializes map components and handles updates for destination on user input
+/**********************************************
+ * Initializes map components and handles updates for destination on user input
+ * val - values for center coordinates
+ **********************************************/
 function updateMap(val) {
     crd = {
         'lat': val[0],
@@ -143,7 +165,10 @@ function updateMap(val) {
     setCurrentPosition(map);
 }
 
-// Calculate and display the route to destination
+/**********************************************
+ * Calculate and display the route to destination
+ * mapView - Map object to create route for
+ **********************************************/
 function createRoute(mapView) {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
@@ -153,7 +178,10 @@ function createRoute(mapView) {
     findRoute(directionsService, directionsDisplay);
 }
 
-// Set up initial path coordinates and point for Polyline
+/**********************************************
+ * Set up initial path coordinates and point for Polyline
+ * mapView - Map object to create initial path for Polyline
+ **********************************************/
 function setInitialPath(mapView) {
     pathCoordinates = [{
         lat: crd.lat,
@@ -201,7 +229,11 @@ function setRouteOption() {
     routeOption = $("input[name=routingOption]:checked").val();
 }
 
-// Finds the optimal route to the destination specified by the user
+/**********************************************
+ * Finds the optimal route to the destination specified by the user
+ * directionsService - Service from Directions API
+ * directionsDisplay - Route display element
+ **********************************************/
 function findRoute(directionsService, directionsDisplay) {
     var destinationCrd = {
         'lat': destinationLat,
@@ -223,7 +255,10 @@ function findRoute(directionsService, directionsDisplay) {
     });
 }
 
-// Draws the path the user has taken so far 
+/**********************************************
+ * Draws the path the user has taken so far 
+ * pos - Current position to update the drawn path
+ **********************************************/
 function drawPath(pos) {
     // Create poly lines to create route and append lat and lng to an array for each point to save.
     var holdPos = {};
@@ -292,7 +327,12 @@ function toggleMap() {
     startView();
 }
 
-// Displays timer in html
+/**********************************************
+ * Displays timer in html
+ * hours - integer for current hours
+ * minutes - integer for current minutes
+ * seconds - integer for current seconds
+ **********************************************/
 function displayTimer(hours, minutes, seconds) {
     if (hours > 0) {
         $("#timeTaken").html(`${hours}h ${minutes}m ${seconds}s`);
@@ -303,7 +343,10 @@ function displayTimer(hours, minutes, seconds) {
     }
 }
 
-// Calculates and updates the timer
+/**********************************************
+ * Calculates and updates the timer
+ * time - current 
+ **********************************************/
 function updateTime(time) {
     var hours = 0;
     var minutes = 0;
@@ -320,7 +363,11 @@ function updateTime(time) {
     displayTimer(hours, minutes, seconds);
 }
 
-// Formats the passed integer (in milliseconds) to a human-readable String
+/********************************************************************************
+ * Formats the passed integer (in milliseconds) to a human-readable String
+ * endTime - TimeStamp when the session ended
+ * returns the formatted human-readable string for the timestamp session ended at
+ ********************************************************************************/ 
 function formatDate(endTime) {
     // Get the time between the start and end time
     var diff = (dateObj.getTime() - endTime.getTime());
@@ -335,14 +382,21 @@ function formatDate(endTime) {
     return `${hoursF}h ${minutesF}m ${secondsF}s`;
 }
 
-// Checks and returns the duration of the session
+/********************************************************************************
+ * Check and returns the duration of the session
+ * endTime - TimeStamp when the session ended
+ * returns the total duration of the session 
+ ********************************************************************************/ 
 function checkTime(endTime) {
     var diff = (dateObj.getTime() - endTime.getTime());
     var minutes = diff / 1000 / 60;
     return Math.abs(Math.round(minutes));
 }
 
-// Sets the values for time and duration bonus score multipliers
+/********************************************************************************
+ * Sets the values for time and duration bonus score multipliers
+ * doc - Firestore document data
+ ********************************************************************************/ 
 function setMultipliers(doc) {
     // Set multipliers to a min of minMultiplier and max of maxMultiplier
     allowedTimeMultiplier = Math.max(minMultiplier, parseFloat(doc.data()["timeMultiplier"]));
@@ -351,8 +405,11 @@ function setMultipliers(doc) {
     durationMultiplier = Math.min(maxMultiplier, durationMultiplier);
 }
 
-// Applies the score multipliers to the bonus score and returns the bonus score
-function scoreMultiplier(distance) {
+/********************************************************************************
+ * Applies the score multipliers to the bonus score and returns the bonus score
+ * Returns the bonus score + flat rate for total distance travelled
+ ********************************************************************************/ 
+function scoreMultiplier() {
     // timeMultiplier = Total estimated time to finish divided by total time taken
     // timeMultiplier will be < 1 if total time taken is negative
     var user = firebase.auth().currentUser;
@@ -428,14 +485,14 @@ function displayStats() {
         totalMaxCalories = (totalSteps / 100) * 4;
         $("#estimatedCalories").html(`${totalMinCalories.toFixed(2)}-${totalMaxCalories.toFixed(2)} calories`);
     }
-    var score = scoreMultiplier(totalDistance);
+    var score = scoreMultiplier();
     score = score * calcTotalStepsPerSecond();
     $("#bonusScore").html(`${Math.round(score)}`);
 }
 
 // Calculates the bonus score
 function calculateBonus() {
-    userScore += scoreMultiplier(totalDistance);
+    userScore += scoreMultiplier();
     userScore = userScore * calcTotalStepsPerSecond();
     $("#bonusScore").html(`${Math.round(userScore)}`);
     writeUserScore();
@@ -482,10 +539,7 @@ function writeEntry() {
         maxCaloriesBurned: totalMaxCalories.toFixed(2),
         path: pathCoordinates
     }).then((docRef) => {
-<<<<<<< HEAD
         // Entry is written
-=======
->>>>>>> b21030af62d256b37e9cf4b7987c89e270f6dad6
     }).catch((error) => {
         console.error("Error added document:", error);
     })
@@ -516,7 +570,10 @@ function endExercise() {
     }
 }
 
-// Function to convert a String of time to milliseconds
+/********************************************************************************
+ * Function to convert a String of time to milliseconds
+ * Returns integer milliseconds from the String of time
+ ********************************************************************************/ 
 var timespanMillis = (function () {
     var tMillis = {
         second: 1000,
@@ -536,7 +593,12 @@ var timespanMillis = (function () {
     };
 })();
 
-// Formula to calculate the distance from the previously tracked coordinate to the current coordinate
+/********************************************************************************
+ * Formula to calculate the distance from the previously tracked coordinate to the current coordinates
+ * previousCrd - Previously recorded coordinate
+ * currentCrd - Most recently recorded coordinate
+ * Returns difference in distance from current coordinate from previous coordinate
+ ********************************************************************************/ 
 function calcDistance(previousCrd, currentCrd) {
     const R = 6371e3; // metres
     const φ1 = previousCrd.latitude * Math.PI / 180; // φ, λ in radians
@@ -550,7 +612,10 @@ function calcDistance(previousCrd, currentCrd) {
     return d = R * c; // in metres
 }
 
-// Sets start and end positions
+/********************************************************************************
+ * Sets start and end positions
+ * crd - Currently tracked coordinate to set for start position
+ ********************************************************************************/ 
 function setPositionCrd(crd) {
     startPosition = {
         'latitude': crd.latitude,
@@ -562,7 +627,11 @@ function setPositionCrd(crd) {
     };
 }
 
-// Update previous coordinate
+/********************************************************************************
+ * Updates previous coordinate variable
+ * crd - Currently tracked coordinate with accuracy
+ * pos - Newest tracked coordinate
+ ********************************************************************************/ 
 function updatePrevCrd(crd, pos) {
     if (trackingState) {
         // If inaccuracy is too high, do not update previous coordinate
@@ -583,7 +652,10 @@ function updatePrevCrd(crd, pos) {
     }
 }
 
-// Update cumulative distance and update polyline path on map view
+/********************************************************************************
+ * Update cumulative distance and update polyline path on map view
+ * crd - Currently tracked coordinate
+ ********************************************************************************/ 
 function updateDistancePath(crd) {
     flagCounter = 0;
     updateMarker(crd);
@@ -612,7 +684,10 @@ function resetFlag() {
     updateCrd = false;
 }
 
-// Check and update current coordinate of user
+/********************************************************************************
+ * Check and update current coordinate of user
+ * crd - Currently tracked coordinate
+ ********************************************************************************/ 
 function updateCurrentCrd(crd) {
     if (previousCrd != null) {
         // If the inaccuracy is too high
@@ -639,6 +714,7 @@ function updateCurrentCrd(crd) {
  * Function performed upon position tracked successfully,
  * performs many other tasks to run the exercise session
  * and updating map as well as handling invalid values
+ * pos - Last tracked position
  ****************************************************************/
 function success(pos) {
     var crd = pos.coords;
@@ -650,7 +726,10 @@ function success(pos) {
     updatePrevCrd(crd, pos);
 }
 
-// Updates the position of the user's location marker on the map view
+/********************************************************************************
+ * Updates the position of the user's location marker on the map view
+ * pos - Last tracked position
+ ********************************************************************************/ 
 function updateMarker(pos) {
     positionMarker.setPosition({
         lat: pos.latitude,
@@ -658,12 +737,20 @@ function updateMarker(pos) {
     });
 }
 
-// Error handler, sends warning to the console
+/********************************************************************************
+ * Error handler, sends warning to the console
+ * err - Error object
+ ********************************************************************************/ 
 function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-// Writes new multipliers to server side
+/********************************************************************************
+ * Writes new multipliers to server side
+ * userDb - User collection path on firestore
+ * newDifficulty - User input difficulty value
+ * newDuration - User input duration value
+ ********************************************************************************/ 
 function writeMultiplier(userDb, newDifficulty, newDuration) {
     if (loggedInUser == null) {
         console.warn("User is not logged in!");
@@ -688,7 +775,11 @@ function writeMultiplier(userDb, newDifficulty, newDuration) {
     }
 }
 
-// Retrieve server side multipliers and update local multipliers
+/********************************************************************************
+ * Retrieve server side multipliers and update local multipliers
+ * userDb - User collection path on firestore
+ * doc - Document object from firestore
+ ********************************************************************************/ 
 function updateLocalMultiplier(userDb, doc) {
     // Get multipliers from database as floats
     allowedTimeMultiplier = parseFloat(doc.data()["timeMultiplier"]);
@@ -809,7 +900,10 @@ function writeUserScore() {
     }
 }
 
-// Calculates the user's total steps per second with all items
+/********************************************************************************
+ * Calculates and returns the user's total steps per second with all items
+ * Returns total steps per second
+ ********************************************************************************/ 
 function calcTotalStepsPerSecond() {
     return 1 +
         inventory.skateboard * stepsPerSecond.skateboard +
