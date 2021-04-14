@@ -1,4 +1,8 @@
-//writes user's bug report to the database
+/**
+ * Writes user's bug report to the database.
+ * 
+ * @param text - the contents of the user's feedback.
+ */
 function writeFeedback(text) {
     var writeSuggestion = db.collection("bugreports");
 
@@ -14,7 +18,9 @@ function writeFeedback(text) {
     });
 }
 
-//retrieves user's bug report from the form
+/**
+ * Retrieves user's bug report from the form
+ */
 function getFeedback() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var feedback = document.getElementById("feedback-input").value;

@@ -1,9 +1,4 @@
-//---------------------------------------------------
-// replace the lines below with your own "firebaseConfig"
-// key value pairs
-//--------------------------------------------------- 
-
-// Your web app's Firebase configuration
+// Globetrotter's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyB2BeahK930jblXk15rTGW7RihvRUon3us",
   authDomain: "comp1800project.firebaseapp.com",

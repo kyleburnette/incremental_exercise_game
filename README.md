@@ -3,6 +3,7 @@
 - [General info](#general-info)
 - [Technologies](#technologies)
 - [Contents](#content)
+- [References](#references)
 - [Contributors](#contributors)
 
 ## General Info
@@ -60,7 +61,6 @@ It has the following subfolders and files:
     /texture.png
     /train.png
 ├── scripts                  # Folder for scripts
-    /distance-functions.js
     /exercise-settings.js
     /exercise.js
     /feedback.js
@@ -87,7 +87,6 @@ It has the following subfolders and files:
     /profile.css
     /stats.css
 ├── pages                    # Folder for html pages
-    /404.html                # 404 page if page doesn't exist
     /bugreport.html          # place for user to submit bug reports
     /exercise.html           # exercise session page to start a new exercise session
     /feedback.html           # feedback landing page where user can select what type of feedback to submit
@@ -103,6 +102,9 @@ It has the following subfolders and files:
         
 
 ```
+
+## References
+-jquery.path.js by Jonah Fox is used under the MIT License.
 
 ## Contributors
 

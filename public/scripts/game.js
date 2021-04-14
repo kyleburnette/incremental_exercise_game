@@ -35,9 +35,9 @@ var updateScoreTimer = window.setInterval(function () {
     writeUserInventory();
 }, updateRate);
 
-/*
-Retrieves user's score from Firebase.
-*/
+/**
+ * Retrieves user's score from Firebase.
+ */
 function retrieveUserScore() {
     var user = firebase.auth().currentUser;
     var score = db.collection("scores").doc(user.uid);
@@ -53,11 +53,13 @@ function retrieveUserScore() {
     });
 }
 
-/*
-Calculates users's total steps per second based on
-whether they are walking or not and also their
-current inventory.
-*/
+/**
+ * Calculates users's total steps per second based on
+ * whether they are walking or not and also their
+ * current inventory.
+ * 
+ * @return The current total steps per second for this user.
+ */
 function calcTotalStepsPerSecond() {
     if (isWalking){
         return 1
@@ -73,10 +75,10 @@ function calcTotalStepsPerSecond() {
 
 }
 
-/*
-Updates DOM elements for all inventory items, including 
-counts and costs.
-*/
+/**
+ * Updates DOM elements for all inventory items, including 
+ * counts and costs.
+ */
 function updateCounts() {
     $("#skateboard-count").html(inventory.skateboard);
     $("#bicycle-count").html(inventory.bicycle);
@@ -103,9 +105,9 @@ function updateCounts() {
     $("#total-steps").html(`Total Steps: ` + Math.round(userScore));
 }
 
-/*
-Fetches user's inventory from the database.
-*/
+/**
+ * Fetches user's inventory from the database.
+ */
 function retrieveUserInventory() {
     var user = firebase.auth().currentUser;
     var inventoryDB = db.collection("inventory").doc(user.uid);
@@ -128,10 +130,10 @@ function retrieveUserInventory() {
     });
 }
 
-/*
-Writes user's current score to the database.
-*/
-function writeUserScore(text) {
+/** 
+ * Writes user's current score to the database.
+ */
+function writeUserScore() {
     var updateScore = db.collection("scores");
     userScore = Math.round(userScore);
     if (loggedInUser == null) {
@@ -139,17 +141,17 @@ function writeUserScore(text) {
     } else {
         updateScore.doc(loggedInUser.uid).set({
             score: userScore,
-            name: loggedInUser.displayName // alex added
+            name: loggedInUser.displayName
         }, {
             merge: true
         });
     }
 }
 
-/*
-Writes user's current inventory to the database.
-*/
-function writeUserInventory(text) {
+/**
+ * Writes user's current inventory to the database.
+ */
+function writeUserInventory() {
     var updateInv = db.collection("inventory");
     if (loggedInUser == null) {
         console.warn("User is not logged in!");
@@ -167,9 +169,11 @@ function writeUserInventory(text) {
     }
 }
 
-/*
-Calculates the distance a user has traveled since the
-last poll.
+/**
+ * Calculates the distance a user has traveled since the
+ * last poll.
+ * 
+ * @return the distance since the last update
 */
 function calcDistance(previousCrd, currentCrd) {
     const R = 6371e3; // meters
@@ -188,6 +192,7 @@ function calcDistance(previousCrd, currentCrd) {
 
 /**
  Calculates user's walking speed.
+ @return the speed the user is walking
  */
 function travelSpeed() {
     return distanceThisCycle / (pollingRate / 1000); //meters per second
@@ -222,10 +227,11 @@ function handleUserScore() {
         + (inventory.plane * stepsPerSecond.plane);
 }
 
-/*
-Called when user's location is successfully obtained.
-This function checks if the user is walking, and if
-they are, it adds score.
+/** 
+* Called when user's location is successfully obtained.
+* This function checks if the user is walking, and if
+* they are, it adds score.
+* @param pos The user's position
 */
 function success(pos) {
     var crd = pos.coords;
@@ -248,17 +254,22 @@ function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-/*
-Calculates exponential growth of item based on how
-many of that item the user currently has.
+/**
+ * Calculates exponential growth of item based on how
+ * many of that item the user currently has.
+ * @param base The base cost of this item
+ * @param x the amount of this item the user has
 */
 function calcGrowth(base, x) {
     return base * Math.pow((1 + growthRate), x)
 }
 
-/*
-Returns appropriate string for whatever the id
-was of the button that was clicked.
+/**
+ * Returns appropriate string for whatever the id
+ * was of the button that was clicked.
+ * 
+ * @param id The id of the inventory that was clicked
+ * @return the sliced string version of the button that was clicked
 */
 function getPropertyName(id) {
     switch (id) {
@@ -277,9 +288,10 @@ function getPropertyName(id) {
     }
 }
 
-/*
-Based on whatever the user purchases, 
-increments inventory count.
+/**
+ * Based on whatever the user purchases, 
+ * increments inventory count.
+ * @param inventoryType - the type of inventory that was clicked
 */
 function increaseInventoryCount(inventoryType) {
     switch (inventoryType) {
@@ -307,10 +319,11 @@ function increaseInventoryCount(inventoryType) {
     updateCounts();
 }
 
-/*
-Spawns an animation when a user purchases an item.
-Using bezier curves, this animation is randomly
-generated.
+/**
+ * Spawns an animation when a user purchases an item. Using bezier curves, this animation is randomly
+ * generated.
+ * @param e The event generated by the user's click.
+ * @param inventoryType The type of button that was clicked on.
 */
 function createParticleDiv(e, inventoryType) {
     var bezier_params = {
@@ -349,11 +362,12 @@ function createParticleDiv(e, inventoryType) {
     });
 }
 
-/*
-This function updates the prices of items when you purchase/click an
-item. It also makes sure you have enough score to purchase that 
-item, and if so, increases your inventory count and spawns an
-animation.
+/** 
+ * This function updates the prices of items when you purchase/click an
+ * item. It also makes sure you have enough score to purchase that 
+ * item, and if so, increases your inventory count and spawns an
+ * animation.
+ * @param e The event generated by the user clicking
 */
 $(".game-button").click(function (e) {
     buttonType = $(this).attr("id");

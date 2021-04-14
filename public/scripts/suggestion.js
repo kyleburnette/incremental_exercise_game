@@ -1,4 +1,8 @@
-//writes user's feedback to the database
+/**
+ * Writes user's feedback to the database.
+ * 
+ * @param text - the contents of the user's feedback.
+ */
 function writeFeedback(text) {
     var writeSuggestion = db.collection("suggestions");
 
@@ -14,7 +18,11 @@ function writeFeedback(text) {
     });
 }
 
-//retrieves user's feedback from the form
+/**
+ * Writes user's feedback to the database.
+ * 
+ * @param text - the contents of the user's feedback.
+ */
 function getFeedback() {
     document.getElementById("button-submit").addEventListener('click', function () {
         var feedback = document.getElementById("feedback-input").value;
