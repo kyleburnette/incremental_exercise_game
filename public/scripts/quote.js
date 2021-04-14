@@ -1,4 +1,8 @@
-// picks a random quote from quote DB and displays for User.
+/**  
+ * Reads database of messsages
+ * Picks at random message and displays for user.
+ * Picks a new message everytime the page reloads.
+ */
 function displayQuote() {
     db.collection("messages")
         .where("position", ">", Math.floor(Math.random() * 1000))

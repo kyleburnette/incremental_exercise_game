@@ -1,4 +1,7 @@
-// Retrives score from score db, sorts top 10 scores and displays.
+/**  
+ * Reads the database of scores
+ * prints out table of the top 10 highest scores from highest to lowest with display name.
+ */
 function scoreQuery() {
     db.collection("scores")
         .where("score", ">", 1)

@@ -1,13 +1,17 @@
+// Default picture for user without a custom profile picture.
 const defaultPic = "https://firebasestorage.googleapis.com/v0/b/comp1800project.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=fe2e2a67-f843-4b28-b83e-7516e584d689";
 
 var user = null;
-// Checks if User is logged in.
+/**  
+ * when User is logged in, listens for file upload
+ * @param user uploads user custom photo for profile picture.
+ *
+ */
 firebase.auth().onAuthStateChanged(function (user) {
     user = firebase.auth().currentUser;
     if (user != null) {
         // User is signed in.
-        user.providerData.forEach(function (profile) {
-        });
+        user.providerData.forEach(function () {});
 
         function uploadUserProfilePic() {
             // Let's assume my storage is only enabled for authenticated users 
@@ -30,40 +34,46 @@ firebase.auth().onAuthStateChanged(function (user) {
                     //get the URL of stored file
                     storageRef.getDownloadURL()
                         .then(function (url) { // Get URL of the uploaded file
+                            console.log(url); // Save the URL into users collection
                             db.collection("user").doc(user.uid).set({
                                     "profilePic": url
                                 }, {
                                     merge: true
                                 })
-                                .then(function () {
-                                })
+                                .then(function () {})
                         })
                 })
             })
         }
         uploadUserProfilePic();
+
+    } else {
+        // No user is signed in.
+        console.warn("User is not logged in")
     }
 })
 
-// reads profilePic and displays image.
+/**  
+ * Displays User Profile Pic
+ * Appends the picUrl to html
+ */
 function displayUserProfilePic() {
+    //console.log("Display Pic");
     firebase.auth().onAuthStateChanged(function (user) { //get user object
         db.collection("user").doc(user.uid) //use user's uid
             .get() //READ the doc
             .then(function (doc) {
                 var picUrl = doc.data().profilePic; //extract pic url
-
-                // use this line if "mypicdiv" is a "div"
-                //$("#mypicdiv").append("<img src='" + picUrl + "'>")
-
-                // use this line if "mypic-goes-here" is an "img" 
                 $("#mypic-goes-here").attr("src", picUrl);
             })
     })
 }
 displayUserProfilePic();
 
-// Initializes the User profilePic field when user visits profile.html 1st time.
+/**  
+ * Write the profilePic field for user, when they first visit the page.
+ *
+ */
 function writeUserProfilePicField() {
     var defaultPicForUser = defaultPic;
     var user = firebase.auth().currentUser;
@@ -85,7 +95,10 @@ function writeUserProfilePicField() {
 
 
 
-// Default Profile Picture of User if none is uploaded.
+/**  
+ * Loads the default profile picture if no user uploaded picture is found.
+ *
+ */
 function defaultProfilePic() {
     var picUrl = defaultPic;
     var user = firebase.auth().currentUser;
@@ -104,6 +117,11 @@ function defaultProfilePic() {
     });
 }
 
+/**  
+ * Verfies the User
+ * default profile pic and writing user profile pic when page loads.
+ * Redirects to User to login.html if no user is logged in.
+ */
 $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -120,7 +138,10 @@ $(document).ready(function () {
 var fileInput = document.getElementById("mypic-input");
 const preview = document.getElementById("preview-image");
 
-// Uploads User Profile Picture in seperate window.
+/**  
+ * Uploaded profile pic 
+ * shows a preview of the profile picture before uploading.
+ */
 function uploadUserProfilePic() {
     // Let's assume my storage is only enabled for authenticated users 
     // This is set in your firebase console storage "rules" tab
@@ -138,37 +159,28 @@ function uploadUserProfilePic() {
 }
 uploadUserProfilePic();
 
-// Confirms profile picture.
+/**  
+ * Confirmation of the preview photo before upload.
+ *
+ */
 function confirmProfilePic() {
     //store using this name
     var storageRef = firebase.storage().ref("images/" + user.uid + ".jpg");
 
     //upload the picked file
     storageRef.put(file)
-        .then(function () {
-        })
+        .then(function () {})
 
     //get the URL of stored file
     storageRef.getDownloadURL()
         .then(function (url) { // Get URL of the uploaded file
+            console.log(url); // Save the URL into users collection
             db.collection("user").doc(user.uid).set({
                     "profilePic": url
                 }, {
                     merge: true
                 })
-                .then(function () {
-                })
+                .then(function () {})
         })
     window.location.reload();
 }
-
-$(document).ready(function () {
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            loggedInUser = user;
-        } else {
-            console.warn("No user detected!");
-            window.location.href = "login.html";
-        }
-    });
-});
