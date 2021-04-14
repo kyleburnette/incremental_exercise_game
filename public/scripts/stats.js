@@ -68,7 +68,10 @@ function updateMapView() {
     userPath.setMap(mapView);
 }
 
-// Retrieve statistics from the document
+/********************************************************************
+ * Retrieve statistics from the passed document
+ * doc - Selected document from firestore
+ ********************************************************************/
 function getStats(doc) {
     startPosition = doc.data().startPosition;
     destinationPosition = doc.data().destinationPosition;
@@ -90,7 +93,10 @@ function setModalStats() {
     $("#estimatedCalories").html(`${minCalories}-${maxCalories} calories`);
 }
 
-// Update statistics in modal from database when an entry is selected
+/********************************************************************
+ * Update statistics in modal from database when an entry is selected
+ * id - Current document ID from html
+ ********************************************************************/
 function openReview(id) {
     currentID = id;
 
@@ -109,7 +115,11 @@ function openReview(id) {
     $("#reviewModal").modal("toggle");
 }
 
-// Create entry element for the list
+/********************************************************************
+ * Create entry element for the list
+ * doc - Selected document from firestore
+ * list - Session entry DOM element
+ ********************************************************************/
 function createEntry(doc, list) {
     var id = doc.id;
     var date = (doc.data().date).toDate();

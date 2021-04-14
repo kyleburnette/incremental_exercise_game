@@ -73,7 +73,6 @@ $(document).ready(function () {
             loggedInUser = user;
             window.location.href = "main.html";
         } else {
-            console.log("No user is logged in.");
         }
     });
 })

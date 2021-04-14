@@ -29,7 +29,11 @@ function initMapView() {
     updateMapView();
 }
 
-// Move destination marker on user input
+/**********************************************
+ * Move destination marker on user input
+ * map - Map object to set destination marker to
+ * event - Mouse event handler
+ **********************************************/ 
 function moveDestinationMarker(map, event) {
     destinationMarker.setPosition(event.latLng);
     destinationMarker.setMap(map);
@@ -478,7 +482,7 @@ function writeEntry() {
         maxCaloriesBurned: totalMaxCalories.toFixed(2),
         path: pathCoordinates
     }).then((docRef) => {
-        console.log("Entry written to:", docRef.id);
+        // Entry is written
     }).catch((error) => {
         console.error("Error added document:", error);
     })
@@ -847,7 +851,6 @@ function checkDevice() {
         $("#desktop-warning").css("margin-bottom", "20px");
         $(".setup-button").css("display", "none");
     }
-    console.log("Device Type:", deviceType);
 }
 
 // Check if there is a user logged in, or redirect if not
@@ -855,7 +858,6 @@ function checkUser() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             loggedInUser = user;
-            console.log("Logged in as", loggedInUser.displayName);
             retrieveMultiplier();
             retrieveUserInventory();
             retrieveUserScore();
